@@ -1,5 +1,10 @@
 package org.example.entity;
 
+/**
+ * Method entity
+ *
+ * @author Thanuja Sivaananthan
+ */
 public class MethodEntity extends Entity {
 
     private final ClassEntity classEntity;

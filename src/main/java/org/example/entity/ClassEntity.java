@@ -3,6 +3,11 @@ package org.example.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class entity
+ *
+ * @author Thanuja Sivaananthan
+ */
 public class ClassEntity extends Entity {
 
     private final PackageEntity packageEntity;
