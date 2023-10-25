@@ -19,20 +19,39 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
 
+        <!-- gephi dependencies-->
         <dependency>
+            <!-- note - has two vulnerabilities-->
             <groupId>org.gephi</groupId>
             <artifactId>gephi-toolkit</artifactId>
             <version>0.10.1</version>
         </dependency>
-
         <dependency>
+            <!-- note - has one vulnerability-->
             <groupId>it.uniroma1.dis.wsngroup.gexf4j</groupId>
             <artifactId>gexf4j</artifactId>
             <version>1.0.0</version>
+        </dependency>
+
+        <!-- bytecode dependencies-->
+        <dependency>
+            <groupId>org.apache.bcel</groupId>
+            <artifactId>bcel</artifactId>
+            <version>6.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>9.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-util</artifactId>
+            <version>9.4</version>
         </dependency>
 
     </dependencies>
