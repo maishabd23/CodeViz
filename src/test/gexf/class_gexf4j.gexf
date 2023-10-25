@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<gexf xmlns="http://www.gexf.net/1.2draft" xmlns:viz="http://www.gexf.net/1.2draft/viz" version="1.2">
+ <meta lastmodifieddate="2023-10-24">
+  <creator>Gephi.org</creator>
+  <description>A Web network</description>
+ </meta>
+ <graph defaultedgetype="directed" idtype="string" mode="static">
+  <nodes count="4">
+   <node id="1person" label="person"/>
+   <node id="2student" label="student"/>
+   <node id="3professor" label="professor"/>
+   <node id="4address" label="address"/>
+  </nodes>
+  <edges count="3">
+   <edge id="1" source="1person" target="4address" type="undirected"/>
+   <edge id="1" source="2student" target="1person" type="undirected"/>
+   <edge id="1" source="3professor" target="1person" type="undirected"/>
+  </edges>
+ </graph>
+</gexf>
