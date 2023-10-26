@@ -54,7 +54,7 @@ public class JavaBytecodeReaderTest {
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
 
         List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
-        javaBytecodeReader.generateEntitesAndConnections(filePaths);
+        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
 
         GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
         LinkedHashMap<String, Entity> packageEntities = graphGenerator.getPackageEntities();
@@ -80,7 +80,7 @@ public class JavaBytecodeReaderTest {
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
 
         List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
-        javaBytecodeReader.generateEntitesAndConnections(filePaths);
+        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
 
         GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
         LinkedHashMap<String, Entity> classEntities = graphGenerator.getClassEntities();
@@ -108,7 +108,7 @@ public class JavaBytecodeReaderTest {
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
 
         List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
-        javaBytecodeReader.generateEntitesAndConnections(filePaths);
+        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
 
         GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
         LinkedHashMap<String, Entity> methodEntities = graphGenerator.getMethodEntities();
@@ -128,7 +128,7 @@ public class JavaBytecodeReaderTest {
         assertTrue(methodEntities.containsKey("org.example.entity.MethodEntity.addConnectedEntity"));
         assertTrue(methodEntities.containsKey("org.example.entity.PackageEntity.addConnectedEntity"));
 
-        // NOTE - <init> and <clinit> are used for the constructors, should we manually change these?
+        // TODO - <init> and <clinit> are used for the constructors, should we manually change these?
         // https://www.baeldung.com/jvm-init-clinit-methods
 
         assertTrue(methodEntities.containsKey("org.example.entity.ClassEntity.<init>"));
@@ -148,7 +148,7 @@ public class JavaBytecodeReaderTest {
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
 
         List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
-        javaBytecodeReader.generateEntitesAndConnections(filePaths);
+        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
 
         GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
 
@@ -184,7 +184,7 @@ public class JavaBytecodeReaderTest {
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
 
         List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
-        javaBytecodeReader.generateEntitesAndConnections(filePaths);
+        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
 
         GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
 
@@ -222,11 +222,11 @@ public class JavaBytecodeReaderTest {
      * @author Thanuja Sivaananthan
      */
     @Test
-    public void testGenerateGraphs(){
+    public void testGenerateGexfGraphs(){
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
 
         List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
-        javaBytecodeReader.generateEntitesAndConnections(filePaths);
+        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
 
         javaBytecodeReader.generateGraph(EntityType.PACKAGE, "./src/test/gexf/" + name + "/package.gexf");
         javaBytecodeReader.generateGraph(EntityType.CLASS, "./src/test/gexf/" + name + "/class.gexf");
@@ -242,7 +242,7 @@ public class JavaBytecodeReaderTest {
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
 
         List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
-        javaBytecodeReader.generateEntitesAndConnections(filePaths);
+        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
 
         GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
         LinkedHashMap<String, Entity> classEntities = graphGenerator.getClassEntities();
@@ -274,7 +274,7 @@ public class JavaBytecodeReaderTest {
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
 
         List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
-        javaBytecodeReader.generateEntitesAndConnections(filePaths);
+        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
 
         GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
         LinkedHashMap<String, Entity> classEntities = graphGenerator.getClassEntities();
@@ -295,9 +295,9 @@ public class JavaBytecodeReaderTest {
         assertTrue(entityClass.getConnectedEntities().contains(entityTypeClass));
 
         assertTrue(classEntityClass.getConnectedEntities().contains(packageEntityClass));
-        // assertTrue(classEntityClass.getConnectedEntities().contains(methodEntityClass)); // is a type Set
+        assertTrue(classEntityClass.getConnectedEntities().contains(methodEntityClass)); // is a type Set, but also in a method's arguments
 
-        // assertTrue(packageEntityClass.getConnectedEntities().contains(classEntityClass)); // is a type Set
+        assertTrue(packageEntityClass.getConnectedEntities().contains(classEntityClass)); // is a type Set, but also in a method's arguments
         assertTrue(methodEntityClass.getConnectedEntities().contains(classEntityClass));
     }
 

@@ -4,6 +4,7 @@ import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
+import org.apache.bcel.generic.Type;
 import org.apache.commons.io.FilenameUtils;
 import org.example.entity.ClassEntity;
 import org.example.entity.EntityType;
@@ -99,7 +100,7 @@ public class JavaBytecodeReader {
      *
      * @param filepath      file to get from
      */
-    public void getAllPackages(String filepath){
+    private void getAllPackages(String filepath){
         ClassParser cp = new ClassParser(filepath);
         JavaClass jc;
         try {
@@ -152,7 +153,7 @@ public class JavaBytecodeReader {
      *
      * @param filepath      file to get from
      */
-    public void getAllClasses(String filepath){
+    private void getAllClasses(String filepath){
 
         ClassParser cp = new ClassParser(filepath);
         JavaClass jc;
@@ -193,7 +194,7 @@ public class JavaBytecodeReader {
      *
      * @param filepath      file to get from
      */
-    public void getAllMethods(String filepath){
+    private void getAllMethods(String filepath){
         ClassParser cp = new ClassParser(filepath);
         JavaClass jc;
         try {
@@ -209,12 +210,17 @@ public class JavaBytecodeReader {
             List<Method> methodList = Arrays.stream(jc.getMethods()).toList();
             for (Method method : methodList){
 
+                // gephi cannot read names with character '<' (will keep them in the totalName for now)
+                // TODO - <init> and <clinit> are used for the constructors, should we manually change these?
+                // https://www.baeldung.com/jvm-init-clinit-methods
+                String methodName = method.getName().replace("<", "").replace(">", "");
                 String totalName = jc.getClassName() + "." + method.getName();
+
                 // System.out.println(totalName);
                 // System.out.println(Arrays.toString(method.getArgumentTypes())); // Todo - add these in connections
                 // System.out.println(method.getReturnType()); // Todo - add these in connections
 
-                MethodEntity methodEntity = new MethodEntity(method.getName(), classEntity);
+                MethodEntity methodEntity = new MethodEntity(methodName, classEntity);
                 boolean success = graphGenerator.addEntity(totalName, methodEntity);
 
                 // TODO - how to handle overloaded methods? (class has more than one method of the same name)
@@ -239,7 +245,7 @@ public class JavaBytecodeReader {
      *
      * @param filepath      file to get from
      */
-    public void getAllConnections(String filepath){
+    private void getAllConnections(String filepath){
 
         ClassParser cp = new ClassParser(filepath);
         JavaClass jc;
@@ -251,10 +257,10 @@ public class JavaBytecodeReader {
 
         ClassEntity classEntity = (ClassEntity) graphGenerator.getClassEntities().get(jc.getClassName());
 
-        System.out.println("classname: " + jc.getClassName());
+        // System.out.println("classname: " + jc.getClassName());
         if (classEntity != null){
 
-            // check interfaces
+            // check interfaces and connect classes
             for (String interfaceName : jc.getInterfaceNames()){ //  TODO - test this
                 ClassEntity interfaceClassEntity = (ClassEntity)  graphGenerator.getClassEntities().get(interfaceName);
 
@@ -265,7 +271,7 @@ public class JavaBytecodeReader {
                 }
             }
 
-            // check superclasses
+            // check superclasses and connect classes
             if (!jc.getSuperclassName().isEmpty()){ // TODO - could there be multiple superclasses
                 ClassEntity superClassEntity = (ClassEntity)  graphGenerator.getClassEntities().get(jc.getSuperclassName());
 
@@ -276,11 +282,10 @@ public class JavaBytecodeReader {
                 }
             }
 
-            // check fields
-            Field[] fields = jc.getFields();
-            for (Field field : fields){
+            // check fields and connect classes
+            for (Field field : jc.getFields()){
                 String fieldType = String.valueOf(field.getType());
-                System.out.println("field: " + fieldType);
+                // System.out.println("field: " + fieldType);
 
                 // TODO - handle List/Set types that hold another class type
 
@@ -295,12 +300,40 @@ public class JavaBytecodeReader {
                 }
             }
 
-            // TODO - check methods argument types
+            // check methods argument/return types and connect classes
+            for (Method method : jc.getMethods()){
 
-            // TODO - check methods contents (using asm)
+                for (Type argumentType : method.getArgumentTypes()){
+                    String stringArgumentType = String.valueOf(argumentType);
+                    // System.out.println("argument: " + stringArgumentType);
 
-            // TODO - update packages based on their classes' connections
-            // TODO - update classes based on their methods' connections
+                    // TODO - handle List/Set types that hold another class type
+
+                    ClassEntity argumentClassEntity = (ClassEntity) graphGenerator.getClassEntities().get(stringArgumentType);
+
+                    if (argumentClassEntity != null){
+                        if (classEntity.equals(argumentClassEntity)){ // FIXME - figure out how to handle this (ex. a method using it's own class)
+                            System.out.println("NOTE, circular reference with class " + classEntity.getName() + " argument " + stringArgumentType);
+                        }
+                        classEntity.addConnectedEntity(argumentClassEntity);
+                    }
+                }
+
+                ClassEntity returnClassEntity = (ClassEntity) graphGenerator.getClassEntities().get(String.valueOf(method.getReturnType()));
+
+                if (returnClassEntity != null){
+                    if (classEntity.equals(returnClassEntity)){ // FIXME - investigate this further (occurs with enum)
+                        System.out.println("NOTE, circular reference with class " + classEntity.getName() + " return " + method.getReturnType());
+                    }
+                    classEntity.addConnectedEntity(returnClassEntity);
+                }
+
+            }
+
+            // TODO - check methods contents and connect methods (using asm)
+
+            // TODO - update package connections based on their classes' connections
+            // TODO - update class connections based on their methods' connections
 
         } else {
             System.out.println("ERROR, class entity should exist for " + jc.getClassName());
@@ -312,7 +345,7 @@ public class JavaBytecodeReader {
      * @author Thanuja Sivaananthan
      * @param filePaths     filepaths to get entities from
      */
-    public void generateEntitesAndConnections(List<String> filePaths){
+    public void generateEntitiesAndConnections(List<String> filePaths){
         for (String filepath : filePaths){
             getAllPackages(filepath);
             getAllClasses(filepath);
