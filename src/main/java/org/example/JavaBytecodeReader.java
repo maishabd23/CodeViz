@@ -165,7 +165,6 @@ public class JavaBytecodeReader {
         // System.out.println(jc.getClassName());
         // System.out.println(jc.getSuperclassName()); // Todo - add these in connections
         // System.out.println(jc.getInterfaceNames()); // Todo - add these in connections
-        // Todo - add field types in connections
 
         if (!jc.getPackageName().isEmpty()) {
             String[] names = jc.getClassName().split("\\.");
@@ -211,7 +210,7 @@ public class JavaBytecodeReader {
             for (Method method : methodList){
 
                 String totalName = jc.getClassName() + "." + method.getName();
-                System.out.println(totalName);
+                // System.out.println(totalName);
                 // System.out.println(Arrays.toString(method.getArgumentTypes())); // Todo - add these in connections
                 // System.out.println(method.getReturnType()); // Todo - add these in connections
 
@@ -234,9 +233,78 @@ public class JavaBytecodeReader {
 
     }
 
-
+    /**
+     * Get all connections for the entities
+     * @author Thanuja Sivaananthan
+     *
+     * @param filepath      file to get from
+     */
     public void getAllConnections(String filepath){
-        // TODO - getting edges
+
+        ClassParser cp = new ClassParser(filepath);
+        JavaClass jc;
+        try {
+            jc = cp.parse();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        ClassEntity classEntity = (ClassEntity) graphGenerator.getClassEntities().get(jc.getClassName());
+
+        System.out.println("classname: " + jc.getClassName());
+        if (classEntity != null){
+
+            // check interfaces
+            for (String interfaceName : jc.getInterfaceNames()){ //  TODO - test this
+                ClassEntity interfaceClassEntity = (ClassEntity)  graphGenerator.getClassEntities().get(interfaceName);
+
+                if (interfaceClassEntity != null){
+                    classEntity.addConnectedEntity(interfaceClassEntity);
+                } else {
+                    System.out.println("ERROR, interface entity should exist " + jc.getSuperclassName());
+                }
+            }
+
+            // check superclasses
+            if (!jc.getSuperclassName().isEmpty()){ // TODO - could there be multiple superclasses
+                ClassEntity superClassEntity = (ClassEntity)  graphGenerator.getClassEntities().get(jc.getSuperclassName());
+
+                if (superClassEntity != null){
+                    classEntity.addConnectedEntity(superClassEntity);
+                } else {
+                    System.out.println("ERROR, superclass entity should exist " + jc.getSuperclassName());
+                }
+            }
+
+            // check fields
+            Field[] fields = jc.getFields();
+            for (Field field : fields){
+                String fieldType = String.valueOf(field.getType());
+                System.out.println("field: " + fieldType);
+
+                // TODO - handle List/Set types that hold another class type
+
+                ClassEntity fieldClassEntity = (ClassEntity) graphGenerator.getClassEntities().get(fieldType);
+
+                if (fieldClassEntity != null){
+                    if (classEntity.equals(fieldClassEntity)){ // FIXME - investigate this further (occurs with enum)
+                        System.out.println("ERROR, circular reference with class " + classEntity.getName() + " field " + fieldType);
+                    } else {
+                        classEntity.addConnectedEntity(fieldClassEntity);
+                    }
+                }
+            }
+
+            // TODO - check methods argument types
+
+            // TODO - check methods contents (using asm)
+
+            // TODO - update packages based on their classes' connections
+            // TODO - update classes based on their methods' connections
+
+        } else {
+            System.out.println("ERROR, class entity should exist for " + jc.getClassName());
+        }
     }
 
     /**

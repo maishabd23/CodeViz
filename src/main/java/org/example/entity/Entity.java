@@ -12,6 +12,8 @@ import java.util.Set;
 public abstract class Entity {
     private final String name;
     private final EntityType entityType;
+
+    // TODO - store the weight of connections
     private Set<Entity> connectedEntities;
 
     // FIXME - keeping both Node types for now, until we decide which one to use

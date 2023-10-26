@@ -50,7 +50,7 @@ public class JavaBytecodeReaderTest {
      * @author Thanuja Sivaananthan
      */
     @Test
-    public void testIterateOverPathsPackage(){
+    public void testGeneratePackages(){
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
 
         List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
@@ -76,7 +76,7 @@ public class JavaBytecodeReaderTest {
      * @author Thanuja Sivaananthan
      */
     @Test
-    public void testIterateOverPathsClass(){
+    public void testGenerateClasses(){
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
 
         List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
@@ -104,7 +104,7 @@ public class JavaBytecodeReaderTest {
      * @author Thanuja Sivaananthan
      */
     @Test
-    public void testIterateOverPathsMethod(){
+    public void testGenerateMethods(){
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
 
         List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
@@ -155,6 +155,74 @@ public class JavaBytecodeReaderTest {
         javaBytecodeReader.generateGraph(EntityType.PACKAGE, "./src/test/gexf/" + name + "/package.gexf");
         javaBytecodeReader.generateGraph(EntityType.CLASS, "./src/test/gexf/" + name + "/class.gexf");
         javaBytecodeReader.generateGraph(EntityType.METHOD, "./src/test/gexf/" + name + "/method.gexf");
+    }
+
+    /**
+     * Test superclass connections
+     * @author Thanuja Sivaananthan
+     */
+    @Test
+    public void testGenerateSuperclassEdges(){
+        JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
+
+        List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
+        javaBytecodeReader.generateEntitesAndConnections(filePaths);
+
+        GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
+        LinkedHashMap<String, Entity> classEntities = graphGenerator.getClassEntities();
+
+        Set<String> keys = classEntities.keySet();
+
+        for (String key : keys){
+            Entity entity = classEntities.get(key);
+            System.out.println(key + ": " +  entity.getName());
+        }
+
+        Entity packageEntityClass = classEntities.get("org.example.entity.PackageEntity");
+        Entity classEntityClass = classEntities.get("org.example.entity.ClassEntity");
+        Entity methodEntityClass = classEntities.get("org.example.entity.MethodEntity");
+        Entity entityClass = classEntities.get("org.example.entity.Entity");
+
+        assertTrue(packageEntityClass.getConnectedEntities().contains(entityClass));
+        assertTrue(classEntityClass.getConnectedEntities().contains(entityClass));
+        assertTrue(methodEntityClass.getConnectedEntities().contains(entityClass));
+    }
+
+
+    /**
+     * Test field connections
+     * @author Thanuja Sivaananthan
+     */
+    @Test
+    public void testGenerateFieldEdges(){
+        JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
+
+        List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
+        javaBytecodeReader.generateEntitesAndConnections(filePaths);
+
+        GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
+        LinkedHashMap<String, Entity> classEntities = graphGenerator.getClassEntities();
+
+        Set<String> keys = classEntities.keySet();
+
+        for (String key : keys){
+            Entity entity = classEntities.get(key);
+            System.out.println(key + ": " +  entity.getName());
+        }
+
+        Entity packageEntityClass = classEntities.get("org.example.entity.PackageEntity");
+        Entity classEntityClass = classEntities.get("org.example.entity.ClassEntity");
+        Entity methodEntityClass = classEntities.get("org.example.entity.MethodEntity");
+        Entity entityTypeClass = classEntities.get("org.example.entity.EntityType");
+        Entity entityClass = classEntities.get("org.example.entity.Entity");
+
+        assertTrue(entityClass.getConnectedEntities().contains(entityTypeClass));
+
+        assertTrue(classEntityClass.getConnectedEntities().contains(packageEntityClass));
+        // assertTrue(classEntityClass.getConnectedEntities().contains(methodEntityClass)); // is a type Set
+
+        // assertTrue(packageEntityClass.getConnectedEntities().contains(classEntityClass)); // is a type Set
+        assertTrue(methodEntityClass.getConnectedEntities().contains(classEntityClass));
     }
 
     // TODO - tests for edges/connections
