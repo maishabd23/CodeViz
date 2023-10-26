@@ -1,13 +1,13 @@
 import org.example.GraphGenerator;
 import org.example.JavaBytecodeReader;
-import org.example.entity.Entity;
-import org.example.entity.EntityType;
+import org.example.entity.*;
 import org.junit.Test;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -120,8 +120,6 @@ public class JavaBytecodeReaderTest {
             System.out.println(key + ": " +  entity.getName());
         }
 
-
-
         assertTrue(methodEntities.containsKey("org.example.entity.ClassEntity.addConnectedEntity"));
         assertTrue(methodEntities.containsKey("org.example.entity.Entity.addConnectedEntity"));
         assertTrue(methodEntities.containsKey("org.example.entity.Entity.getEntityType"));
@@ -139,6 +137,84 @@ public class JavaBytecodeReaderTest {
         assertTrue(methodEntities.containsKey("org.example.entity.MethodEntity.<init>"));
         assertTrue(methodEntities.containsKey("org.example.entity.MethodEntity.<init>"));
         assertTrue(methodEntities.containsKey("org.example.entity.PackageEntity.<init>"));
+    }
+
+    /**
+     * Test the package class connections
+     * @author Thanuja Sivaananthan
+     */
+    @Test
+    public void testGenerateLevelPackageClassConnections(){
+        JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
+
+        List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
+        javaBytecodeReader.generateEntitesAndConnections(filePaths);
+
+        GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
+
+        LinkedHashMap<String, Entity> packageEntities = graphGenerator.getPackageEntities();
+        LinkedHashMap<String, Entity> classEntities = graphGenerator.getClassEntities();
+
+        // check package and class connections
+
+        PackageEntity entityPackage = (PackageEntity) packageEntities.get("org.example.entity");
+
+        ClassEntity entityClass = (ClassEntity) classEntities.get("org.example.entity.Entity");
+        ClassEntity packageEntityClass = (ClassEntity) classEntities.get("org.example.entity.PackageEntity");
+        ClassEntity classEntityClass = (ClassEntity) classEntities.get("org.example.entity.ClassEntity");
+        ClassEntity methodEntityClass = (ClassEntity) classEntities.get("org.example.entity.MethodEntity");
+
+        assertEquals(entityPackage, entityClass.getPackageEntity());
+        assertEquals(entityPackage, packageEntityClass.getPackageEntity());
+        assertEquals(entityPackage, classEntityClass.getPackageEntity());
+        assertEquals(entityPackage, methodEntityClass.getPackageEntity());
+
+        assertTrue(entityPackage.getClasses().contains(entityClass));
+        assertTrue(entityPackage.getClasses().contains(packageEntityClass));
+        assertTrue(entityPackage.getClasses().contains(classEntityClass));
+        assertTrue(entityPackage.getClasses().contains(methodEntityClass));
+    }
+
+    /**
+     * Test the class methods connections
+     * @author Thanuja Sivaananthan
+     */
+    @Test
+    public void testGenerateLevelClassMethodConnections(){
+        JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
+
+        List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
+        javaBytecodeReader.generateEntitesAndConnections(filePaths);
+
+        GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
+
+        LinkedHashMap<String, Entity> classEntities = graphGenerator.getClassEntities();
+        LinkedHashMap<String, Entity> methodEntities = graphGenerator.getMethodEntities();
+
+        // check class and method connections
+
+        ClassEntity entityClass = (ClassEntity) classEntities.get("org.example.entity.Entity");
+        ClassEntity packageEntityClass = (ClassEntity) classEntities.get("org.example.entity.PackageEntity");
+        ClassEntity classEntityClass = (ClassEntity) classEntities.get("org.example.entity.ClassEntity");
+        ClassEntity methodEntityClass = (ClassEntity) classEntities.get("org.example.entity.MethodEntity");
+
+        MethodEntity entityAddConnectedEntityMethod = (MethodEntity) methodEntities.get("org.example.entity.Entity.addConnectedEntity");
+        MethodEntity packageAddConnectedEntityMethod = (MethodEntity) methodEntities.get("org.example.entity.PackageEntity.addConnectedEntity");
+        MethodEntity classAddConnectedEntityMethod = (MethodEntity) methodEntities.get("org.example.entity.ClassEntity.addConnectedEntity");
+        MethodEntity methodGetClassEntityMethod = (MethodEntity) methodEntities.get("org.example.entity.MethodEntity.getClassEntity");
+        MethodEntity entityGetEntityTypeMethod = (MethodEntity) methodEntities.get("org.example.entity.Entity.getEntityType");
+
+        assertEquals(entityClass, entityAddConnectedEntityMethod.getClassEntity());
+        assertEquals(packageEntityClass, packageAddConnectedEntityMethod.getClassEntity());
+        assertEquals(classEntityClass, classAddConnectedEntityMethod.getClassEntity());
+        assertEquals(methodEntityClass, methodGetClassEntityMethod.getClassEntity());
+        assertEquals(entityClass, entityGetEntityTypeMethod.getClassEntity());
+
+        assertTrue(entityClass.getMethods().contains(entityAddConnectedEntityMethod));
+        assertTrue(packageEntityClass.getMethods().contains(packageAddConnectedEntityMethod));
+        assertTrue(classEntityClass.getMethods().contains(classAddConnectedEntityMethod));
+        assertTrue(methodEntityClass.getMethods().contains(methodGetClassEntityMethod));
+        assertTrue(entityClass.getMethods().contains(entityGetEntityTypeMethod));
     }
 
     /**
