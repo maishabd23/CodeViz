@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf xmlns="http://gexf.net/1.3" version="1.3">
+	<graph mode="static" defaultedgetype="directed">
+		<nodes>
+			<node id="1ClassEntity" label="ClassEntity" />
+			<node id="2Entity" label="Entity" />
+			<node id="3EntityType" label="EntityType" />
+			<node id="4MethodEntity" label="MethodEntity" />
+			<node id="5PackageEntity" label="PackageEntity" />
+		</nodes>
+		<edges>
+			<edge source="1ClassEntity" target="5PackageEntity" />
+			<edge source="1ClassEntity" target="1ClassEntity" />
+			<edge source="1ClassEntity" target="2Entity" />
+			<edge source="1ClassEntity" target="4MethodEntity" />
+			<edge source="2Entity" target="3EntityType" />
+			<edge source="2Entity" target="2Entity" />
+			<edge source="3EntityType" target="3EntityType" />
+			<edge source="4MethodEntity" target="1ClassEntity" />
+			<edge source="4MethodEntity" target="2Entity" />
+			<edge source="4MethodEntity" target="4MethodEntity" />
+			<edge source="5PackageEntity" target="5PackageEntity" />
+			<edge source="5PackageEntity" target="1ClassEntity" />
+			<edge source="5PackageEntity" target="2Entity" />
+		</edges>
+	</graph>
+</gexf>

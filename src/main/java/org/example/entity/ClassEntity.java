@@ -1,7 +1,7 @@
 package org.example.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Class entity
@@ -11,12 +11,12 @@ import java.util.List;
 public class ClassEntity extends Entity {
 
     private final PackageEntity packageEntity;
-    private List<MethodEntity> methods;
+    private Set<MethodEntity> methods;
 
     public ClassEntity(String name, PackageEntity packageEntity){
         super(name, EntityType.CLASS);
         this.packageEntity = packageEntity;
-        this.methods = new ArrayList<>();
+        this.methods = new HashSet<>();
 
         if (packageEntity != null){
             packageEntity.addClass(this);
@@ -39,7 +39,7 @@ public class ClassEntity extends Entity {
         methods.add(methodEntity);
     }
 
-    public List<MethodEntity> getMethods() {
+    public Set<MethodEntity> getMethods() {
         return methods;
     }
 }

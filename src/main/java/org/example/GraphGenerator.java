@@ -11,9 +11,7 @@ import org.gephi.project.api.ProjectController;
 import org.openide.util.Lookup;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 /**
  * Class that generates the gephi input files
@@ -24,35 +22,56 @@ public class GraphGenerator {
 
     // can look at the individual list when making that specific level's view
     // NOTE: kept all List types as Entity to allow for code reuse, might need to specify type as PackageEntity, etc, later on
-    //private List<Entity> allEntities;
-    private List<Entity> packageEntities;
-    private List<Entity> classEntities;
-    private List<Entity> methodEntities;
+    private LinkedHashMap<String, Entity> packageEntities;
+    private LinkedHashMap<String, Entity> classEntities;
+    private LinkedHashMap<String, Entity> methodEntities;
 
     /**
      * Create an EntityGraphGenerator
      * @author Thanuja Sivaananthan
      */
     public GraphGenerator(){
-        //allEntities = new ArrayList<>();
-        packageEntities = new ArrayList<>();
-        classEntities = new ArrayList<>();
-        methodEntities = new ArrayList<>();
+        packageEntities = new LinkedHashMap<>();
+        classEntities = new LinkedHashMap<>();
+        methodEntities = new LinkedHashMap<>();
     }
 
     /**
-     * Add entity
+     * Add entity with specific key
      * @author Thanuja Sivaananthan
+     * @param key       key of entity
      * @param entity    entity
      */
-    public void addEntity(Entity entity){
-        //allEntities.add(entity);
+    public boolean addEntity(String key, Entity entity){
+        LinkedHashMap<String, Entity> entites;
         switch (entity.getEntityType()) {
-            case PACKAGE -> packageEntities.add(entity);
-            case CLASS -> classEntities.add(entity);
-            case METHOD -> methodEntities.add(entity);
+            case PACKAGE -> entites = packageEntities;
+            case CLASS -> entites = classEntities;
+            case METHOD -> entites = methodEntities;
             default -> throw new IllegalStateException("Unexpected value: " + entity.getEntityType());
         }
+
+        // If the key already exists, normally its old value is replaced with a new one
+        // Do not want to replace with new value, as any connections that were made could get messed up
+        if (entites.containsKey(key)){
+            System.out.println("NOTE, list of type " + entity.getEntityType() + " already has name: " + key);
+            return false;
+        }
+
+        entites.put(key, entity);
+        return true;
+    }
+
+    public LinkedHashMap<String, Entity> getPackageEntities() {
+        return packageEntities;
+    }
+
+    public LinkedHashMap<String, Entity> getClassEntities() {
+        return classEntities;
+    }
+
+    public LinkedHashMap<String, Entity> getMethodEntities() {
+        return methodEntities;
     }
 
     /**
@@ -68,12 +87,12 @@ public class GraphGenerator {
         // examples from https://github.com/francesco-ficarola/gexf4j/tree/master/src/examples/java/it/uniroma1/dis/wsngroup/gexf4j/examples
 
         // NOTE: assuming all entities are properly set up with connections already
-        List<Entity> entities;
+        Collection<Entity> entities;
 
         switch (entityType) {
-            case PACKAGE -> entities = packageEntities;
-            case CLASS -> entities = classEntities;
-            case METHOD -> entities = methodEntities;
+            case PACKAGE -> entities = packageEntities.values();
+            case CLASS -> entities =  classEntities.values();
+            case METHOD -> entities = methodEntities.values();
             default -> throw new IllegalStateException("Unexpected value: " + entityType);
         }
 
@@ -130,12 +149,12 @@ public class GraphGenerator {
      */
     public DirectedGraph entitiesToNodes(EntityType entityType){
         // NOTE: assuming all entities are properly set up with connections already
-        List<Entity> entities;
+        Collection<Entity> entities;
 
         switch (entityType) {
-            case PACKAGE -> entities = packageEntities;
-            case CLASS -> entities = classEntities;
-            case METHOD -> entities = methodEntities;
+            case PACKAGE -> entities = packageEntities.values();
+            case CLASS -> entities =  classEntities.values();
+            case METHOD -> entities = methodEntities.values();
             default -> throw new IllegalStateException("Unexpected value: " + entityType);
         }
 
