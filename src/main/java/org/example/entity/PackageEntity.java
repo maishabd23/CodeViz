@@ -1,7 +1,7 @@
 package org.example.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Package entity
@@ -10,12 +10,12 @@ import java.util.List;
  */
 public class PackageEntity extends Entity {
 
-    private List<ClassEntity> classes;
+    private Set<ClassEntity> classes;
 
     public PackageEntity(String name){
         super(name, EntityType.PACKAGE);
 
-        this.classes = new ArrayList<>();
+        this.classes = new HashSet<>();
     }
 
     public void addConnectedEntity(PackageEntity packageEntity) {
@@ -26,7 +26,7 @@ public class PackageEntity extends Entity {
         classes.add(classEntity);
     }
 
-    public List<ClassEntity> getClasses() {
+    public Set<ClassEntity> getClasses() {
         return classes;
     }
 }
