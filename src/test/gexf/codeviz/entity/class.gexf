@@ -9,19 +9,19 @@
 			<node id="5PackageEntity" label="PackageEntity" />
 		</nodes>
 		<edges>
-			<edge source="1ClassEntity" target="5PackageEntity" />
-			<edge source="1ClassEntity" target="1ClassEntity" />
 			<edge source="1ClassEntity" target="2Entity" />
 			<edge source="1ClassEntity" target="4MethodEntity" />
-			<edge source="2Entity" target="3EntityType" />
+			<edge source="1ClassEntity" target="5PackageEntity" />
+			<edge source="1ClassEntity" target="1ClassEntity" />
 			<edge source="2Entity" target="2Entity" />
+			<edge source="2Entity" target="3EntityType" />
 			<edge source="3EntityType" target="3EntityType" />
-			<edge source="4MethodEntity" target="1ClassEntity" />
 			<edge source="4MethodEntity" target="2Entity" />
 			<edge source="4MethodEntity" target="4MethodEntity" />
+			<edge source="4MethodEntity" target="1ClassEntity" />
+			<edge source="5PackageEntity" target="2Entity" />
 			<edge source="5PackageEntity" target="5PackageEntity" />
 			<edge source="5PackageEntity" target="1ClassEntity" />
-			<edge source="5PackageEntity" target="2Entity" />
 		</edges>
 	</graph>
 </gexf>

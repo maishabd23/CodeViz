@@ -6,14 +6,12 @@ import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.Type;
 import org.apache.commons.io.FilenameUtils;
-import org.example.entity.ClassEntity;
-import org.example.entity.EntityType;
-import org.example.entity.MethodEntity;
-import org.example.entity.PackageEntity;
+import org.example.entity.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -164,8 +162,6 @@ public class JavaBytecodeReader {
         }
 
         // System.out.println(jc.getClassName());
-        // System.out.println(jc.getSuperclassName()); // Todo - add these in connections
-        // System.out.println(jc.getInterfaceNames()); // Todo - add these in connections
 
         if (!jc.getPackageName().isEmpty()) {
             String[] names = jc.getClassName().split("\\.");
@@ -331,12 +327,54 @@ public class JavaBytecodeReader {
             }
 
             // TODO - check methods contents and connect methods (using asm)
-
-            // TODO - update package connections based on their classes' connections
-            // TODO - update class connections based on their methods' connections
+            generateMethodConnections(filepath, classEntity);
 
         } else {
             System.out.println("ERROR, class entity should exist for " + jc.getClassName());
+        }
+    }
+
+    private void generateMethodConnections(String filepath, ClassEntity classEntity){
+        // TODO
+    }
+
+    /**
+     *  Update class connections based on their methods' connections
+     * @author Thanuja Sivaananthan
+     */
+    private void updateClassConnections(){
+        Collection<Entity> classEntities = graphGenerator.getClassEntities().values();
+        for (Entity classEntity : classEntities){
+            // for each method in the class
+            for (MethodEntity methodEntity : ((ClassEntity) classEntity).getMethods()){
+                // get the connected method
+                for (Entity connectedMethod : methodEntity.getConnectedEntities()){
+                    // and connect the class to the connected method's class
+                    ClassEntity connectedClass = ((MethodEntity) connectedMethod).getClassEntity();
+                    ((ClassEntity) classEntity).addConnectedEntity(connectedClass);
+                }
+            }
+        }
+    }
+
+    /**
+     * Update package connections based on their classes' connections
+     * @author Thanuja Sivaananthan
+     */
+    private void updatePackageConnections(){
+        Collection<Entity> packageEntities = graphGenerator.getPackageEntities().values();
+        for (Entity packageEntity : packageEntities){
+            // for each class in the package
+            for (ClassEntity classEntity : ((PackageEntity) packageEntity).getClasses()){
+                // get the connected class
+                for (Entity connectedClass : classEntity.getConnectedEntities()){
+                    // and connect the package to the connected class's package (if it exists)
+                    PackageEntity connectedPackage = ((ClassEntity) connectedClass).getPackageEntity();
+                    if (connectedPackage != null){
+                        ((PackageEntity) packageEntity).addConnectedEntity(connectedPackage);
+                    }
+                }
+            }
         }
     }
 
@@ -355,6 +393,10 @@ public class JavaBytecodeReader {
         for (String filepath : filePaths){
             getAllConnections(filepath);
         }
+
+        // TODO - test if updated connections are needed
+        updateClassConnections();
+        updatePackageConnections();
     }
 
     public void generateGraph(EntityType entityType, String filename){
