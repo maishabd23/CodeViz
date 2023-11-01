@@ -7,9 +7,12 @@ import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.Type;
 import org.apache.commons.io.FilenameUtils;
 import org.example.entity.*;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -219,6 +222,8 @@ public class JavaBytecodeReader {
 
                 boolean success = graphGenerator.addEntity(totalName, methodEntity);
 
+                // TODO - a subclass could call a superclass method (even if not explicitly there) - should the subclass have all of the superclass methods then?
+
                 // TODO - how to handle overloaded methods? (class has more than one method of the same name)
                 // ex multiple constructors
                 if (!success){
@@ -334,8 +339,25 @@ public class JavaBytecodeReader {
         }
     }
 
+    /**
+     * Get all connections for the methods
+     * @author Thanuja Sivaananthan
+     *
+     * @param filepath      file to get from
+     * @param classEntity   the class entity for the corresponding file
+     */
     private void generateMethodConnections(String filepath, ClassEntity classEntity){
-        // TODO
+        try {
+            InputStream in =
+                    Files.newInputStream(Paths.get(filepath));
+            ClassReader reader = new ClassReader(in);
+
+            ClassVisitor tcv = new ConnectedClassVisitor(graphGenerator, classEntity);
+            reader.accept(tcv, 0);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

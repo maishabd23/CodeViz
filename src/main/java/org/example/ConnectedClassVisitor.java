@@ -1,45 +1,102 @@
 package org.example;
 
+import org.example.entity.ClassEntity;
+import org.example.entity.Entity;
+import org.example.entity.MethodEntity;
 import org.objectweb.asm.*;
 
-/*
-Useful links:
-https://stackoverflow.com/questions/61807758/how-to-read-a-java-class-method-annotation-value-with-asm
-https://asm.ow2.io/javadoc/org/objectweb/asm/MethodVisitor.html
+/**
+ * Extension of the ASM ClassVisitor class
+ * Updates the methodEntity connections for a given graphGenerator
+ * @author Thanuja Sivaananthan
  */
-
-
 public class ConnectedClassVisitor extends ClassVisitor {
-    public ConnectedClassVisitor() {
+    private final GraphGenerator graphGenerator;
+    private final ClassEntity classEntity;
+
+    /**
+     * Create new ConnectedClassVisitor
+     * @author Thanuja Sivaananthan
+     *
+     * @param graphGenerator    the graphGenerator to update
+     * @param classEntity       the classEntity of the ClassVisitor
+     */
+    public ConnectedClassVisitor(GraphGenerator graphGenerator, ClassEntity classEntity) {
         super(Opcodes.ASM8);
+        this.graphGenerator = graphGenerator;
+        this.classEntity = classEntity;
     }
 
-    static class ConnectedMethodVisitor extends MethodVisitor {
-        ConnectedMethodVisitor() {
+    /**
+     * Extension of the ASM ClassMethod class
+     * Updates the methodEntity connections for a given graphGenerator
+     * @author Thanuja Sivaananthan
+     */
+     static class ConnectedMethodVisitor extends MethodVisitor {
+
+        private final GraphGenerator graphGenerator;
+        private final MethodEntity methodEntity;
+
+        /**
+         * Create new ConnectedMethodVisitor
+         * @author Thanuja Sivaananthan
+         *
+         * @param graphGenerator    the graphGenerator to update
+         * @param methodEntity       the methodEntity of the MethodVisitor
+         */
+        ConnectedMethodVisitor(GraphGenerator graphGenerator, MethodEntity methodEntity) {
             super(Opcodes.ASM8);
+            this.graphGenerator = graphGenerator;
+            this.methodEntity = methodEntity;
         }
 
-//        @Override // not high priority, can add missing connections/increase weights after
-//        public void visitLocalVariable(String name, String descriptor, String signature, Label start, Label end, int index) {
-//            System.out.println("HELLO, local variable " + name + " has descriptor : " + descriptor );
-//            super.visitLocalVariable(name, descriptor, signature, start, end, index);
-//        }
-
+        /**
+         * Visits a method instruction, and adds connected methodEntities together
+         * @author Thanuja Sivaananthan
+         */
         @Override
         public void visitMethodInsn(int opcode, String owner, String name, String descriptor, boolean isInterface) {
-//            System.out.println("HELLO, method " + opcode + " " + owner + " " + name + " " + descriptor);
-            // opcode meaning? 182 = Opcodes.INVOKEVIRTUAL
-            if (opcode == Opcodes.INVOKEVIRTUAL){
-                System.out.println("methodInsn + " + opcode + " :class: " + owner + " :name: " + name );
+
+            // the following opcodes should definitely be checked (could restrict to just these opcodes if performance becomes an issue)
+            // 182 - Opcodes.INVOKEVIRTUAL
+            // 183 - Opcodes.INVOKESPECIAL
+            // 184 - Opcodes.INVOKESTATIC
+
+            // NOTE: bcel uses . in the class name; asm uses / in the owner name; chose bcel as the standard
+            String connectedClassName = owner.replace("/", ".");
+            String connectedMethodName = connectedClassName + "." + name.replace("<", "").replace(">", "");
+            // System.out.println("methodInsn : " + opcode + " :method: " + connectedMethodName);
+
+            Entity connectedClass = graphGenerator.getClassEntities().get(connectedClassName);
+            // if the class exists, the method should probably also exist
+            if (connectedClass != null) {
+                // System.out.println("Connected class exists! " + connectedClassName);
+                MethodEntity connectedMethod = (MethodEntity) graphGenerator.getMethodEntities().get(connectedMethodName);
+                if (connectedMethod != null) {
+                    // System.out.println("Connected method exists! " + opcode + " " + connectedMethodName);
+                    if (methodEntity != null) {
+                        methodEntity.addConnectedEntity(connectedMethod);
+                    }
+                } else {
+                    System.out.println("ERROR, Method is null: " + connectedMethodName);
+                }
             }
+
             super.visitMethodInsn(opcode, owner, name, descriptor, isInterface);
         }
     }
 
+    /**
+     * Visits a method of a class
+     * @author Thanuja Sivaananthan
+     */
     @Override
     public MethodVisitor visitMethod(int access, String name, String desc,
                                      String signature, String[] exceptions) {
-        System.out.println("method: name = " + name);
-        return new ConnectedMethodVisitor();
+        MethodEntity methodEntity = classEntity.getMethod(name);
+        if (methodEntity == null){ // this should never happen (the methods should have already been created)
+            System.out.println("ERROR, METHOD ENTITY IS NULL: " + classEntity.getName() + " " + name);
+        }
+        return new ConnectedMethodVisitor(graphGenerator, classEntity.getMethod(name));
     }
 }
