@@ -207,7 +207,7 @@ public class JavaBytecodeReader {
             for (Method method : methodList){
 
                 // gephi cannot read names with character '<' (will keep them in the totalName for now)
-                // TODO - <init> and <clinit> are used for the constructors, should we manually change these?
+                // NOTE: <init> and <clinit> are used for the constructors, manually changed those
                 // https://www.baeldung.com/jvm-init-clinit-methods
                 MethodEntity methodEntity = new MethodEntity(method.getName(), classEntity);
                 String methodName = methodEntity.getName();

@@ -128,15 +128,15 @@ public class JavaBytecodeReaderTest {
         assertTrue(methodEntities.containsKey("org.example.entity.MethodEntity.addConnectedEntity"));
         assertTrue(methodEntities.containsKey("org.example.entity.PackageEntity.addConnectedEntity"));
 
-        // TODO - <init> and <clinit> are used for the constructors, should we manually change these?
+        // NOTE: <init> and <clinit> are used for the constructors, manually changed those
         // https://www.baeldung.com/jvm-init-clinit-methods
 
-        assertTrue(methodEntities.containsKey("org.example.entity.ClassEntity.<init>"));
-        assertTrue(methodEntities.containsKey("org.example.entity.Entity.<init>"));
-        assertTrue(methodEntities.containsKey("org.example.entity.EntityType.<clinit>"));
-        assertTrue(methodEntities.containsKey("org.example.entity.MethodEntity.<init>"));
-        assertTrue(methodEntities.containsKey("org.example.entity.MethodEntity.<init>"));
-        assertTrue(methodEntities.containsKey("org.example.entity.PackageEntity.<init>"));
+        assertTrue(methodEntities.containsKey("org.example.entity.ClassEntity.init"));
+        assertTrue(methodEntities.containsKey("org.example.entity.Entity.init"));
+        assertTrue(methodEntities.containsKey("org.example.entity.EntityType.clinit"));
+        assertTrue(methodEntities.containsKey("org.example.entity.MethodEntity.init"));
+        assertTrue(methodEntities.containsKey("org.example.entity.MethodEntity.init"));
+        assertTrue(methodEntities.containsKey("org.example.entity.PackageEntity.init"));
     }
 
     /**
