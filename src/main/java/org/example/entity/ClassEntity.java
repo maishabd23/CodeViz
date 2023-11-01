@@ -42,4 +42,23 @@ public class ClassEntity extends Entity {
     public Set<MethodEntity> getMethods() {
         return methods;
     }
+
+    /**
+     * Get a classEntity's methodEntity
+     * @author Thanuja Sivaananthan
+     *
+     * @param methodName    name of method
+     * @return              methodEntity, or null if the method doesn't exist
+     */
+    public MethodEntity getMethod(String methodName){
+        // could simplify this if methods is changed from Set to something like HashMap
+        methodName = methodName.replace("<", "").replace(">","");
+        for (MethodEntity method : methods){
+            if (method.getName().equals(methodName)){
+                return method;
+            }
+        }
+        return null;
+    }
+
 }

@@ -209,14 +209,14 @@ public class JavaBytecodeReader {
                 // gephi cannot read names with character '<' (will keep them in the totalName for now)
                 // TODO - <init> and <clinit> are used for the constructors, should we manually change these?
                 // https://www.baeldung.com/jvm-init-clinit-methods
-                String methodName = method.getName().replace("<", "").replace(">", "");
-                String totalName = jc.getClassName() + "." + method.getName();
+                MethodEntity methodEntity = new MethodEntity(method.getName(), classEntity);
+                String methodName = methodEntity.getName();
+                String totalName = jc.getClassName() + "." + methodName;
 
                 // System.out.println(totalName);
                 // System.out.println(Arrays.toString(method.getArgumentTypes())); // Todo - add these in connections
                 // System.out.println(method.getReturnType()); // Todo - add these in connections
 
-                MethodEntity methodEntity = new MethodEntity(methodName, classEntity);
                 boolean success = graphGenerator.addEntity(totalName, methodEntity);
 
                 // TODO - how to handle overloaded methods? (class has more than one method of the same name)

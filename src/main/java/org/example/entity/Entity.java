@@ -21,6 +21,7 @@ public abstract class Entity {
     private it.uniroma1.dis.wsngroup.gexf4j.core.Node gexf4jNode;
 
     public Entity(String name, EntityType entityType){
+        name = name.replace("<", "").replace(">", "");
         this.name = name;
         this.entityType = entityType;
         this.connectedEntities = new HashSet<>();
