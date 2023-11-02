@@ -29,10 +29,10 @@ public class GraphGeneratorTest {
         person.addConnectedEntity(address);
 
         GraphGenerator graphGenerator = new GraphGenerator();
-        graphGenerator.addEntity(person);
-        graphGenerator.addEntity(student);
-        graphGenerator.addEntity(professor);
-        graphGenerator.addEntity(address);
+        graphGenerator.addEntity(person.getName(), person);
+        graphGenerator.addEntity(student.getName(), student);
+        graphGenerator.addEntity(professor.getName(), professor);
+        graphGenerator.addEntity(address.getName(), address);
 
         DirectedGraph directedGraph = graphGenerator.entitiesToNodes(EntityType.CLASS);
 
@@ -78,10 +78,10 @@ public class GraphGeneratorTest {
         person.addConnectedEntity(address);
 
         GraphGenerator graphGenerator = new GraphGenerator();
-        graphGenerator.addEntity(person);
-        graphGenerator.addEntity(student);
-        graphGenerator.addEntity(professor);
-        graphGenerator.addEntity(address);
+        graphGenerator.addEntity(person.getName(), person);
+        graphGenerator.addEntity(student.getName(), student);
+        graphGenerator.addEntity(professor.getName(), professor);
+        graphGenerator.addEntity(address.getName(), address);
 
         graphGenerator.entitiesToGexf(EntityType.CLASS, "./src/test/gexf/class_gexf4j.gexf");
 

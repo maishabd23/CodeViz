@@ -1,8 +1,8 @@
 package org.example.entity;
 
 import org.gephi.graph.api.Node;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Abstract entity class with common behavior, such as connected components
@@ -12,16 +12,19 @@ import java.util.List;
 public abstract class Entity {
     private final String name;
     private final EntityType entityType;
-    private List<Entity> connectedEntities;
+
+    // TODO - store the weight of connections
+    private Set<Entity> connectedEntities;
 
     // FIXME - keeping both Node types for now, until we decide which one to use
     private Node gephiNode;
     private it.uniroma1.dis.wsngroup.gexf4j.core.Node gexf4jNode;
 
     public Entity(String name, EntityType entityType){
+        name = name.replace("<", "").replace(">", "");
         this.name = name;
         this.entityType = entityType;
-        this.connectedEntities = new ArrayList<>();
+        this.connectedEntities = new HashSet<>();
     }
 
     public String getName() {
@@ -57,7 +60,7 @@ public abstract class Entity {
         this.connectedEntities.add(entity); // should only add to one list at a time
     }
 
-    public List<Entity> getConnectedEntities() {
+    public Set<Entity> getConnectedEntities() {
         return connectedEntities;
     }
 }
