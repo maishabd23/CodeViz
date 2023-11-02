@@ -149,12 +149,12 @@ public class GraphGenerator {
      */
     public DirectedGraph entitiesToNodes(EntityType entityType){
         // NOTE: assuming all entities are properly set up with connections already
-        Collection<Entity> entities;
+        LinkedHashMap<String, Entity> entities;
 
         switch (entityType) {
-            case PACKAGE -> entities = packageEntities.values();
-            case CLASS -> entities =  classEntities.values();
-            case METHOD -> entities = methodEntities.values();
+            case PACKAGE -> entities = packageEntities;
+            case CLASS -> entities =  classEntities;
+            case METHOD -> entities = methodEntities;
             default -> throw new IllegalStateException("Unexpected value: " + entityType);
         }
 
@@ -170,9 +170,11 @@ public class GraphGenerator {
 
         // 1. create nodes for each entity
         int id = 1; // add id in case there are duplicate names
-        for (Entity entity : entities){
-            Node node = graphModel.factory().newNode(id + entity.getName());
-            node.setLabel(entity.getName());
+        for (String entityKey : entities.keySet()){
+            Entity entity = entities.get(entityKey);
+            String nodeName = entity.getName(); // FIXME - might want this as entityKey, but the name might get really long
+            Node node = graphModel.factory().newNode(id + nodeName);
+            node.setLabel(nodeName);
             entity.setGephiNode(node);
             nodes.add(node);
 
@@ -180,7 +182,8 @@ public class GraphGenerator {
         }
 
         // 2. create edges for each pair
-        for (Entity entity : entities){
+        for (String entityKey : entities.keySet()){
+            Entity entity = entities.get(entityKey);
             for (Entity connectedEntity : entity.getConnectedEntities()){
                 // https://gephi.org/gephi/0.9.2/apidocs/org/gephi/graph/api/GraphFactory.html
                 // can have other parameters like type, weight, directed

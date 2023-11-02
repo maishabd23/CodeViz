@@ -7,29 +7,41 @@
 			<node id="3getPackageEntity" label="getPackageEntity" />
 			<node id="4addMethod" label="addMethod" />
 			<node id="5getMethods" label="getMethods" />
-			<node id="6init" label="init" />
-			<node id="7getName" label="getName" />
-			<node id="8getEntityType" label="getEntityType" />
-			<node id="9setGephiNode" label="setGephiNode" />
-			<node id="10getGephiNode" label="getGephiNode" />
-			<node id="11setGexf4jNode" label="setGexf4jNode" />
-			<node id="12getGexf4jNode" label="getGexf4jNode" />
-			<node id="13addConnectedEntity" label="addConnectedEntity" />
-			<node id="14getConnectedEntities" label="getConnectedEntities" />
-			<node id="15values" label="values" />
-			<node id="16valueOf" label="valueOf" />
-			<node id="17init" label="init" />
-			<node id="18$values" label="$values" />
-			<node id="19clinit" label="clinit" />
-			<node id="20init" label="init" />
-			<node id="21addConnectedEntity" label="addConnectedEntity" />
-			<node id="22getClassEntity" label="getClassEntity" />
-			<node id="23init" label="init" />
-			<node id="24addConnectedEntity" label="addConnectedEntity" />
-			<node id="25addClass" label="addClass" />
-			<node id="26getClasses" label="getClasses" />
+			<node id="6getMethod" label="getMethod" />
+			<node id="7init" label="init" />
+			<node id="8getName" label="getName" />
+			<node id="9getEntityType" label="getEntityType" />
+			<node id="10setGephiNode" label="setGephiNode" />
+			<node id="11getGephiNode" label="getGephiNode" />
+			<node id="12setGexf4jNode" label="setGexf4jNode" />
+			<node id="13getGexf4jNode" label="getGexf4jNode" />
+			<node id="14addConnectedEntity" label="addConnectedEntity" />
+			<node id="15getConnectedEntities" label="getConnectedEntities" />
+			<node id="16values" label="values" />
+			<node id="17valueOf" label="valueOf" />
+			<node id="18init" label="init" />
+			<node id="19$values" label="$values" />
+			<node id="20clinit" label="clinit" />
+			<node id="21init" label="init" />
+			<node id="22addConnectedEntity" label="addConnectedEntity" />
+			<node id="23getClassEntity" label="getClassEntity" />
+			<node id="24init" label="init" />
+			<node id="25addConnectedEntity" label="addConnectedEntity" />
+			<node id="26addClass" label="addClass" />
+			<node id="27getClasses" label="getClasses" />
 		</nodes>
 		<edges>
+			<edge source="1init" target="7init" />
+			<edge source="1init" target="26addClass" />
+			<edge source="1init" target="1init" />
+			<edge source="2addConnectedEntity" target="14addConnectedEntity" />
+			<edge source="20clinit" target="18init" />
+			<edge source="20clinit" target="19$values" />
+			<edge source="21init" target="7init" />
+			<edge source="21init" target="4addMethod" />
+			<edge source="22addConnectedEntity" target="14addConnectedEntity" />
+			<edge source="24init" target="7init" />
+			<edge source="25addConnectedEntity" target="14addConnectedEntity" />
 		</edges>
 	</graph>
 </gexf>
