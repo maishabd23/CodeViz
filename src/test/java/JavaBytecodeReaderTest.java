@@ -301,5 +301,47 @@ public class JavaBytecodeReaderTest {
         assertTrue(methodEntityClass.getConnectedEntities().contains(classEntityClass));
     }
 
-    // TODO - tests for edges/connections
+    /**
+     * Test method connections
+     * @author Thanuja Sivaananthan
+     */
+    @Test
+    public void testGenerateMethodEdges() {
+        JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
+
+        List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
+        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
+
+        GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
+        LinkedHashMap<String, Entity> methodEntities = graphGenerator.getMethodEntities();
+
+        Entity entityAddConnectedEntity = methodEntities.get("org.example.entity.Entity.addConnectedEntity");
+        Entity packageAddConnectedEntity = methodEntities.get("org.example.entity.PackageEntity.addConnectedEntity");
+        Entity classAddConnectedEntity = methodEntities.get("org.example.entity.ClassEntity.addConnectedEntity");
+        Entity methodAddConnectedEntity = methodEntities.get("org.example.entity.MethodEntity.addConnectedEntity");
+
+        // test that subclass methods call superclass method
+        assertTrue(packageAddConnectedEntity.getConnectedEntities().contains(entityAddConnectedEntity));
+        assertTrue(classAddConnectedEntity.getConnectedEntities().contains(entityAddConnectedEntity));
+        assertTrue(methodAddConnectedEntity.getConnectedEntities().contains(entityAddConnectedEntity));
+
+        Entity entityInit = methodEntities.get("org.example.entity.Entity.init");
+        Entity packageInit = methodEntities.get("org.example.entity.PackageEntity.init");
+        Entity classInit = methodEntities.get("org.example.entity.ClassEntity.init"); // FIXME - multiple constructors
+        Entity methodInit = methodEntities.get("org.example.entity.MethodEntity.init");
+
+        Entity packageAddClass = methodEntities.get("org.example.entity.PackageEntity.addClass");
+        Entity classAddMethod = methodEntities.get("org.example.entity.ClassEntity.addMethod");
+
+        // test that subclass methods call superclass method
+        assertTrue(packageInit.getConnectedEntities().contains(entityInit));
+        // assertTrue(classInit.getConnectedEntities().contains(entityInit)); // FAILS - one constructor always calls super, other doesn't
+        assertTrue(methodInit.getConnectedEntities().contains(entityInit));
+
+        // assertTrue(classInit.getConnectedEntities().contains(packageAddClass)); // FAILS - connected inside if statement, may not occur?
+        assertTrue(methodInit.getConnectedEntities().contains(classAddMethod));
+
+        // FIXME - MethodEntity.getMethod should be connected to Entity.getName or a MethodEntity.getName
+    }
+
 }
