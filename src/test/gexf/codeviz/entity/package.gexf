@@ -8,8 +8,8 @@
 		</nodes>
 		<edges>
 			<edge source="2org.example" target="1org" />
-			<edge source="3org.example.entity" target="3org.example.entity" />
 			<edge source="3org.example.entity" target="2org.example" />
+			<edge source="3org.example.entity" target="3org.example.entity" />
 		</edges>
 	</graph>
 </gexf>

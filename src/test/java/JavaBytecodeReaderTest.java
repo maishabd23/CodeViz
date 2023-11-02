@@ -335,10 +335,10 @@ public class JavaBytecodeReaderTest {
 
         // test that subclass methods call superclass method
         assertTrue(packageInit.getConnectedEntities().contains(entityInit));
-        // assertTrue(classInit.getConnectedEntities().contains(entityInit)); // FAILS - one constructor always calls super, other doesn't
+        assertTrue(classInit.getConnectedEntities().contains(entityInit));
         assertTrue(methodInit.getConnectedEntities().contains(entityInit));
 
-        // assertTrue(classInit.getConnectedEntities().contains(packageAddClass)); // FAILS - connected inside if statement, may not occur?
+        assertTrue(classInit.getConnectedEntities().contains(packageAddClass));
         assertTrue(methodInit.getConnectedEntities().contains(classAddMethod));
 
         // FIXME - MethodEntity.getMethod should be connected to Entity.getName or a MethodEntity.getName
