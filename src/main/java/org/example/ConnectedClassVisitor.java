@@ -78,6 +78,7 @@ public class ConnectedClassVisitor extends ClassVisitor {
                         methodEntity.addConnectedEntity(connectedMethod);
                     }
                 } else {
+                    // TODO - might be from an inherited method
                     System.out.println("ERROR, Method is null: " + connectedMethodName);
                 }
             }

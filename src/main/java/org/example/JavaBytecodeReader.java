@@ -127,10 +127,6 @@ public class JavaBytecodeReader {
                 innerPackageEntity = new PackageEntity(innerFullPackageName);
                 boolean success = graphGenerator.addEntity(innerFullPackageName, innerPackageEntity);
 
-                if (!success){
-                    break;
-                }
-
                 // sometimes the outerPackageEntity might be a placeholder
                 // ex if packages A.B and A.C, package A's object was already added
                 // when adding the connection, want to reference the object that is already there
@@ -217,8 +213,6 @@ public class JavaBytecodeReader {
                 String totalName = jc.getClassName() + "." + methodName;
 
                 // System.out.println(totalName);
-                // System.out.println(Arrays.toString(method.getArgumentTypes())); // Todo - add these in connections
-                // System.out.println(method.getReturnType()); // Todo - add these in connections
 
                 boolean success = graphGenerator.addEntity(totalName, methodEntity);
 
@@ -268,7 +262,8 @@ public class JavaBytecodeReader {
                 if (interfaceClassEntity != null){
                     classEntity.addConnectedEntity(interfaceClassEntity);
                 } else {
-                    System.out.println("ERROR, interface entity should exist " + jc.getSuperclassName());
+                    // might be an imported class - not an error
+                    System.out.println("ERROR, interface entity for " + jc.getClassName() + " does not exist: " + jc.getSuperclassName());
                 }
             }
 
@@ -279,7 +274,8 @@ public class JavaBytecodeReader {
                 if (superClassEntity != null){
                     classEntity.addConnectedEntity(superClassEntity);
                 } else {
-                    System.out.println("ERROR, superclass entity should exist " + jc.getSuperclassName());
+                    // might be an imported class - not an error
+                    System.out.println("ERROR, superclass entity for " + jc.getClassName() + " does not exist: " + jc.getSuperclassName());
                 }
             }
 
@@ -331,7 +327,6 @@ public class JavaBytecodeReader {
 
             }
 
-            // TODO - check methods contents and connect methods (using asm)
             generateMethodConnections(filepath, classEntity);
 
         } else {
