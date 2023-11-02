@@ -35,8 +35,18 @@ public class ClassEntity extends Entity {
         return packageEntity;
     }
 
-    public void addMethod(MethodEntity methodEntity){
-        methods.add(methodEntity);
+    /**
+     * Add method to a class if it doesn't already exist
+     * @author Thanuja Sivaananthan
+     *
+     * @param methodEntity method entity to add
+     */
+    public void addMethod(MethodEntity methodEntity){ // TODO - allow for overloaded methods
+        if (getMethod(methodEntity.getName()) == null){
+            methods.add(methodEntity);
+        } else {
+            System.out.println("NOTE, class " + getName() + " already contains method " + methodEntity.getName() );
+        }
     }
 
     public Set<MethodEntity> getMethods() {
