@@ -1,6 +1,6 @@
-import org.example.GraphGenerator;
-import org.example.entity.ClassEntity;
-import org.example.entity.EntityType;
+import codeViz.GraphGenerator;
+import codeViz.entity.ClassEntity;
+import codeViz.entity.EntityType;
 import org.gephi.graph.api.*;
 import org.junit.Test;
 

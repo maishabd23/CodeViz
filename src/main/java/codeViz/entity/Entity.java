@@ -1,4 +1,4 @@
-package org.example.entity;
+package codeViz.entity;
 
 import org.gephi.graph.api.Node;
 import java.util.HashSet;

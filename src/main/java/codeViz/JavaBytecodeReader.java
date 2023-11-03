@@ -1,12 +1,12 @@
-package org.example;
+package codeViz;
 
+import codeViz.entity.*;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.Type;
 import org.apache.commons.io.FilenameUtils;
-import org.example.entity.*;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 
