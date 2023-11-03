@@ -1,4 +1,4 @@
-package org.example.entity;
+package codeViz.entity;
 
 /**
  * Entity type to differentiate entities

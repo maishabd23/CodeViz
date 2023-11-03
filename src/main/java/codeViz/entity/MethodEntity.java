@@ -1,4 +1,4 @@
-package org.example.entity;
+package codeViz.entity;
 
 /**
  * Method entity

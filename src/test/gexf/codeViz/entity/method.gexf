@@ -31,15 +31,15 @@
 			<node id="27getClasses" label="getClasses" />
 		</nodes>
 		<edges>
-			<edge source="1init" target="7init" />
 			<edge source="1init" target="26addClass" />
 			<edge source="1init" target="1init" />
+			<edge source="1init" target="7init" />
 			<edge source="2addConnectedEntity" target="14addConnectedEntity" />
 			<edge source="4addMethod" target="6getMethod" />
 			<edge source="20clinit" target="19$values" />
 			<edge source="20clinit" target="18init" />
-			<edge source="21init" target="7init" />
 			<edge source="21init" target="4addMethod" />
+			<edge source="21init" target="7init" />
 			<edge source="22addConnectedEntity" target="14addConnectedEntity" />
 			<edge source="24init" target="7init" />
 			<edge source="25addConnectedEntity" target="14addConnectedEntity" />

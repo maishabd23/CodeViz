@@ -1,6 +1,6 @@
-import org.example.GraphGenerator;
-import org.example.JavaBytecodeReader;
-import org.example.entity.*;
+import codeViz.GraphGenerator;
+import codeViz.JavaBytecodeReader;
+import codeViz.entity.*;
 import org.junit.Test;
 
 import java.util.LinkedHashMap;
@@ -19,8 +19,8 @@ public class JavaBytecodeReaderTest {
 
     // FIXME - want these tests to use hardcoded files that will not change (can have more robust tests)
 
-    private final String folderPath = ".\\target\\classes\\org\\example\\entity";
-    private final String name = "codeviz/entity";
+    private final String folderPath = ".\\target\\classes\\codeViz\\entity";
+    private final String name = "codeViz/entity";
 
 
     /**
@@ -37,11 +37,11 @@ public class JavaBytecodeReaderTest {
             System.out.println(filepath);
         }
 
-        assertTrue(filePaths.contains(".\\target\\classes\\org\\example\\entity\\ClassEntity.class"));
-        assertTrue(filePaths.contains(".\\target\\classes\\org\\example\\entity\\Entity.class"));
-        assertTrue(filePaths.contains(".\\target\\classes\\org\\example\\entity\\EntityType.class"));
-        assertTrue(filePaths.contains(".\\target\\classes\\org\\example\\entity\\MethodEntity.class"));
-        assertTrue(filePaths.contains(".\\target\\classes\\org\\example\\entity\\PackageEntity.class"));
+        assertTrue(filePaths.contains(".\\target\\classes\\codeViz\\entity\\ClassEntity.class"));
+        assertTrue(filePaths.contains(".\\target\\classes\\codeViz\\entity\\Entity.class"));
+        assertTrue(filePaths.contains(".\\target\\classes\\codeViz\\entity\\EntityType.class"));
+        assertTrue(filePaths.contains(".\\target\\classes\\codeViz\\entity\\MethodEntity.class"));
+        assertTrue(filePaths.contains(".\\target\\classes\\codeViz\\entity\\PackageEntity.class"));
 
     }
 
@@ -66,9 +66,8 @@ public class JavaBytecodeReaderTest {
             System.out.println(key + ": " +  entity.getName());
         }
 
-        assertTrue(packageEntities.containsKey("org"));
-        assertTrue(packageEntities.containsKey("org.example"));
-        assertTrue(packageEntities.containsKey("org.example.entity"));
+        assertTrue(packageEntities.containsKey("codeViz"));
+        assertTrue(packageEntities.containsKey("codeViz.entity"));
     }
 
     /**
@@ -92,11 +91,11 @@ public class JavaBytecodeReaderTest {
             System.out.println(key + ": " +  entity.getName());
         }
 
-        assertTrue(classEntities.containsKey("org.example.entity.ClassEntity"));
-        assertTrue(classEntities.containsKey("org.example.entity.Entity"));
-        assertTrue(classEntities.containsKey("org.example.entity.EntityType"));
-        assertTrue(classEntities.containsKey("org.example.entity.MethodEntity"));
-        assertTrue(classEntities.containsKey("org.example.entity.PackageEntity"));
+        assertTrue(classEntities.containsKey("codeViz.entity.ClassEntity"));
+        assertTrue(classEntities.containsKey("codeViz.entity.Entity"));
+        assertTrue(classEntities.containsKey("codeViz.entity.EntityType"));
+        assertTrue(classEntities.containsKey("codeViz.entity.MethodEntity"));
+        assertTrue(classEntities.containsKey("codeViz.entity.PackageEntity"));
     }
 
     /**
@@ -120,23 +119,23 @@ public class JavaBytecodeReaderTest {
             System.out.println(key + ": " +  entity.getName());
         }
 
-        assertTrue(methodEntities.containsKey("org.example.entity.ClassEntity.addConnectedEntity"));
-        assertTrue(methodEntities.containsKey("org.example.entity.Entity.addConnectedEntity"));
-        assertTrue(methodEntities.containsKey("org.example.entity.Entity.getEntityType"));
-//        assertTrue(methodEntities.containsKey("org.example.entity.EntityType"));
-        assertTrue(methodEntities.containsKey("org.example.entity.MethodEntity.getClassEntity"));
-        assertTrue(methodEntities.containsKey("org.example.entity.MethodEntity.addConnectedEntity"));
-        assertTrue(methodEntities.containsKey("org.example.entity.PackageEntity.addConnectedEntity"));
+        assertTrue(methodEntities.containsKey("codeViz.entity.ClassEntity.addConnectedEntity"));
+        assertTrue(methodEntities.containsKey("codeViz.entity.Entity.addConnectedEntity"));
+        assertTrue(methodEntities.containsKey("codeViz.entity.Entity.getEntityType"));
+//        assertTrue(methodEntities.containsKey("codeViz.entity.EntityType"));
+        assertTrue(methodEntities.containsKey("codeViz.entity.MethodEntity.getClassEntity"));
+        assertTrue(methodEntities.containsKey("codeViz.entity.MethodEntity.addConnectedEntity"));
+        assertTrue(methodEntities.containsKey("codeViz.entity.PackageEntity.addConnectedEntity"));
 
         // NOTE: <init> and <clinit> are used for the constructors, manually changed those
         // https://www.baeldung.com/jvm-init-clinit-methods
 
-        assertTrue(methodEntities.containsKey("org.example.entity.ClassEntity.init"));
-        assertTrue(methodEntities.containsKey("org.example.entity.Entity.init"));
-        assertTrue(methodEntities.containsKey("org.example.entity.EntityType.clinit"));
-        assertTrue(methodEntities.containsKey("org.example.entity.MethodEntity.init"));
-        assertTrue(methodEntities.containsKey("org.example.entity.MethodEntity.init"));
-        assertTrue(methodEntities.containsKey("org.example.entity.PackageEntity.init"));
+        assertTrue(methodEntities.containsKey("codeViz.entity.ClassEntity.init"));
+        assertTrue(methodEntities.containsKey("codeViz.entity.Entity.init"));
+        assertTrue(methodEntities.containsKey("codeViz.entity.EntityType.clinit"));
+        assertTrue(methodEntities.containsKey("codeViz.entity.MethodEntity.init"));
+        assertTrue(methodEntities.containsKey("codeViz.entity.MethodEntity.init"));
+        assertTrue(methodEntities.containsKey("codeViz.entity.PackageEntity.init"));
     }
 
     /**
@@ -157,12 +156,12 @@ public class JavaBytecodeReaderTest {
 
         // check package and class connections
 
-        PackageEntity entityPackage = (PackageEntity) packageEntities.get("org.example.entity");
+        PackageEntity entityPackage = (PackageEntity) packageEntities.get("codeViz.entity");
 
-        ClassEntity entityClass = (ClassEntity) classEntities.get("org.example.entity.Entity");
-        ClassEntity packageEntityClass = (ClassEntity) classEntities.get("org.example.entity.PackageEntity");
-        ClassEntity classEntityClass = (ClassEntity) classEntities.get("org.example.entity.ClassEntity");
-        ClassEntity methodEntityClass = (ClassEntity) classEntities.get("org.example.entity.MethodEntity");
+        ClassEntity entityClass = (ClassEntity) classEntities.get("codeViz.entity.Entity");
+        ClassEntity packageEntityClass = (ClassEntity) classEntities.get("codeViz.entity.PackageEntity");
+        ClassEntity classEntityClass = (ClassEntity) classEntities.get("codeViz.entity.ClassEntity");
+        ClassEntity methodEntityClass = (ClassEntity) classEntities.get("codeViz.entity.MethodEntity");
 
         assertEquals(entityPackage, entityClass.getPackageEntity());
         assertEquals(entityPackage, packageEntityClass.getPackageEntity());
@@ -193,16 +192,16 @@ public class JavaBytecodeReaderTest {
 
         // check class and method connections
 
-        ClassEntity entityClass = (ClassEntity) classEntities.get("org.example.entity.Entity");
-        ClassEntity packageEntityClass = (ClassEntity) classEntities.get("org.example.entity.PackageEntity");
-        ClassEntity classEntityClass = (ClassEntity) classEntities.get("org.example.entity.ClassEntity");
-        ClassEntity methodEntityClass = (ClassEntity) classEntities.get("org.example.entity.MethodEntity");
+        ClassEntity entityClass = (ClassEntity) classEntities.get("codeViz.entity.Entity");
+        ClassEntity packageEntityClass = (ClassEntity) classEntities.get("codeViz.entity.PackageEntity");
+        ClassEntity classEntityClass = (ClassEntity) classEntities.get("codeViz.entity.ClassEntity");
+        ClassEntity methodEntityClass = (ClassEntity) classEntities.get("codeViz.entity.MethodEntity");
 
-        MethodEntity entityAddConnectedEntityMethod = (MethodEntity) methodEntities.get("org.example.entity.Entity.addConnectedEntity");
-        MethodEntity packageAddConnectedEntityMethod = (MethodEntity) methodEntities.get("org.example.entity.PackageEntity.addConnectedEntity");
-        MethodEntity classAddConnectedEntityMethod = (MethodEntity) methodEntities.get("org.example.entity.ClassEntity.addConnectedEntity");
-        MethodEntity methodGetClassEntityMethod = (MethodEntity) methodEntities.get("org.example.entity.MethodEntity.getClassEntity");
-        MethodEntity entityGetEntityTypeMethod = (MethodEntity) methodEntities.get("org.example.entity.Entity.getEntityType");
+        MethodEntity entityAddConnectedEntityMethod = (MethodEntity) methodEntities.get("codeViz.entity.Entity.addConnectedEntity");
+        MethodEntity packageAddConnectedEntityMethod = (MethodEntity) methodEntities.get("codeViz.entity.PackageEntity.addConnectedEntity");
+        MethodEntity classAddConnectedEntityMethod = (MethodEntity) methodEntities.get("codeViz.entity.ClassEntity.addConnectedEntity");
+        MethodEntity methodGetClassEntityMethod = (MethodEntity) methodEntities.get("codeViz.entity.MethodEntity.getClassEntity");
+        MethodEntity entityGetEntityTypeMethod = (MethodEntity) methodEntities.get("codeViz.entity.Entity.getEntityType");
 
         assertEquals(entityClass, entityAddConnectedEntityMethod.getClassEntity());
         assertEquals(packageEntityClass, packageAddConnectedEntityMethod.getClassEntity());
@@ -254,10 +253,10 @@ public class JavaBytecodeReaderTest {
             System.out.println(key + ": " +  entity.getName());
         }
 
-        Entity packageEntityClass = classEntities.get("org.example.entity.PackageEntity");
-        Entity classEntityClass = classEntities.get("org.example.entity.ClassEntity");
-        Entity methodEntityClass = classEntities.get("org.example.entity.MethodEntity");
-        Entity entityClass = classEntities.get("org.example.entity.Entity");
+        Entity packageEntityClass = classEntities.get("codeViz.entity.PackageEntity");
+        Entity classEntityClass = classEntities.get("codeViz.entity.ClassEntity");
+        Entity methodEntityClass = classEntities.get("codeViz.entity.MethodEntity");
+        Entity entityClass = classEntities.get("codeViz.entity.Entity");
 
         assertTrue(packageEntityClass.getConnectedEntities().contains(entityClass));
         assertTrue(classEntityClass.getConnectedEntities().contains(entityClass));
@@ -286,11 +285,11 @@ public class JavaBytecodeReaderTest {
             System.out.println(key + ": " +  entity.getName());
         }
 
-        Entity packageEntityClass = classEntities.get("org.example.entity.PackageEntity");
-        Entity classEntityClass = classEntities.get("org.example.entity.ClassEntity");
-        Entity methodEntityClass = classEntities.get("org.example.entity.MethodEntity");
-        Entity entityTypeClass = classEntities.get("org.example.entity.EntityType");
-        Entity entityClass = classEntities.get("org.example.entity.Entity");
+        Entity packageEntityClass = classEntities.get("codeViz.entity.PackageEntity");
+        Entity classEntityClass = classEntities.get("codeViz.entity.ClassEntity");
+        Entity methodEntityClass = classEntities.get("codeViz.entity.MethodEntity");
+        Entity entityTypeClass = classEntities.get("codeViz.entity.EntityType");
+        Entity entityClass = classEntities.get("codeViz.entity.Entity");
 
         assertTrue(entityClass.getConnectedEntities().contains(entityTypeClass));
 
@@ -315,23 +314,23 @@ public class JavaBytecodeReaderTest {
         GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
         LinkedHashMap<String, Entity> methodEntities = graphGenerator.getMethodEntities();
 
-        Entity entityAddConnectedEntity = methodEntities.get("org.example.entity.Entity.addConnectedEntity");
-        Entity packageAddConnectedEntity = methodEntities.get("org.example.entity.PackageEntity.addConnectedEntity");
-        Entity classAddConnectedEntity = methodEntities.get("org.example.entity.ClassEntity.addConnectedEntity");
-        Entity methodAddConnectedEntity = methodEntities.get("org.example.entity.MethodEntity.addConnectedEntity");
+        Entity entityAddConnectedEntity = methodEntities.get("codeViz.entity.Entity.addConnectedEntity");
+        Entity packageAddConnectedEntity = methodEntities.get("codeViz.entity.PackageEntity.addConnectedEntity");
+        Entity classAddConnectedEntity = methodEntities.get("codeViz.entity.ClassEntity.addConnectedEntity");
+        Entity methodAddConnectedEntity = methodEntities.get("codeViz.entity.MethodEntity.addConnectedEntity");
 
         // test that subclass methods call superclass method
         assertTrue(packageAddConnectedEntity.getConnectedEntities().contains(entityAddConnectedEntity));
         assertTrue(classAddConnectedEntity.getConnectedEntities().contains(entityAddConnectedEntity));
         assertTrue(methodAddConnectedEntity.getConnectedEntities().contains(entityAddConnectedEntity));
 
-        Entity entityInit = methodEntities.get("org.example.entity.Entity.init");
-        Entity packageInit = methodEntities.get("org.example.entity.PackageEntity.init");
-        Entity classInit = methodEntities.get("org.example.entity.ClassEntity.init"); // FIXME - multiple constructors
-        Entity methodInit = methodEntities.get("org.example.entity.MethodEntity.init");
+        Entity entityInit = methodEntities.get("codeViz.entity.Entity.init");
+        Entity packageInit = methodEntities.get("codeViz.entity.PackageEntity.init");
+        Entity classInit = methodEntities.get("codeViz.entity.ClassEntity.init"); // FIXME - multiple constructors
+        Entity methodInit = methodEntities.get("codeViz.entity.MethodEntity.init");
 
-        Entity packageAddClass = methodEntities.get("org.example.entity.PackageEntity.addClass");
-        Entity classAddMethod = methodEntities.get("org.example.entity.ClassEntity.addMethod");
+        Entity packageAddClass = methodEntities.get("codeViz.entity.PackageEntity.addClass");
+        Entity classAddMethod = methodEntities.get("codeViz.entity.ClassEntity.addMethod");
 
         // test that subclass methods call superclass method
         assertTrue(packageInit.getConnectedEntities().contains(entityInit));

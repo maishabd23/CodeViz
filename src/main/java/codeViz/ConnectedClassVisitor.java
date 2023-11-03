@@ -1,8 +1,8 @@
-package org.example;
+package codeViz;
 
-import org.example.entity.ClassEntity;
-import org.example.entity.Entity;
-import org.example.entity.MethodEntity;
+import codeViz.entity.MethodEntity;
+import codeViz.entity.ClassEntity;
+import codeViz.entity.Entity;
 import org.objectweb.asm.*;
 
 /**
