@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-public class SampleController {
+public class APIController {
 
     @GetMapping("/")
     public String index() {
