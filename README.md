@@ -5,7 +5,7 @@
 To start up the backend, run the main method in the `SpringBootApp` class in the `codeViz` package.\
 This should run the app on [http://localhost:8080](http://localhost:8080).
 
-Navigate to the project directory on the terminal, and run the following:
+Navigate to the frontend directory on the terminal, and run the following:
 
 ### `npm start`
 
