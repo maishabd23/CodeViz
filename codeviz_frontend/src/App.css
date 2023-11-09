@@ -1,0 +1,70 @@
+html, body, .App, #root {
+  height: 100%;
+  background-color: #E6EAF1;
+  text-align: center;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  padding: 10px 10px;
+  background-color: #CBCFD5;
+  margin: 0;
+}
+
+.nav--main {
+  text-align: left;
+  padding: 5px 5px;
+}
+
+.nav--title {
+  font-size: x-large;
+  font-weight: 600;
+  margin: 0;
+}
+
+.nav--description {
+  font-size: medium;
+  font-weight: 500;
+  margin: 0;
+}
+
+.nav--icon {
+  height: 40px;
+  margin: 10px 10px;
+}
+
+.nav--dropdown {
+  margin-left: auto;
+  padding-right: 20px;
+}
+
+.nav--dropdownItem {
+  font-size: medium;
+  font-weight: 500;
+}
+
+.graphDisplay {
+  margin-left: auto;
+  padding: 10px;
+}
+
+.graphDisplay--image {
+  max-width: 100%;
+  height: auto;
+}
+
+.menu {
+  background-color: #F4F7FC;
+  padding: 10px 10px;
+  width: 25%;
+}
+
+.main {
+  display: flex;
+  height: 100%;
+}
+
