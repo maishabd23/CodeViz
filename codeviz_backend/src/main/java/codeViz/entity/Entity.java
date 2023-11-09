@@ -1,7 +1,8 @@
 package codeViz.entity;
 
 import org.gephi.graph.api.Node;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.LinkedHashMap;
 import java.util.Set;
 
 /**
@@ -12,19 +13,16 @@ import java.util.Set;
 public abstract class Entity {
     private final String name;
     private final EntityType entityType;
-
-    // TODO - store the weight of connections
-    private Set<Entity> connectedEntities;
+    private Map<Entity, Integer> connectedEntitiesAndWeights; //stores the weight of connections
 
     // FIXME - keeping both Node types for now, until we decide which one to use
     private Node gephiNode;
     private it.uniroma1.dis.wsngroup.gexf4j.core.Node gexf4jNode;
 
     public Entity(String name, EntityType entityType){
-        name = name.replace("<", "").replace(">", "");
-        this.name = name;
+        this.name = name.replace("<", "").replace(">", "");
         this.entityType = entityType;
-        this.connectedEntities = new HashSet<>();
+        this.connectedEntitiesAndWeights = new LinkedHashMap<>();
     }
 
     public String getName() {
@@ -52,15 +50,20 @@ public abstract class Entity {
     }
 
     /**
-     * Add a connected entity
+     * Add a connected entity with weight
      * This method is protected: A package should only be able to add other packages, etc
      * @param entity entity to add
      */
     protected void addConnectedEntity(Entity entity){
-        this.connectedEntities.add(entity); // should only add to one list at a time
+        int initialWeight = connectedEntitiesAndWeights.getOrDefault(entity, 0);
+        //System.out.println(initialWeight);
+        connectedEntitiesAndWeights.put(entity, initialWeight + 1);
     }
 
     public Set<Entity> getConnectedEntities() {
-        return connectedEntities;
+        return connectedEntitiesAndWeights.keySet();
+    }
+    public Map <Entity, Integer> getConnectedEntitiesAndWeights(){
+        return connectedEntitiesAndWeights;
     }
 }

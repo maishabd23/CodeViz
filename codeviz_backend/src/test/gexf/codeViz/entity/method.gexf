@@ -17,32 +17,33 @@
 			<node id="13getGexf4jNode" label="getGexf4jNode" />
 			<node id="14addConnectedEntity" label="addConnectedEntity" />
 			<node id="15getConnectedEntities" label="getConnectedEntities" />
-			<node id="16values" label="values" />
-			<node id="17valueOf" label="valueOf" />
-			<node id="18init" label="init" />
-			<node id="19$values" label="$values" />
-			<node id="20clinit" label="clinit" />
-			<node id="21init" label="init" />
-			<node id="22addConnectedEntity" label="addConnectedEntity" />
-			<node id="23getClassEntity" label="getClassEntity" />
-			<node id="24init" label="init" />
-			<node id="25addConnectedEntity" label="addConnectedEntity" />
-			<node id="26addClass" label="addClass" />
-			<node id="27getClasses" label="getClasses" />
+			<node id="16getConnectedEntitiesAndWeights" label="getConnectedEntitiesAndWeights" />
+			<node id="17values" label="values" />
+			<node id="18valueOf" label="valueOf" />
+			<node id="19init" label="init" />
+			<node id="20$values" label="$values" />
+			<node id="21clinit" label="clinit" />
+			<node id="22init" label="init" />
+			<node id="23addConnectedEntity" label="addConnectedEntity" />
+			<node id="24getClassEntity" label="getClassEntity" />
+			<node id="25init" label="init" />
+			<node id="26addConnectedEntity" label="addConnectedEntity" />
+			<node id="27addClass" label="addClass" />
+			<node id="28getClasses" label="getClasses" />
 		</nodes>
 		<edges>
-			<edge source="1init" target="26addClass" />
-			<edge source="1init" target="1init" />
-			<edge source="1init" target="7init" />
-			<edge source="2addConnectedEntity" target="14addConnectedEntity" />
-			<edge source="4addMethod" target="6getMethod" />
-			<edge source="20clinit" target="19$values" />
-			<edge source="20clinit" target="18init" />
-			<edge source="21init" target="4addMethod" />
-			<edge source="21init" target="7init" />
-			<edge source="22addConnectedEntity" target="14addConnectedEntity" />
-			<edge source="24init" target="7init" />
-			<edge source="25addConnectedEntity" target="14addConnectedEntity" />
+			<edge source="1init" target="7init" weight="1.0" />
+			<edge source="1init" target="27addClass" weight="1.0" />
+			<edge source="1init" target="1init" weight="1.0" />
+			<edge source="2addConnectedEntity" target="14addConnectedEntity" weight="1.0" />
+			<edge source="4addMethod" target="6getMethod" weight="1.0" />
+			<edge source="21clinit" target="19init" weight="1.0" />
+			<edge source="21clinit" target="20$values" weight="1.0" />
+			<edge source="22init" target="7init" weight="1.0" />
+			<edge source="22init" target="4addMethod" weight="1.0" />
+			<edge source="23addConnectedEntity" target="14addConnectedEntity" weight="1.0" />
+			<edge source="25init" target="7init" weight="1.0" />
+			<edge source="26addConnectedEntity" target="14addConnectedEntity" weight="1.0" />
 		</edges>
 	</graph>
 </gexf>
