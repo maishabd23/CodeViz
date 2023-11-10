@@ -37,7 +37,7 @@
 			<edge source="1init" target="1init" weight="1.0" />
 			<edge source="2addConnectedEntity" target="14addConnectedEntity" weight="1.0" />
 			<edge source="4addMethod" target="6getMethod" weight="1.0" />
-			<edge source="21clinit" target="19init" weight="1.0" />
+			<edge source="21clinit" target="19init" weight="3.0" />
 			<edge source="21clinit" target="20$values" weight="1.0" />
 			<edge source="22init" target="7init" weight="1.0" />
 			<edge source="22init" target="4addMethod" weight="1.0" />

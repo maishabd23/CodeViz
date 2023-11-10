@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf xmlns="http://gexf.net/1.3" version="1.3">
+	<graph mode="static" defaultedgetype="directed">
+		<nodes>
+			<node id="1codeViz" label="codeViz" />
+			<node id="2codeViz.entity" label="codeViz.entity" />
+		</nodes>
+		<edges>
+			<edge source="2codeViz.entity" target="1codeViz" weight="1.0" />
+			<edge source="2codeViz.entity" target="2codeViz.entity" weight="13.0" />
+		</edges>
+	</graph>
+</gexf>

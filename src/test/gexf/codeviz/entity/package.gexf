@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf xmlns="http://gexf.net/1.3" version="1.3">
+	<graph mode="static" defaultedgetype="directed">
+		<nodes>
+			<node id="1codeViz" label="codeViz" />
+			<node id="2codeViz.entity" label="codeViz.entity" />
+		</nodes>
+		<edges>
+			<edge source="2org.example" target="1org" weight="1.0" />
+			<edge source="3org.example.entity" target="2org.example" weight="1.0" />
+			<edge source="3org.example.entity" target="3org.example.entity" weight="13.0" />
+		</edges>
+	</graph>
+</gexf>

@@ -23,9 +23,9 @@ public class GraphGenerator {
 
     // can look at the individual list when making that specific level's view
     // NOTE: kept all List types as Entity to allow for code reuse, might need to specify type as PackageEntity, etc, later on
-    private LinkedHashMap<String, Entity> packageEntities;
-    private LinkedHashMap<String, Entity> classEntities;
-    private LinkedHashMap<String, Entity> methodEntities;
+    private final LinkedHashMap<String, Entity> packageEntities;
+    private final LinkedHashMap<String, Entity> classEntities;
+    private final LinkedHashMap<String, Entity> methodEntities;
 
     /**
      * Create an EntityGraphGenerator
@@ -185,12 +185,12 @@ public class GraphGenerator {
         // 2. create edges for each pair
         for (String entityKey : entities.keySet()){
             Entity entity = entities.get(entityKey);
-            System.out.println(entity.getConnectedEntitiesAndWeights()+" "+ entity.getConnectedEntitiesAndWeights().size());
             for (Map.Entry<Entity, Integer> entry : entity.getConnectedEntitiesAndWeights().entrySet()){
 
                 Entity connectedEntity = entry.getKey();
                 int weight = entry.getValue();
-                Edge edge = graphModel.factory().newEdge(entity.getGephiNode(), connectedEntity.getGephiNode(), weight, true);
+                int type = (int) 1f; // not sure what the type field should be
+                Edge edge = graphModel.factory().newEdge(entity.getGephiNode(), connectedEntity.getGephiNode(), type, weight, true);
                 edges.add(edge);
             }
         }
