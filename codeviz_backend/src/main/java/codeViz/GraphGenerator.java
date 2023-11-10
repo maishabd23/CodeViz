@@ -23,9 +23,9 @@ public class GraphGenerator {
 
     // can look at the individual list when making that specific level's view
     // NOTE: kept all List types as Entity to allow for code reuse, might need to specify type as PackageEntity, etc, later on
-    private LinkedHashMap<String, Entity> packageEntities;
-    private LinkedHashMap<String, Entity> classEntities;
-    private LinkedHashMap<String, Entity> methodEntities;
+    private final LinkedHashMap<String, Entity> packageEntities;
+    private final LinkedHashMap<String, Entity> classEntities;
+    private final LinkedHashMap<String, Entity> methodEntities;
 
     /**
      * Create an EntityGraphGenerator
@@ -185,10 +185,12 @@ public class GraphGenerator {
         // 2. create edges for each pair
         for (String entityKey : entities.keySet()){
             Entity entity = entities.get(entityKey);
-            for (Entity connectedEntity : entity.getConnectedEntities()){
-                // https://gephi.org/gephi/0.9.2/apidocs/org/gephi/graph/api/GraphFactory.html
-                // can have other parameters like type, weight, directed
-                Edge edge = graphModel.factory().newEdge(entity.getGephiNode(), connectedEntity.getGephiNode(), true);
+            for (Map.Entry<Entity, Integer> entry : entity.getConnectedEntitiesAndWeights().entrySet()){
+
+                Entity connectedEntity = entry.getKey();
+                int weight = entry.getValue();
+                int type = (int) 1f; // not sure what the type field should be
+                Edge edge = graphModel.factory().newEdge(entity.getGephiNode(), connectedEntity.getGephiNode(), type, weight, true);
                 edges.add(edge);
             }
         }
@@ -241,7 +243,7 @@ public class GraphGenerator {
             writer.write("\t\t<edges>\n");
             for (Edge edge: edges){
                 // System.out.println(edge.getSource().getLabel() + "->" + edge.getTarget().getLabel());
-                writer.write("\t\t\t<edge source=\"" + edge.getSource().getId() + "\" target=\"" + edge.getTarget().getId() +"\" />");
+                writer.write("\t\t\t<edge source=\"" + edge.getSource().getId() + "\" target=\"" + edge.getTarget().getId() + "\" weight=\"" + edge.getWeight() +"\" />");
                 writer.write("\n");
             }
             writer.write("\t\t</edges>\n");

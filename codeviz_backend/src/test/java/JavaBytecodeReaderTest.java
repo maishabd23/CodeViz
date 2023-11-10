@@ -19,7 +19,7 @@ public class JavaBytecodeReaderTest {
 
     // FIXME - want these tests to use hardcoded files that will not change (can have more robust tests)
 
-    private final String folderPath = ".\\target\\classes\\codeViz\\entity";
+    private final String folderPath = "./target/classes/codeViz/entity";
     private final String name = "codeViz/entity";
 
 
