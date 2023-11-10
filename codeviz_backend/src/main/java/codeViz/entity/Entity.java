@@ -17,6 +17,7 @@ public abstract class Entity {
     private final EntityType entityType;
     private Map<Entity, Integer> connectedEntitiesAndWeights; //stores the weight of connections
 
+    private int size;
     private final Color colour;
 
     // FIXME - keeping both Node types for now, until we decide which one to use
@@ -34,6 +35,7 @@ public abstract class Entity {
         this.name = name.replace("<", "").replace(">", "");
         this.entityType = entityType;
         this.connectedEntitiesAndWeights = new LinkedHashMap<>();
+        this.size = 1;
         this.colour = getRandomColour();
     }
 
@@ -59,6 +61,14 @@ public abstract class Entity {
 
     public it.uniroma1.dis.wsngroup.gexf4j.core.Node getGexf4jNode() {
         return gexf4jNode;
+    }
+
+    public void incrementSize(){
+        this.size += 1;
+    }
+
+    public int getSize() {
+        return size;
     }
 
     /**
@@ -101,6 +111,7 @@ public abstract class Entity {
         int initialWeight = connectedEntitiesAndWeights.getOrDefault(entity, 0);
         //System.out.println(initialWeight);
         connectedEntitiesAndWeights.put(entity, initialWeight + 1);
+        incrementSize();
     }
 
     public Set<Entity> getConnectedEntities() {

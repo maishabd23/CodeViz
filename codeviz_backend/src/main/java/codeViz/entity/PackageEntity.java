@@ -25,6 +25,7 @@ public class PackageEntity extends Entity {
 
     public void addClass(ClassEntity classEntity){
         classes.add(classEntity);
+        incrementSize();
     }
 
     public Set<ClassEntity> getClasses() {

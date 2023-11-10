@@ -45,6 +45,7 @@ public class ClassEntity extends Entity {
     public void addMethod(MethodEntity methodEntity){ // TODO - allow for overloaded methods
         if (getMethod(methodEntity.getName()) == null){
             methods.add(methodEntity);
+            incrementSize();
         } else {
             System.out.println("NOTE, class " + getName() + " already contains method " + methodEntity.getName() );
         }

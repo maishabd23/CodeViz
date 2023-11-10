@@ -177,6 +177,7 @@ public class GraphGenerator {
             String nodeName = entity.getName(); // FIXME - might want this as entityKey, but the name might get really long
             Node node = graphModel.factory().newNode(id + nodeName);
             node.setLabel(nodeName);
+            node.setSize(entity.getSize()); // might need to scale up node size so it appears nicely?
             node.setColor(entity.getParentColour());
             entity.setGephiNode(node);
             nodes.add(node);
@@ -238,9 +239,15 @@ public class GraphGenerator {
             for (Node node: nodes){
                 // System.out.println(node.getLabel());
                 writer.write("\t\t\t<node id=\"" + node.getId() + "\" label=\"" + node.getLabel() + "\" >\n");
+
+                // FIXME - adding size ends up really spaced out on gephi? might need coordinates first
+                //writer.write("\t\t\t\t<size value=\"" + node.size() + "\"></size>");
+                //writer.write("\n");
+
                 Color colour = node.getColor();
                 writer.write("\t\t\t\t<color r=\"" + colour.getRed() + "\" g=\"" + colour.getGreen() + "\" b=\""+ colour.getBlue() +"\"></color>");
                 writer.write("\n");
+
                 writer.write("\t\t\t</node>\n");
             }
             writer.write("\t\t</nodes>\n");
