@@ -50,11 +50,32 @@ nav {
 .graphDisplay {
   margin-left: auto;
   padding: 10px;
+  width: 100%;
 }
 
 .graphDisplay--image {
-  max-width: 100%;
-  height: auto;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: none;
+}
+
+canvas {
+  display: flex;
+  align-items: center;
+}
+
+/* .sigma-scene, .sigma-labels, .sigma-mouse {
+  left: 0;
+} */
+
+#controls {
+  position: absolute;
+  right: 1em;
+  top: 6em;
+  text-align: left;
 }
 
 .menu {

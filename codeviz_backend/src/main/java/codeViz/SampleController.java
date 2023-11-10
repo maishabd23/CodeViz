@@ -18,7 +18,7 @@ public class SampleController {
     @GetMapping("/api/displayGraph")
     public Map<String, String> hello() {
         Map<String, String> response = new HashMap<>();
-        response.put("file", "https://gmamaladze.files.wordpress.com/2014/02/codedependencyforcegraph1.png");
+        response.put("file", "src/test/gexf/class_gephi.gexf");
         return response; //each API call returns a JSON object that the React app parses
     }
 }
