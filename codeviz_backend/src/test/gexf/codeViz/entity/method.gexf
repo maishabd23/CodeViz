@@ -2,48 +2,123 @@
 <gexf xmlns="http://gexf.net/1.3" version="1.3">
 	<graph mode="static" defaultedgetype="directed">
 		<nodes>
-			<node id="1init" label="init" />
-			<node id="2addConnectedEntity" label="addConnectedEntity" />
-			<node id="3getPackageEntity" label="getPackageEntity" />
-			<node id="4addMethod" label="addMethod" />
-			<node id="5getMethods" label="getMethods" />
-			<node id="6getMethod" label="getMethod" />
-			<node id="7init" label="init" />
-			<node id="8getName" label="getName" />
-			<node id="9getEntityType" label="getEntityType" />
-			<node id="10setGephiNode" label="setGephiNode" />
-			<node id="11getGephiNode" label="getGephiNode" />
-			<node id="12setGexf4jNode" label="setGexf4jNode" />
-			<node id="13getGexf4jNode" label="getGexf4jNode" />
-			<node id="14addConnectedEntity" label="addConnectedEntity" />
-			<node id="15getConnectedEntities" label="getConnectedEntities" />
-			<node id="16getConnectedEntitiesAndWeights" label="getConnectedEntitiesAndWeights" />
-			<node id="17values" label="values" />
-			<node id="18valueOf" label="valueOf" />
-			<node id="19init" label="init" />
-			<node id="20$values" label="$values" />
-			<node id="21clinit" label="clinit" />
-			<node id="22init" label="init" />
-			<node id="23addConnectedEntity" label="addConnectedEntity" />
-			<node id="24getClassEntity" label="getClassEntity" />
-			<node id="25init" label="init" />
-			<node id="26addConnectedEntity" label="addConnectedEntity" />
-			<node id="27addClass" label="addClass" />
-			<node id="28getClasses" label="getClasses" />
+			<node id="1init" label="init" >
+				<color r="245" g="204" b="187"></color>
+			</node>
+			<node id="2addConnectedEntity" label="addConnectedEntity" >
+				<color r="245" g="204" b="187"></color>
+			</node>
+			<node id="3getPackageEntity" label="getPackageEntity" >
+				<color r="245" g="204" b="187"></color>
+			</node>
+			<node id="4addMethod" label="addMethod" >
+				<color r="245" g="204" b="187"></color>
+			</node>
+			<node id="5getMethods" label="getMethods" >
+				<color r="245" g="204" b="187"></color>
+			</node>
+			<node id="6getMethod" label="getMethod" >
+				<color r="245" g="204" b="187"></color>
+			</node>
+			<node id="7getParentColour" label="getParentColour" >
+				<color r="245" g="204" b="187"></color>
+			</node>
+			<node id="8init" label="init" >
+				<color r="224" g="141" b="241"></color>
+			</node>
+			<node id="9getName" label="getName" >
+				<color r="224" g="141" b="241"></color>
+			</node>
+			<node id="10getEntityType" label="getEntityType" >
+				<color r="224" g="141" b="241"></color>
+			</node>
+			<node id="11setGephiNode" label="setGephiNode" >
+				<color r="224" g="141" b="241"></color>
+			</node>
+			<node id="12getGephiNode" label="getGephiNode" >
+				<color r="224" g="141" b="241"></color>
+			</node>
+			<node id="13setGexf4jNode" label="setGexf4jNode" >
+				<color r="224" g="141" b="241"></color>
+			</node>
+			<node id="14getGexf4jNode" label="getGexf4jNode" >
+				<color r="224" g="141" b="241"></color>
+			</node>
+			<node id="15getRandomColour" label="getRandomColour" >
+				<color r="224" g="141" b="241"></color>
+			</node>
+			<node id="16getColour" label="getColour" >
+				<color r="224" g="141" b="241"></color>
+			</node>
+			<node id="17getParentColour" label="getParentColour" >
+				<color r="224" g="141" b="241"></color>
+			</node>
+			<node id="18addConnectedEntity" label="addConnectedEntity" >
+				<color r="224" g="141" b="241"></color>
+			</node>
+			<node id="19getConnectedEntities" label="getConnectedEntities" >
+				<color r="224" g="141" b="241"></color>
+			</node>
+			<node id="20getConnectedEntitiesAndWeights" label="getConnectedEntitiesAndWeights" >
+				<color r="224" g="141" b="241"></color>
+			</node>
+			<node id="21values" label="values" >
+				<color r="228" g="234" b="146"></color>
+			</node>
+			<node id="22valueOf" label="valueOf" >
+				<color r="228" g="234" b="146"></color>
+			</node>
+			<node id="23init" label="init" >
+				<color r="228" g="234" b="146"></color>
+			</node>
+			<node id="24$values" label="$values" >
+				<color r="228" g="234" b="146"></color>
+			</node>
+			<node id="25clinit" label="clinit" >
+				<color r="228" g="234" b="146"></color>
+			</node>
+			<node id="26init" label="init" >
+				<color r="243" g="144" b="209"></color>
+			</node>
+			<node id="27addConnectedEntity" label="addConnectedEntity" >
+				<color r="243" g="144" b="209"></color>
+			</node>
+			<node id="28getClassEntity" label="getClassEntity" >
+				<color r="243" g="144" b="209"></color>
+			</node>
+			<node id="29getParentColour" label="getParentColour" >
+				<color r="243" g="144" b="209"></color>
+			</node>
+			<node id="30init" label="init" >
+				<color r="206" g="131" b="223"></color>
+			</node>
+			<node id="31addConnectedEntity" label="addConnectedEntity" >
+				<color r="206" g="131" b="223"></color>
+			</node>
+			<node id="32addClass" label="addClass" >
+				<color r="206" g="131" b="223"></color>
+			</node>
+			<node id="33getClasses" label="getClasses" >
+				<color r="206" g="131" b="223"></color>
+			</node>
+			<node id="34getParentColour" label="getParentColour" >
+				<color r="206" g="131" b="223"></color>
+			</node>
 		</nodes>
 		<edges>
-			<edge source="1init" target="7init" weight="1.0" />
-			<edge source="1init" target="27addClass" weight="1.0" />
+			<edge source="1init" target="8init" weight="1.0" />
+			<edge source="1init" target="32addClass" weight="1.0" />
 			<edge source="1init" target="1init" weight="1.0" />
-			<edge source="2addConnectedEntity" target="14addConnectedEntity" weight="1.0" />
+			<edge source="2addConnectedEntity" target="18addConnectedEntity" weight="1.0" />
 			<edge source="4addMethod" target="6getMethod" weight="1.0" />
-			<edge source="21clinit" target="19init" weight="3.0" />
-			<edge source="21clinit" target="20$values" weight="1.0" />
-			<edge source="22init" target="7init" weight="1.0" />
-			<edge source="22init" target="4addMethod" weight="1.0" />
-			<edge source="23addConnectedEntity" target="14addConnectedEntity" weight="1.0" />
-			<edge source="25init" target="7init" weight="1.0" />
-			<edge source="26addConnectedEntity" target="14addConnectedEntity" weight="1.0" />
+			<edge source="8init" target="15getRandomColour" weight="1.0" />
+			<edge source="25clinit" target="23init" weight="3.0" />
+			<edge source="25clinit" target="24$values" weight="1.0" />
+			<edge source="26init" target="8init" weight="1.0" />
+			<edge source="26init" target="4addMethod" weight="1.0" />
+			<edge source="27addConnectedEntity" target="18addConnectedEntity" weight="1.0" />
+			<edge source="30init" target="8init" weight="1.0" />
+			<edge source="31addConnectedEntity" target="18addConnectedEntity" weight="1.0" />
 		</edges>
 	</graph>
 </gexf>

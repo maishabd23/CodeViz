@@ -1,5 +1,6 @@
 package codeViz.entity;
 
+import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -69,6 +70,19 @@ public class ClassEntity extends Entity {
             }
         }
         return null;
+    }
+
+    /**
+     * Get parent colour
+     * @author Thanuja Sivaananthan
+     * @return  parent colour
+     */
+    public Color getParentColour() {
+        if (packageEntity != null){
+            return packageEntity.getColour();
+        } else {
+            return getColour();
+        }
     }
 
 }

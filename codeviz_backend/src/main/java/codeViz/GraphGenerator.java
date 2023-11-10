@@ -13,6 +13,7 @@ import org.openide.util.Lookup;
 
 import java.io.*;
 import java.util.*;
+import java.awt.Color;
 
 /**
  * Class that generates the gephi input files
@@ -176,6 +177,7 @@ public class GraphGenerator {
             String nodeName = entity.getName(); // FIXME - might want this as entityKey, but the name might get really long
             Node node = graphModel.factory().newNode(id + nodeName);
             node.setLabel(nodeName);
+            node.setColor(entity.getParentColour());
             entity.setGephiNode(node);
             nodes.add(node);
 
@@ -235,8 +237,11 @@ public class GraphGenerator {
             writer.write("\t\t<nodes>\n");
             for (Node node: nodes){
                 // System.out.println(node.getLabel());
-                writer.write("\t\t\t<node id=\"" + node.getId() + "\" label=\"" + node.getLabel() + "\" />");
+                writer.write("\t\t\t<node id=\"" + node.getId() + "\" label=\"" + node.getLabel() + "\" >\n");
+                Color colour = node.getColor();
+                writer.write("\t\t\t\t<color r=\"" + colour.getRed() + "\" g=\"" + colour.getGreen() + "\" b=\""+ colour.getBlue() +"\"></color>");
                 writer.write("\n");
+                writer.write("\t\t\t</node>\n");
             }
             writer.write("\t\t</nodes>\n");
 
