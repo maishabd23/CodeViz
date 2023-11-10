@@ -12,6 +12,6 @@ Navigate to the frontend directory on the terminal, and run the following:
 This will run the frontend of the app in development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-You may need to install node_modules using:
+If you get an error, you may need to install node_modules using:
 
 ### `npm install`
