@@ -3,10 +3,14 @@
 	<graph mode="static" defaultedgetype="directed">
 		<nodes>
 			<node id="1codeViz" label="codeViz" >
-				<color r="178" g="186" b="158"></color>
+				<size value="1.0"></size>
+				 <position x="14.156007" y="19.828306" z="0.0"></position>
+				<color r="199" g="167" b="215"></color>
 			</node>
 			<node id="2codeViz.entity" label="codeViz.entity" >
-				<color r="229" g="176" b="151"></color>
+				<size value="20.0"></size>
+				 <position x="5.0072947" y="8.094461" z="0.0"></position>
+				<color r="248" g="179" b="169"></color>
 			</node>
 		</nodes>
 		<edges>

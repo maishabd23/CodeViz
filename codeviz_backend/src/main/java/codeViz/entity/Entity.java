@@ -76,7 +76,7 @@ public abstract class Entity {
      * @author Thanuja Sivaananthan
      */
     private Color getRandomColour(){
-        Random rand = new Random();
+        Random rand = new Random(name.hashCode()); // could enforce a seed, ex. name.hashCode()
 
         // Will produce only bright / light colours:
         float r = (float) (rand.nextFloat() / 2f + 0.5);
