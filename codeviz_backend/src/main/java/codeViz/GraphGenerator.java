@@ -315,4 +315,13 @@ public class GraphGenerator {
     }
 
 
+    /**
+     * Clear existing entities from the graph generator
+     * @author Thanuja Sivaananthan
+     */
+    public void clearEntites() {
+        this.packageEntities.clear();
+        this.classEntities.clear();
+        this.methodEntities.clear();
+    }
 }
