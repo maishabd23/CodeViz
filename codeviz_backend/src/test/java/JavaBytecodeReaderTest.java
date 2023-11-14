@@ -230,6 +230,16 @@ public class JavaBytecodeReaderTest {
         javaBytecodeReader.generateGraph(EntityType.PACKAGE, "./src/test/gexf/" + name + "/package.gexf");
         javaBytecodeReader.generateGraph(EntityType.CLASS, "./src/test/gexf/" + name + "/class.gexf");
         javaBytecodeReader.generateGraph(EntityType.METHOD, "./src/test/gexf/" + name + "/method.gexf");
+
+//        String folderPath2 = "./target/classes/codeViz";
+//        String name2 = "codeViz";
+//
+//        filePaths = javaBytecodeReader.getAllFilePaths(folderPath2);
+//        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
+//
+//        javaBytecodeReader.generateGraph(EntityType.PACKAGE, "./src/test/gexf/" + name2 + "/package.gexf");
+//        javaBytecodeReader.generateGraph(EntityType.CLASS, "./src/test/gexf/" + name2 + "/class.gexf");
+//        javaBytecodeReader.generateGraph(EntityType.METHOD, "./src/test/gexf/" + name2 + "/method.gexf");
     }
 
     /**

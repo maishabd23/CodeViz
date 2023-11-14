@@ -1,5 +1,7 @@
 package codeViz.entity;
 
+import java.awt.Color;
+
 /**
  * Method entity
  *
@@ -23,5 +25,14 @@ public class MethodEntity extends Entity {
 
     public ClassEntity getClassEntity() {
         return classEntity;
+    }
+
+    /**
+     * Get parent colour
+     * @author Thanuja Sivaananthan
+     * @return  parent colour
+     */
+    public Color getParentColour() {
+        return classEntity.getColour();
     }
 }

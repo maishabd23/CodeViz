@@ -401,6 +401,7 @@ public class JavaBytecodeReader {
      * @param filePaths     filepaths to get entities from
      */
     public void generateEntitiesAndConnections(List<String> filePaths){
+        graphGenerator.clearEntites();
         for (String filepath : filePaths){
             getAllPackages(filepath);
             getAllClasses(filepath);

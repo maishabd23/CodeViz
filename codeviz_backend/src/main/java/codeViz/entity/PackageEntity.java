@@ -2,6 +2,7 @@ package codeViz.entity;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.awt.Color;
 
 /**
  * Package entity
@@ -24,9 +25,20 @@ public class PackageEntity extends Entity {
 
     public void addClass(ClassEntity classEntity){
         classes.add(classEntity);
+        incrementSize();
     }
 
     public Set<ClassEntity> getClasses() {
         return classes;
+    }
+
+    /**
+     * Get parent colour
+     * Note: package doesn't have any parent, so it returns itself
+     * @author Thanuja Sivaananthan
+     * @return  parent colour
+     */
+    public Color getParentColour() {
+        return getColour();
     }
 }

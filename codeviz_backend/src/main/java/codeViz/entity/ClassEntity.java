@@ -1,5 +1,6 @@
 package codeViz.entity;
 
+import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,6 +45,7 @@ public class ClassEntity extends Entity {
     public void addMethod(MethodEntity methodEntity){ // TODO - allow for overloaded methods
         if (getMethod(methodEntity.getName()) == null){
             methods.add(methodEntity);
+            incrementSize();
         } else {
             System.out.println("NOTE, class " + getName() + " already contains method " + methodEntity.getName() );
         }
@@ -69,6 +71,19 @@ public class ClassEntity extends Entity {
             }
         }
         return null;
+    }
+
+    /**
+     * Get parent colour
+     * @author Thanuja Sivaananthan
+     * @return  parent colour
+     */
+    public Color getParentColour() {
+        if (packageEntity != null){
+            return packageEntity.getColour();
+        } else {
+            return getColour();
+        }
     }
 
 }

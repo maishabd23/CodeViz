@@ -13,6 +13,7 @@ import org.openide.util.Lookup;
 
 import java.io.*;
 import java.util.*;
+import java.awt.Color;
 
 /**
  * Class that generates the gephi input files
@@ -27,6 +28,9 @@ public class GraphGenerator {
     private final LinkedHashMap<String, Entity> classEntities;
     private final LinkedHashMap<String, Entity> methodEntities;
 
+    private float max_x;
+    private float max_y;
+
     /**
      * Create an EntityGraphGenerator
      * @author Thanuja Sivaananthan
@@ -35,6 +39,9 @@ public class GraphGenerator {
         packageEntities = new LinkedHashMap<>();
         classEntities = new LinkedHashMap<>();
         methodEntities = new LinkedHashMap<>();
+        // initial values, these are dynamically set based on the graph size
+        this.max_x = 500;
+        this.max_y = 500;
     }
 
     /**
@@ -140,6 +147,29 @@ public class GraphGenerator {
         }
     }
 
+    /**
+     * Set max size of coordinates based on the nodes in the graph
+     * Note: This method could be improved to better fit the graph
+     * @param entities      entities to graph
+     * @return              size of graph
+     * @author Thanuja Sivaananthan
+     */
+    private float getGraphSize(LinkedHashMap<String, Entity> entities){
+        int totalNodeSize = 0;
+
+        for (String entityKey : entities.keySet()) {
+            Entity entity = entities.get(entityKey);
+            totalNodeSize += entity.getSize();
+        }
+
+        //System.out.println("Total node size is " + totalNodeSize + " for " + entities.size() + " nodes");
+        int factor = totalNodeSize/100;
+        if (factor == 0) factor = 1;
+        float max_graph_size = (float) (totalNodeSize * factor);
+        //System.out.println("Setting max as " + max_graph_size);
+        return max_graph_size;
+    }
+
 
     /**
      * Convert entities to directedGraph format
@@ -159,6 +189,11 @@ public class GraphGenerator {
             default -> throw new IllegalStateException("Unexpected value: " + entityType);
         }
 
+        System.out.println("Get coordinates for " + entityType);
+        float max_graph_size = getGraphSize(entities);
+        max_x = max_graph_size;
+        max_y = max_graph_size;
+
         List<Node> nodes = new ArrayList<>();
         List<Edge> edges = new ArrayList<>();
 
@@ -176,6 +211,14 @@ public class GraphGenerator {
             String nodeName = entity.getName(); // FIXME - might want this as entityKey, but the name might get really long
             Node node = graphModel.factory().newNode(id + nodeName);
             node.setLabel(nodeName);
+            node.setSize(entity.getSize()); // might need to scale up node size so it appears nicely?
+            node.setColor(entity.getParentColour());
+
+            Random rand = new Random();
+            float pos_x = rand.nextFloat() * max_x;
+            float pos_y = rand.nextFloat() * max_y;
+            node.setPosition(pos_x, pos_y); // TODO - determine proper coordinates
+
             entity.setGephiNode(node);
             nodes.add(node);
 
@@ -235,8 +278,19 @@ public class GraphGenerator {
             writer.write("\t\t<nodes>\n");
             for (Node node: nodes){
                 // System.out.println(node.getLabel());
-                writer.write("\t\t\t<node id=\"" + node.getId() + "\" label=\"" + node.getLabel() + "\" />");
+                writer.write("\t\t\t<node id=\"" + node.getId() + "\" label=\"" + node.getLabel() + "\" >\n");
+
+                writer.write("\t\t\t\t<size value=\"" + node.size() + "\"></size>");
                 writer.write("\n");
+
+                writer.write("\t\t\t\t <position x=\"" + node.x() + "\" y=\"" + node.y() + "\" z=\"0.0\"></position>");
+                writer.write("\n");
+
+                Color colour = node.getColor();
+                writer.write("\t\t\t\t<color r=\"" + colour.getRed() + "\" g=\"" + colour.getGreen() + "\" b=\""+ colour.getBlue() +"\"></color>");
+                writer.write("\n");
+
+                writer.write("\t\t\t</node>\n");
             }
             writer.write("\t\t</nodes>\n");
 
@@ -261,4 +315,13 @@ public class GraphGenerator {
     }
 
 
+    /**
+     * Clear existing entities from the graph generator
+     * @author Thanuja Sivaananthan
+     */
+    public void clearEntites() {
+        this.packageEntities.clear();
+        this.classEntities.clear();
+        this.methodEntities.clear();
+    }
 }
