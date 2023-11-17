@@ -7,8 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Test class for JavaBytecodeReader.
@@ -353,4 +352,55 @@ public class JavaBytecodeReaderTest {
         // FIXME - MethodEntity.getMethod should be connected to Entity.getName or a MethodEntity.getName
     }
 
+
+    /**
+     * Test search of a class name
+     * @author Thanuja Sivaananthan
+     */
+    @Test
+    public void testSearchClassColours() {
+        JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
+
+        List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
+        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
+        String prefix = "MethodEntity";
+        javaBytecodeReader.getGraphGenerator().performSearch(prefix);
+
+        GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
+        LinkedHashMap<String, Entity> packageEntities = graphGenerator.getPackageEntities();
+        LinkedHashMap<String, Entity> classEntities = graphGenerator.getClassEntities();
+        LinkedHashMap<String, Entity> methodEntities = graphGenerator.getMethodEntities();
+
+        assertNotEquals(Entity.getHighlighedColour(), packageEntities.get("codeViz.entity").getColour());
+        assertEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.MethodEntity").getColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.init").getColour());
+
+        javaBytecodeReader.generateGraph(EntityType.PACKAGE, "./src/test/gexf/" + name + "/search_" + prefix + "_package.gexf");
+        javaBytecodeReader.generateGraph(EntityType.CLASS, "./src/test/gexf/" + name + "/search_" + prefix + "_class.gexf");
+        javaBytecodeReader.generateGraph(EntityType.METHOD, "./src/test/gexf/" + name + "/search_" + prefix + "_method.gexf");
+    }
+
+    /**
+     * Test search of a class name
+     * @author Thanuja Sivaananthan
+     */
+    @Test
+    public void testSearchMethodColours() {
+        JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
+
+        List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
+        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
+        String prefix = "getParentColour";
+        javaBytecodeReader.getGraphGenerator().performSearch(prefix);
+
+        GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
+        LinkedHashMap<String, Entity> methodEntities = graphGenerator.getMethodEntities();
+
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.Entity.getParentColour").getColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.PackageEntity.getParentColour").getColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.getParentColour").getColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.getParentColour").getColour());
+
+        javaBytecodeReader.generateGraph(EntityType.METHOD, "./src/test/gexf/" + name + "/search_" + prefix + "_method.gexf");
+    }
 }

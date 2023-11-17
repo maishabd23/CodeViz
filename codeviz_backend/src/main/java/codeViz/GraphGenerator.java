@@ -324,4 +324,64 @@ public class GraphGenerator {
         this.classEntities.clear();
         this.methodEntities.clear();
     }
+
+
+    /**
+     * Perform a search on a given entity type
+     * @param searchValue       the search value
+     * @param entities          the entities to search
+     * @author Thanuja Sivaananthan
+     */
+    private void performSearch(String searchValue, LinkedHashMap<String, Entity> entities){
+        // assume correct case
+        for (String entityKey : entities.keySet()) {
+            Entity entity = entities.get(entityKey);
+            // this should work if graphing a level, where the search is at a higher level
+            // will not highlight if graphing a level, where the search is at a lower level
+            // TODO - in depth searches - highlight class if it contains an attribute name, method if it contains a parameter name, etc?
+            if (entityKey.contains(searchValue) || entity.getName().contains(searchValue)) {
+                System.out.println("CONTAINS SEARCH VALUE " + entityKey);
+                System.out.println("CONTAINS SEARCH VALUE " + entity.getName());
+                entity.setHighlighed(true);
+            }
+        }
+    }
+
+    /**
+     * Perform a search
+     * @param searchValue       the search value
+     * @author Thanuja Sivaananthan
+     */
+    public void performSearch(String searchValue) {
+        // start a fresh search
+        clearSearch();
+
+        performSearch(searchValue, packageEntities);
+        performSearch(searchValue, classEntities);
+        performSearch(searchValue, methodEntities);
+    }
+
+    /**
+     * Clear any previous searches
+     * @param entities          the entities to clear
+     * @author Thanuja Sivaananthan
+     */
+    private void clearSearch(LinkedHashMap<String, Entity> entities){
+        for (String entityKey : entities.keySet()) {
+            Entity entity = entities.get(entityKey);
+            entity.setHighlighed(false);
+        }
+
+    }
+
+    /**
+     * Clear any previous searches
+     * @author Thanuja Sivaananthan
+     */
+    private void clearSearch() {
+        clearSearch(packageEntities);
+        clearSearch(classEntities);
+        clearSearch(methodEntities);
+
+    }
 }
