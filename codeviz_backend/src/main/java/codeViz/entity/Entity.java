@@ -19,7 +19,7 @@ public abstract class Entity {
 
     private int size;
     private final Color colour;
-    private static final Color highlighedColour = new Color(255,255,0);
+    private static final Color HIGHLIGHED_COLOUR = new Color(255,255,50);
     private boolean isHighlighed;
 
     // FIXME - keeping both Node types for now, until we decide which one to use
@@ -96,7 +96,7 @@ public abstract class Entity {
      */
     public Color getColour() {
         if (isHighlighed){
-            return highlighedColour;
+            return HIGHLIGHED_COLOUR;
         } else {
             return colour;
         }
@@ -108,7 +108,7 @@ public abstract class Entity {
      * @return  colour
      */
     public static Color getHighlighedColour() {
-        return highlighedColour;
+        return HIGHLIGHED_COLOUR;
     }
 
     public boolean isHighlighed() {

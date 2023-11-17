@@ -189,7 +189,7 @@ public class GraphGenerator {
             default -> throw new IllegalStateException("Unexpected value: " + entityType);
         }
 
-        System.out.println("Get coordinates for " + entityType);
+        //System.out.println("Get coordinates for " + entityType);
         float max_graph_size = getGraphSize(entities);
         max_x = max_graph_size;
         max_y = max_graph_size;
@@ -340,8 +340,6 @@ public class GraphGenerator {
             // will not highlight if graphing a level, where the search is at a lower level
             // TODO - in depth searches - highlight class if it contains an attribute name, method if it contains a parameter name, etc?
             if (entityKey.contains(searchValue) || entity.getName().contains(searchValue)) {
-                System.out.println("CONTAINS SEARCH VALUE " + entityKey);
-                System.out.println("CONTAINS SEARCH VALUE " + entity.getName());
                 entity.setHighlighed(true);
             }
         }
