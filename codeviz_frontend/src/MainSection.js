@@ -1,12 +1,13 @@
 import React from 'react';
-import Graph from './Graph';
+import GraphViz from './GraphViz';
 import Menu from './Menu';
 
 function MainSection() {
     return (
         <div className='main'>
             <Menu />
-            <Graph />
+            <GraphViz />
+            {/* <Graph /> */}
         </div>
     );
 }
