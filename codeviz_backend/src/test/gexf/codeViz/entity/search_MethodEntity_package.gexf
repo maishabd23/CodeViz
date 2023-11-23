@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf xmlns="http://gexf.net/1.3" version="1.3">
+	<graph mode="static" defaultedgetype="directed">
+		<nodes>
+			<node id="1codeViz" label="codeViz" >
+				<size value="1.0"></size>
+				 <position x="5.964714" y="3.6428728" z="0.0"></position>
+				<color r="199" g="167" b="215"></color>
+			</node>
+			<node id="2codeViz.entity" label="codeViz.entity" >
+				<size value="20.0"></size>
+				 <position x="16.844925" y="20.72605" z="0.0"></position>
+				<color r="248" g="179" b="169"></color>
+			</node>
+		</nodes>
+		<edges>
+			<edge source="2codeViz.entity" target="1codeViz" weight="1.0" />
+			<edge source="2codeViz.entity" target="2codeViz.entity" weight="13.0" />
+		</edges>
+	</graph>
+</gexf>

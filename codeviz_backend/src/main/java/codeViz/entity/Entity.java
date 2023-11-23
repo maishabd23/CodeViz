@@ -19,6 +19,8 @@ public abstract class Entity {
 
     private int size;
     private final Color colour;
+    private static final Color HIGHLIGHED_COLOUR = new Color(255,255,50);
+    private boolean isHighlighed;
 
     // FIXME - keeping both Node types for now, until we decide which one to use
     private Node gephiNode;
@@ -37,6 +39,7 @@ public abstract class Entity {
         this.connectedEntitiesAndWeights = new LinkedHashMap<>();
         this.size = 1;
         this.colour = getRandomColour();
+        this.isHighlighed = false;
     }
 
     public String getName() {
@@ -92,7 +95,28 @@ public abstract class Entity {
      * @return  colour
      */
     public Color getColour() {
-        return colour;
+        if (isHighlighed){
+            return HIGHLIGHED_COLOUR;
+        } else {
+            return colour;
+        }
+    }
+
+    /**
+     * Get highlighted colour
+     * @author Thanuja Sivaananthan
+     * @return  colour
+     */
+    public static Color getHighlighedColour() {
+        return HIGHLIGHED_COLOUR;
+    }
+
+    public boolean isHighlighed() {
+        return isHighlighed;
+    }
+
+    public void setHighlighed(boolean highlighed) {
+        isHighlighed = highlighed;
     }
 
     /**

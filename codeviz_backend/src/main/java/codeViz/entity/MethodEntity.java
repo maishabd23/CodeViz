@@ -33,6 +33,9 @@ public class MethodEntity extends Entity {
      * @return  parent colour
      */
     public Color getParentColour() {
+        if (isHighlighed()){ // being highlighted takes precedence over the parent
+            return getHighlighedColour();
+        }
         return classEntity.getColour();
     }
 }
