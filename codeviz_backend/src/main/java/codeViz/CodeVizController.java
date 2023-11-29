@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-public class SampleController {
+public class CodeVizController {
 
     private String currentTarget = "./codeviz_backend/target/classes/codeViz/entity";
     private EntityType currentLevel = EntityType.PACKAGE;
