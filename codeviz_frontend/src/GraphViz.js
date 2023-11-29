@@ -9,7 +9,7 @@ import Sigma from "sigma";
 import Graph from "graphology";
 import { parse } from "graphology-gexf/browser";
 // import React from 'react';
-import React, { useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect} from 'react';
 
 // Load external GEXF file:
 function GraphViz() {
@@ -38,11 +38,6 @@ function GraphViz() {
         const zoomOutBtn = document.getElementById("zoom-out");
         const zoomResetBtn = document.getElementById("zoom-reset");
 
-
-        const packageView = document.getElementById("package-view");
-        const classView = document.getElementById("class-view");
-        const methodView = document.getElementById("method-view");
-  
         // Instantiate sigma:
         const renderer = new Sigma(graph, container, {
           minCameraRatio: 0.1,
@@ -61,15 +56,6 @@ function GraphViz() {
         zoomResetBtn.addEventListener("click", () => {
           camera.animatedReset({ duration: 600 });
         });
-        packageView.addEventListener("click", () => {
-          fetch('/api/viewGraphLevel?level=PACKAGE');
-        });
-        classView.addEventListener("click", () => {
-          fetch('/api/viewGraphLevel?level=CLASS');
-        });
-        methodView.addEventListener("click", () => {
-          fetch('/api/viewGraphLevel?level=METHOD');
-        });
       };
   
       fetchData();
@@ -83,9 +69,6 @@ function GraphViz() {
           <div className="input"><label htmlFor="zoom-in">Zoom in</label><button id="zoom-in">+</button></div>
           <div className="input"><label htmlFor="zoom-out">Zoom out</label><button id="zoom-out">-</button></div>
           <div className="input"><label htmlFor="zoom-reset">Reset zoom</label><button id="zoom-reset">⊙</button></div>
-          <div className="input"><label htmlFor="package-view"></label><button id="package-view">Package</button></div>
-          <div className="input"><label htmlFor="class-view"></label><button id="class-view">Class</button></div>
-          <div className="input"><label htmlFor="method-view"></label><button id="method-view">Method</button></div>
         </div>
       </div>
     );
