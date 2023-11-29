@@ -29,11 +29,11 @@ public class SampleController {
 
 
     public void viewLevel(EntityType entityType, String searchValue){
-        currentLevel = entityType;
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
         javaBytecodeReader.generateEntitiesAndConnections(javaBytecodeReader.getAllFilePaths(folderPath));
 
         if (!searchValue.isEmpty()) {
+            System.out.println("SEARCHING FOR "  + searchValue);
             javaBytecodeReader.getGraphGenerator().performSearch(searchValue);
         }
 
@@ -42,22 +42,15 @@ public class SampleController {
 
     @CrossOrigin
     @GetMapping("/api/viewGraphLevel")
-    public Map<String, String> viewGraphLevel(@RequestParam(name = "level", required = false, defaultValue = "PACKAGE") String level,
+    public Map<String, String> viewGraphLevel(@RequestParam(name = "level", required = false, defaultValue = "") String level,
                                               @RequestParam(name = "searchValue", required = false, defaultValue = "") String searchValue) {
         Map<String, String> response = new HashMap<>();
 
-        viewLevel(EntityType.valueOf(level), searchValue);
+        if (!level.isEmpty()) {
+            currentLevel = EntityType.valueOf(level);
+        }
 
-        response.put("file", "codeviz_demo.gexf");
-        return response; //each API call returns a JSON object that the React app parses
-    }
-
-    @CrossOrigin
-    @GetMapping("/api/search")
-    public Map<String, String> searchGraph(@RequestParam(name = "search", required = false, defaultValue = "") String search) {
-        Map<String, String> response = new HashMap<>();
-
-        viewLevel(currentLevel, search);
+        viewLevel(currentLevel, searchValue);
 
         response.put("file", "codeviz_demo.gexf");
         return response; //each API call returns a JSON object that the React app parses

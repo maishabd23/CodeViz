@@ -1,13 +1,29 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 function Menu() {
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const search = document.getElementById("myInput");
+
+            search.addEventListener("search", myFunction);
+            function myFunction() {
+                var x = document.getElementById("myInput");
+                document.getElementById("printSearch").innerHTML = "Searching for: " + x.value;
+                fetch('/api/viewGraphLevel?searchValue=' + x.value);
+            }
+
+        };
+
+        fetchData();
+    }, []);
+
     return (
         <div className='menu'>
-            <p>&#123;Menu items&#125;</p>
-            <form action="/api/search" method="get">
-                <input type="text" name="search" placeholder="Search..."/>
-                <input type="submit" value="Search"/>
-            </form>
+            <p>Menu</p>
+            <input type="search" id="myInput"/>{/*TODO - add submit button?*/}
+            <p id="printSearch"></p>
+
         </div>
     );
 }
