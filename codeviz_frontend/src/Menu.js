@@ -36,8 +36,8 @@ function Menu() {
 
     return (
         <div className='menu'>
-            <p>Menu</p>
-            <input type="search" id="myInput"/>{/*TODO - add submit button?*/}
+            <h2>Menu</h2>
+            <input type="search" id="myInput" placeholder="Search..."/>{/*TODO - add submit button?*/}
             <p id="printSearch"></p>
             <table className="center">
                 <tbody>
