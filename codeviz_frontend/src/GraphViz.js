@@ -9,7 +9,7 @@ import Sigma from "sigma";
 import Graph from "graphology";
 import { parse } from "graphology-gexf/browser";
 // import React from 'react';
-import React, { useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect} from 'react';
 
 // Load external GEXF file:
 function GraphViz() {
@@ -26,7 +26,7 @@ function GraphViz() {
 
     useEffect(() => {
       const fetchData = async () => {
-        const response = await fetch("sample.gexf"); //needs to be in 'public' folder
+        const response = await fetch("codeviz_demo.gexf"); //needs to be in 'public' folder // TODO - don't hardcode here
         const gexf = await response.text();
   
         // Parse GEXF string:
@@ -37,7 +37,7 @@ function GraphViz() {
         const zoomInBtn = document.getElementById("zoom-in");
         const zoomOutBtn = document.getElementById("zoom-out");
         const zoomResetBtn = document.getElementById("zoom-reset");
-  
+
         // Instantiate sigma:
         const renderer = new Sigma(graph, container, {
           minCameraRatio: 0.1,

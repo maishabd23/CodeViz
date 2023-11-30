@@ -9,7 +9,7 @@ function Navbar() {
             <h2 className="nav--description">A tool for code visualization</h2>
         </div>
         <div className='nav--dropdown'>
-            <h3 className='nav--dropdownItem'>&#123;Insert dropdown items&#125;</h3>
+            {/*<h3 className='nav--dropdownItem'>&#123;Insert dropdown items&#125;</h3>*/}
         </div>
         </nav>
     );
