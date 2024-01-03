@@ -363,7 +363,7 @@ public class JavaBytecodeReaderTest {
 
         List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
         javaBytecodeReader.generateEntitiesAndConnections(filePaths);
-        String prefix = "MethodEntity";
+        String prefix = "Method";
         javaBytecodeReader.getGraphGenerator().performSearch(prefix, false);
 
         GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
@@ -374,6 +374,11 @@ public class JavaBytecodeReaderTest {
         assertNotEquals(Entity.getHighlighedColour(), packageEntities.get("codeViz.entity").getColour());
         assertEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.MethodEntity").getColour());
         assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.init").getColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.getClassEntity").getColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.addConnectedEntity").getColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.addMethod").getColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.getMethods").getColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.getMethod").getColour());
 
         javaBytecodeReader.generateGraph(EntityType.PACKAGE, "./src/test/gexf/" + name + "/search_" + prefix + "_package.gexf");
         javaBytecodeReader.generateGraph(EntityType.CLASS, "./src/test/gexf/" + name + "/search_" + prefix + "_class.gexf");
@@ -402,5 +407,36 @@ public class JavaBytecodeReaderTest {
         assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.addConnectedEntity").getColour());
 
         javaBytecodeReader.generateGraph(EntityType.METHOD, "./src/test/gexf/" + name + "/search_" + prefix + "_method.gexf");
+    }
+
+    /**
+     * Test search of a class name
+     * @author Thanuja Sivaananthan
+     */
+    @Test
+    public void testSearchDetailed() {
+        LinkedHashMap<String, Entity> packageEntities, classEntities, methodEntities;
+
+        JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
+        GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
+
+        List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
+        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
+
+        javaBytecodeReader.getGraphGenerator().performSearch("addMethod", true);
+        methodEntities = graphGenerator.getMethodEntities();
+        classEntities = graphGenerator.getClassEntities();
+        assertEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.ClassEntity").getColour()); // class that contains addMethod
+        assertEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.MethodEntity").getColour()); // class that calls addMethod
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.addMethod").getColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.init").getColour()); // calls addMethod
+
+        javaBytecodeReader.getGraphGenerator().performSearch("ClassEntity", true);
+        packageEntities = graphGenerator.getPackageEntities();
+        classEntities = graphGenerator.getClassEntities();
+        assertEquals(Entity.getHighlighedColour(), packageEntities.get("codeViz.entity").getColour()); // package that contains the class
+        assertEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.ClassEntity").getColour());
+        // other values are also highlighted...
+
     }
 }

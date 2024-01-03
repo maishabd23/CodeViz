@@ -4,12 +4,12 @@
 		<nodes>
 			<node id="1codeViz" label="codeViz" >
 				<size value="1.0"></size>
-				 <position x="5.964714" y="3.6428728" z="0.0"></position>
+				 <position x="20.825405" y="18.005167" z="0.0"></position>
 				<color r="199" g="167" b="215"></color>
 			</node>
 			<node id="2codeViz.entity" label="codeViz.entity" >
 				<size value="20.0"></size>
-				 <position x="16.844925" y="20.72605" z="0.0"></position>
+				 <position x="3.5220678" y="4.9634514" z="0.0"></position>
 				<color r="248" g="179" b="169"></color>
 			</node>
 		</nodes>
