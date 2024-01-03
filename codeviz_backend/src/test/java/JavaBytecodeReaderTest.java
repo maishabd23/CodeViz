@@ -371,14 +371,15 @@ public class JavaBytecodeReaderTest {
         LinkedHashMap<String, Entity> classEntities = graphGenerator.getClassEntities();
         LinkedHashMap<String, Entity> methodEntities = graphGenerator.getMethodEntities();
 
-        assertNotEquals(Entity.getHighlighedColour(), packageEntities.get("codeViz.entity").getColour());
-        assertEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.MethodEntity").getColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.init").getColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.getClassEntity").getColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.addConnectedEntity").getColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.addMethod").getColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.getMethods").getColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.getMethod").getColour());
+        assertNotEquals(Entity.getHighlighedColour(), packageEntities.get("codeViz.entity").getParentColour());
+        assertNotEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.PackageEntity").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.MethodEntity").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.init").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.getClassEntity").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.addConnectedEntity").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.addMethod").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.getMethods").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.getMethod").getParentColour());
 
         javaBytecodeReader.generateGraph(EntityType.PACKAGE, "./src/test/gexf/" + name + "/search_" + prefix + "_package.gexf");
         javaBytecodeReader.generateGraph(EntityType.CLASS, "./src/test/gexf/" + name + "/search_" + prefix + "_class.gexf");
@@ -401,10 +402,10 @@ public class JavaBytecodeReaderTest {
         GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
         LinkedHashMap<String, Entity> methodEntities = graphGenerator.getMethodEntities();
 
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.Entity.addConnectedEntity").getColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.PackageEntity.addConnectedEntity").getColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.addConnectedEntity").getColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.addConnectedEntity").getColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.Entity.addConnectedEntity").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.PackageEntity.addConnectedEntity").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.addConnectedEntity").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.addConnectedEntity").getParentColour());
 
         javaBytecodeReader.generateGraph(EntityType.METHOD, "./src/test/gexf/" + name + "/search_" + prefix + "_method.gexf");
     }
@@ -426,16 +427,19 @@ public class JavaBytecodeReaderTest {
         javaBytecodeReader.getGraphGenerator().performSearch("addMethod", true);
         methodEntities = graphGenerator.getMethodEntities();
         classEntities = graphGenerator.getClassEntities();
-        assertEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.ClassEntity").getColour()); // class that contains addMethod
-        assertEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.MethodEntity").getColour()); // class that calls addMethod
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.addMethod").getColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.init").getColour()); // calls addMethod
+        assertNotEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.PackageEntity").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.ClassEntity").getParentColour()); // class that contains addMethod
+        assertEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.MethodEntity").getParentColour()); // class that calls addMethod
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.addMethod").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.init").getParentColour()); // calls addMethod
 
-        javaBytecodeReader.getGraphGenerator().performSearch("ClassEntity", true);
+        javaBytecodeReader.getGraphGenerator().performSearch("MethodEntity", true);
         packageEntities = graphGenerator.getPackageEntities();
         classEntities = graphGenerator.getClassEntities();
-        assertEquals(Entity.getHighlighedColour(), packageEntities.get("codeViz.entity").getColour()); // package that contains the class
-        assertEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.ClassEntity").getColour());
+        assertEquals(Entity.getHighlighedColour(), packageEntities.get("codeViz.entity").getParentColour()); // package that contains the class
+        assertNotEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.PackageEntity").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.ClassEntity").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.MethodEntity").getParentColour());
         // other values are also highlighted...
 
     }

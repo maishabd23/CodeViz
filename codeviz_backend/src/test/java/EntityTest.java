@@ -1,5 +1,8 @@
 import codeViz.entity.ClassEntity;
 import org.junit.Test;
+
+import java.awt.*;
+
 import static org.junit.Assert.*;
 
 /**
@@ -14,8 +17,9 @@ public class EntityTest {
     @Test
     public void testGetRandomColour() {
         ClassEntity classEntity = new ClassEntity("Entity");
-        System.out.println(classEntity.getColour());
+        Color color = classEntity.getParentColour();
+        System.out.println(color);
 
-        assertFalse(classEntity.getColour().getRed() > 240 && classEntity.getColour().getGreen() > 240 && classEntity.getColour().getBlue() < 150);
+        assertFalse(color.getRed() > 240 && color.getGreen() > 240 && color.getBlue() < 150);
     }
 }

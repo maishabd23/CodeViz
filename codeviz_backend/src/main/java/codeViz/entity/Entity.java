@@ -97,15 +97,12 @@ public abstract class Entity {
 
     /**
      * Get colour
+     * Only subclasses should call this method directly
      * @author Thanuja Sivaananthan
      * @return  colour
      */
-    public Color getColour() {
-        if (isHighlighed){
-            return HIGHLIGHED_COLOUR;
-        } else {
-            return colour;
-        }
+    protected Color getColour() {
+        return colour;
     }
 
     /**
