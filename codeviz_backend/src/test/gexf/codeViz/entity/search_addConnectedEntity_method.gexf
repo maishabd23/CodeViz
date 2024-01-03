@@ -4,220 +4,292 @@
 		<nodes>
 			<node id="1init" label="init" >
 				<size value="4.0"></size>
-				 <position x="22.112602" y="36.223476" z="0.0"></position>
+				 <position x="57.572746" y="36.877903" z="0.0"></position>
 				<color r="250" g="166" b="139"></color>
 			</node>
 			<node id="2addConnectedEntity" label="addConnectedEntity" >
 				<size value="2.0"></size>
-				 <position x="53.685673" y="14.999949" z="0.0"></position>
+				 <position x="86.27659" y="82.3591" z="0.0"></position>
 				<color r="255" g="255" b="50"></color>
 			</node>
 			<node id="3getPackageEntity" label="getPackageEntity" >
 				<size value="1.0"></size>
-				 <position x="46.42198" y="4.2719936" z="0.0"></position>
+				 <position x="35.480858" y="56.674942" z="0.0"></position>
 				<color r="250" g="166" b="139"></color>
 			</node>
-			<node id="4addMethod" label="addMethod" >
+			<node id="4setSuperClass" label="setSuperClass" >
+				<size value="1.0"></size>
+				 <position x="16.039635" y="87.1985" z="0.0"></position>
+				<color r="250" g="166" b="139"></color>
+			</node>
+			<node id="5getSuperClass" label="getSuperClass" >
+				<size value="1.0"></size>
+				 <position x="1.0439513" y="11.955582" z="0.0"></position>
+				<color r="250" g="166" b="139"></color>
+			</node>
+			<node id="6addMethod" label="addMethod" >
+				<size value="6.0"></size>
+				 <position x="45.14677" y="42.270645" z="0.0"></position>
+				<color r="250" g="166" b="139"></color>
+			</node>
+			<node id="7getMethods" label="getMethods" >
+				<size value="1.0"></size>
+				 <position x="20.05445" y="14.319681" z="0.0"></position>
+				<color r="250" g="166" b="139"></color>
+			</node>
+			<node id="8getMethod" label="getMethod" >
+				<size value="3.0"></size>
+				 <position x="64.53483" y="2.219643" z="0.0"></position>
+				<color r="250" g="166" b="139"></color>
+			</node>
+			<node id="9getParentColour" label="getParentColour" >
+				<size value="5.0"></size>
+				 <position x="12.352954" y="46.23301" z="0.0"></position>
+				<color r="250" g="166" b="139"></color>
+			</node>
+			<node id="10containsSearchValue" label="containsSearchValue" >
+				<size value="3.0"></size>
+				 <position x="9.9336605" y="52.957954" z="0.0"></position>
+				<color r="250" g="166" b="139"></color>
+			</node>
+			<node id="11init" label="init" >
 				<size value="2.0"></size>
-				 <position x="8.290052" y="42.37341" z="0.0"></position>
-				<color r="250" g="166" b="139"></color>
+				 <position x="13.648202" y="52.943974" z="0.0"></position>
+				<color r="185" g="233" b="228"></color>
 			</node>
-			<node id="5getMethods" label="getMethods" >
+			<node id="12getName" label="getName" >
 				<size value="1.0"></size>
-				 <position x="12.443302" y="53.73589" z="0.0"></position>
-				<color r="250" g="166" b="139"></color>
+				 <position x="7.3436127" y="32.79101" z="0.0"></position>
+				<color r="185" g="233" b="228"></color>
 			</node>
-			<node id="6getMethod" label="getMethod" >
+			<node id="13getEntityType" label="getEntityType" >
 				<size value="1.0"></size>
-				 <position x="36.56844" y="29.463718" z="0.0"></position>
-				<color r="250" g="166" b="139"></color>
+				 <position x="73.17765" y="25.537199" z="0.0"></position>
+				<color r="185" g="233" b="228"></color>
 			</node>
-			<node id="7getParentColour" label="getParentColour" >
+			<node id="14setGephiNode" label="setGephiNode" >
 				<size value="1.0"></size>
-				 <position x="7.7311983" y="31.388363" z="0.0"></position>
-				<color r="250" g="166" b="139"></color>
+				 <position x="22.034481" y="92.57419" z="0.0"></position>
+				<color r="185" g="233" b="228"></color>
 			</node>
-			<node id="8init" label="init" >
+			<node id="15getGephiNode" label="getGephiNode" >
+				<size value="1.0"></size>
+				 <position x="7.6134906" y="59.39098" z="0.0"></position>
+				<color r="185" g="233" b="228"></color>
+			</node>
+			<node id="16setGexf4jNode" label="setGexf4jNode" >
+				<size value="1.0"></size>
+				 <position x="92.75471" y="27.127573" z="0.0"></position>
+				<color r="185" g="233" b="228"></color>
+			</node>
+			<node id="17getGexf4jNode" label="getGexf4jNode" >
+				<size value="1.0"></size>
+				 <position x="56.05935" y="85.55939" z="0.0"></position>
+				<color r="185" g="233" b="228"></color>
+			</node>
+			<node id="18incrementSize" label="incrementSize" >
+				<size value="1.0"></size>
+				 <position x="43.36533" y="75.29335" z="0.0"></position>
+				<color r="185" g="233" b="228"></color>
+			</node>
+			<node id="19getSize" label="getSize" >
+				<size value="1.0"></size>
+				 <position x="47.183872" y="59.39554" z="0.0"></position>
+				<color r="185" g="233" b="228"></color>
+			</node>
+			<node id="20getRandomColour" label="getRandomColour" >
+				<size value="1.0"></size>
+				 <position x="55.457603" y="90.37579" z="0.0"></position>
+				<color r="185" g="233" b="228"></color>
+			</node>
+			<node id="21getColour" label="getColour" >
+				<size value="1.0"></size>
+				 <position x="85.631516" y="18.122116" z="0.0"></position>
+				<color r="185" g="233" b="228"></color>
+			</node>
+			<node id="22getHighlighedColour" label="getHighlighedColour" >
+				<size value="1.0"></size>
+				 <position x="36.209507" y="77.29545" z="0.0"></position>
+				<color r="185" g="233" b="228"></color>
+			</node>
+			<node id="23isHighlighed" label="isHighlighed" >
+				<size value="1.0"></size>
+				 <position x="62.941666" y="1.4971993" z="0.0"></position>
+				<color r="185" g="233" b="228"></color>
+			</node>
+			<node id="24setHighlighed" label="setHighlighed" >
+				<size value="1.0"></size>
+				 <position x="14.144183" y="87.53917" z="0.0"></position>
+				<color r="185" g="233" b="228"></color>
+			</node>
+			<node id="25getParentColour" label="getParentColour" >
+				<size value="1.0"></size>
+				 <position x="89.580345" y="66.731865" z="0.0"></position>
+				<color r="185" g="233" b="228"></color>
+			</node>
+			<node id="26addConnectedEntity" label="addConnectedEntity" >
 				<size value="2.0"></size>
-				 <position x="37.572857" y="0.09001207" z="0.0"></position>
-				<color r="244" g="252" b="130"></color>
-			</node>
-			<node id="9getName" label="getName" >
-				<size value="1.0"></size>
-				 <position x="7.775562" y="16.779005" z="0.0"></position>
-				<color r="244" g="252" b="130"></color>
-			</node>
-			<node id="10getEntityType" label="getEntityType" >
-				<size value="1.0"></size>
-				 <position x="0.41799355" y="7.3192563" z="0.0"></position>
-				<color r="244" g="252" b="130"></color>
-			</node>
-			<node id="11setGephiNode" label="setGephiNode" >
-				<size value="1.0"></size>
-				 <position x="22.146336" y="40.215122" z="0.0"></position>
-				<color r="244" g="252" b="130"></color>
-			</node>
-			<node id="12getGephiNode" label="getGephiNode" >
-				<size value="1.0"></size>
-				 <position x="0.86421204" y="18.793865" z="0.0"></position>
-				<color r="244" g="252" b="130"></color>
-			</node>
-			<node id="13setGexf4jNode" label="setGexf4jNode" >
-				<size value="1.0"></size>
-				 <position x="42.700027" y="8.247448" z="0.0"></position>
-				<color r="244" g="252" b="130"></color>
-			</node>
-			<node id="14getGexf4jNode" label="getGexf4jNode" >
-				<size value="1.0"></size>
-				 <position x="24.055523" y="14.862156" z="0.0"></position>
-				<color r="244" g="252" b="130"></color>
-			</node>
-			<node id="15incrementSize" label="incrementSize" >
-				<size value="1.0"></size>
-				 <position x="30.078142" y="46.926674" z="0.0"></position>
-				<color r="244" g="252" b="130"></color>
-			</node>
-			<node id="16getSize" label="getSize" >
-				<size value="1.0"></size>
-				 <position x="8.804363" y="18.017725" z="0.0"></position>
-				<color r="244" g="252" b="130"></color>
-			</node>
-			<node id="17getRandomColour" label="getRandomColour" >
-				<size value="1.0"></size>
-				 <position x="8.790699" y="45.83441" z="0.0"></position>
-				<color r="244" g="252" b="130"></color>
-			</node>
-			<node id="18getColour" label="getColour" >
-				<size value="1.0"></size>
-				 <position x="18.165396" y="6.6152616" z="0.0"></position>
-				<color r="244" g="252" b="130"></color>
-			</node>
-			<node id="19getHighlighedColour" label="getHighlighedColour" >
-				<size value="1.0"></size>
-				 <position x="19.509178" y="33.242912" z="0.0"></position>
-				<color r="244" g="252" b="130"></color>
-			</node>
-			<node id="20isHighlighed" label="isHighlighed" >
-				<size value="1.0"></size>
-				 <position x="48.077187" y="54.37595" z="0.0"></position>
-				<color r="244" g="252" b="130"></color>
-			</node>
-			<node id="21setHighlighed" label="setHighlighed" >
-				<size value="1.0"></size>
-				 <position x="2.2157917" y="6.6692147" z="0.0"></position>
-				<color r="244" g="252" b="130"></color>
-			</node>
-			<node id="22getParentColour" label="getParentColour" >
-				<size value="1.0"></size>
-				 <position x="13.006262" y="34.830368" z="0.0"></position>
-				<color r="244" g="252" b="130"></color>
-			</node>
-			<node id="23addConnectedEntity" label="addConnectedEntity" >
-				<size value="2.0"></size>
-				 <position x="1.3318062" y="23.68826" z="0.0"></position>
+				 <position x="82.88096" y="19.582005" z="0.0"></position>
 				<color r="255" g="255" b="50"></color>
 			</node>
-			<node id="24getConnectedEntities" label="getConnectedEntities" >
+			<node id="27getConnectedEntities" label="getConnectedEntities" >
 				<size value="1.0"></size>
-				 <position x="25.256666" y="0.86507654" z="0.0"></position>
-				<color r="244" g="252" b="130"></color>
+				 <position x="50.047928" y="62.391037" z="0.0"></position>
+				<color r="185" g="233" b="228"></color>
 			</node>
-			<node id="25getConnectedEntitiesAndWeights" label="getConnectedEntitiesAndWeights" >
+			<node id="28getConnectedEntitiesAndWeights" label="getConnectedEntitiesAndWeights" >
 				<size value="1.0"></size>
-				 <position x="44.568653" y="7.685159" z="0.0"></position>
-				<color r="244" g="252" b="130"></color>
+				 <position x="67.55807" y="35.77432" z="0.0"></position>
+				<color r="185" g="233" b="228"></color>
 			</node>
-			<node id="26clinit" label="clinit" >
+			<node id="29nameContains" label="nameContains" >
 				<size value="1.0"></size>
-				 <position x="34.95717" y="55.781754" z="0.0"></position>
-				<color r="244" g="252" b="130"></color>
+				 <position x="58.08428" y="79.66007" z="0.0"></position>
+				<color r="185" g="233" b="228"></color>
 			</node>
-			<node id="27values" label="values" >
-				<size value="1.0"></size>
-				 <position x="44.424442" y="35.857468" z="0.0"></position>
-				<color r="175" g="173" b="194"></color>
-			</node>
-			<node id="28valueOf" label="valueOf" >
-				<size value="1.0"></size>
-				 <position x="16.420626" y="7.149129" z="0.0"></position>
-				<color r="175" g="173" b="194"></color>
-			</node>
-			<node id="29init" label="init" >
-				<size value="1.0"></size>
-				 <position x="33.49502" y="54.573452" z="0.0"></position>
-				<color r="175" g="173" b="194"></color>
-			</node>
-			<node id="30$values" label="$values" >
-				<size value="1.0"></size>
-				 <position x="8.495361" y="22.565075" z="0.0"></position>
-				<color r="175" g="173" b="194"></color>
+			<node id="30containsSearchValue" label="containsSearchValue" >
+				<size value="3.0"></size>
+				 <position x="72.34278" y="70.09672" z="0.0"></position>
+				<color r="185" g="233" b="228"></color>
 			</node>
 			<node id="31clinit" label="clinit" >
-				<size value="5.0"></size>
-				 <position x="48.909843" y="35.942894" z="0.0"></position>
+				<size value="1.0"></size>
+				 <position x="37.19515" y="27.678288" z="0.0"></position>
+				<color r="185" g="233" b="228"></color>
+			</node>
+			<node id="32values" label="values" >
+				<size value="1.0"></size>
+				 <position x="89.394424" y="75.687164" z="0.0"></position>
 				<color r="175" g="173" b="194"></color>
 			</node>
-			<node id="32init" label="init" >
+			<node id="33valueOf" label="valueOf" >
+				<size value="1.0"></size>
+				 <position x="59.694828" y="27.087236" z="0.0"></position>
+				<color r="175" g="173" b="194"></color>
+			</node>
+			<node id="34init" label="init" >
+				<size value="1.0"></size>
+				 <position x="71.98123" y="18.258331" z="0.0"></position>
+				<color r="175" g="173" b="194"></color>
+			</node>
+			<node id="35$values" label="$values" >
+				<size value="1.0"></size>
+				 <position x="70.67684" y="64.798195" z="0.0"></position>
+				<color r="175" g="173" b="194"></color>
+			</node>
+			<node id="36clinit" label="clinit" >
+				<size value="5.0"></size>
+				 <position x="36.34096" y="81.383606" z="0.0"></position>
+				<color r="175" g="173" b="194"></color>
+			</node>
+			<node id="37init" label="init" >
+				<size value="4.0"></size>
+				 <position x="0.18361402" y="37.939255" z="0.0"></position>
+				<color r="173" g="158" b="180"></color>
+			</node>
+			<node id="38getProperName" label="getProperName" >
+				<size value="1.0"></size>
+				 <position x="67.39494" y="23.38765" z="0.0"></position>
+				<color r="173" g="158" b="180"></color>
+			</node>
+			<node id="39addConnectedEntity" label="addConnectedEntity" >
+				<size value="2.0"></size>
+				 <position x="35.037285" y="70.11435" z="0.0"></position>
+				<color r="255" g="255" b="50"></color>
+			</node>
+			<node id="40getClassEntity" label="getClassEntity" >
+				<size value="1.0"></size>
+				 <position x="54.253403" y="14.075347" z="0.0"></position>
+				<color r="173" g="158" b="180"></color>
+			</node>
+			<node id="41getParentColour" label="getParentColour" >
+				<size value="4.0"></size>
+				 <position x="23.50832" y="10.056864" z="0.0"></position>
+				<color r="173" g="158" b="180"></color>
+			</node>
+			<node id="42containsSearchValue" label="containsSearchValue" >
+				<size value="4.0"></size>
+				 <position x="86.89744" y="68.47404" z="0.0"></position>
+				<color r="173" g="158" b="180"></color>
+			</node>
+			<node id="43addArgument" label="addArgument" >
+				<size value="1.0"></size>
+				 <position x="62.799957" y="2.413296" z="0.0"></position>
+				<color r="173" g="158" b="180"></color>
+			</node>
+			<node id="44setReturnType" label="setReturnType" >
+				<size value="1.0"></size>
+				 <position x="86.01245" y="71.96946" z="0.0"></position>
+				<color r="173" g="158" b="180"></color>
+			</node>
+			<node id="45init" label="init" >
+				<size value="2.0"></size>
+				 <position x="79.06782" y="5.3712254" z="0.0"></position>
+				<color r="226" g="148" b="156"></color>
+			</node>
+			<node id="46addConnectedEntity" label="addConnectedEntity" >
+				<size value="2.0"></size>
+				 <position x="10.362679" y="33.735302" z="0.0"></position>
+				<color r="255" g="255" b="50"></color>
+			</node>
+			<node id="47addClass" label="addClass" >
+				<size value="2.0"></size>
+				 <position x="19.49491" y="14.807298" z="0.0"></position>
+				<color r="226" g="148" b="156"></color>
+			</node>
+			<node id="48getClasses" label="getClasses" >
+				<size value="1.0"></size>
+				 <position x="22.392473" y="86.727394" z="0.0"></position>
+				<color r="226" g="148" b="156"></color>
+			</node>
+			<node id="49getParentColour" label="getParentColour" >
+				<size value="4.0"></size>
+				 <position x="78.61111" y="23.8292" z="0.0"></position>
+				<color r="226" g="148" b="156"></color>
+			</node>
+			<node id="50containsSearchValue" label="containsSearchValue" >
 				<size value="3.0"></size>
-				 <position x="24.06242" y="44.649822" z="0.0"></position>
-				<color r="173" g="158" b="180"></color>
-			</node>
-			<node id="33addConnectedEntity" label="addConnectedEntity" >
-				<size value="2.0"></size>
-				 <position x="47.473454" y="21.35876" z="0.0"></position>
-				<color r="255" g="255" b="50"></color>
-			</node>
-			<node id="34getClassEntity" label="getClassEntity" >
-				<size value="1.0"></size>
-				 <position x="28.46468" y="53.62864" z="0.0"></position>
-				<color r="173" g="158" b="180"></color>
-			</node>
-			<node id="35getParentColour" label="getParentColour" >
-				<size value="1.0"></size>
-				 <position x="48.250412" y="2.770801" z="0.0"></position>
-				<color r="173" g="158" b="180"></color>
-			</node>
-			<node id="36init" label="init" >
-				<size value="2.0"></size>
-				 <position x="45.86346" y="10.84656" z="0.0"></position>
-				<color r="226" g="148" b="156"></color>
-			</node>
-			<node id="37addConnectedEntity" label="addConnectedEntity" >
-				<size value="2.0"></size>
-				 <position x="42.833153" y="9.463207" z="0.0"></position>
-				<color r="255" g="255" b="50"></color>
-			</node>
-			<node id="38addClass" label="addClass" >
-				<size value="1.0"></size>
-				 <position x="4.323243" y="38.306152" z="0.0"></position>
-				<color r="226" g="148" b="156"></color>
-			</node>
-			<node id="39getClasses" label="getClasses" >
-				<size value="1.0"></size>
-				 <position x="3.7672458" y="29.976498" z="0.0"></position>
-				<color r="226" g="148" b="156"></color>
-			</node>
-			<node id="40getParentColour" label="getParentColour" >
-				<size value="1.0"></size>
-				 <position x="21.024815" y="13.337719" z="0.0"></position>
+				 <position x="53.497887" y="19.427559" z="0.0"></position>
 				<color r="226" g="148" b="156"></color>
 			</node>
 		</nodes>
 		<edges>
-			<edge source="1init" target="8init" weight="1.0" />
-			<edge source="1init" target="38addClass" weight="1.0" />
+			<edge source="1init" target="11init" weight="1.0" />
+			<edge source="1init" target="47addClass" weight="1.0" />
 			<edge source="1init" target="1init" weight="1.0" />
-			<edge source="2addConnectedEntity" target="23addConnectedEntity" weight="1.0" />
-			<edge source="4addMethod" target="6getMethod" weight="1.0" />
-			<edge source="8init" target="17getRandomColour" weight="1.0" />
-			<edge source="23addConnectedEntity" target="15incrementSize" weight="1.0" />
-			<edge source="31clinit" target="29init" weight="3.0" />
-			<edge source="31clinit" target="30$values" weight="1.0" />
-			<edge source="32init" target="8init" weight="1.0" />
-			<edge source="32init" target="4addMethod" weight="1.0" />
-			<edge source="33addConnectedEntity" target="23addConnectedEntity" weight="1.0" />
-			<edge source="36init" target="8init" weight="1.0" />
-			<edge source="37addConnectedEntity" target="23addConnectedEntity" weight="1.0" />
+			<edge source="2addConnectedEntity" target="26addConnectedEntity" weight="1.0" />
+			<edge source="6addMethod" target="12getName" weight="3.0" />
+			<edge source="6addMethod" target="8getMethod" weight="1.0" />
+			<edge source="6addMethod" target="18incrementSize" weight="1.0" />
+			<edge source="8getMethod" target="38getProperName" weight="1.0" />
+			<edge source="8getMethod" target="12getName" weight="1.0" />
+			<edge source="9getParentColour" target="23isHighlighed" weight="1.0" />
+			<edge source="9getParentColour" target="22getHighlighedColour" weight="1.0" />
+			<edge source="9getParentColour" target="21getColour" weight="2.0" />
+			<edge source="10containsSearchValue" target="30containsSearchValue" weight="1.0" />
+			<edge source="10containsSearchValue" target="42containsSearchValue" weight="1.0" />
+			<edge source="11init" target="20getRandomColour" weight="1.0" />
+			<edge source="26addConnectedEntity" target="18incrementSize" weight="1.0" />
+			<edge source="30containsSearchValue" target="29nameContains" weight="2.0" />
+			<edge source="36clinit" target="34init" weight="3.0" />
+			<edge source="36clinit" target="35$values" weight="1.0" />
+			<edge source="37init" target="38getProperName" weight="1.0" />
+			<edge source="37init" target="11init" weight="1.0" />
+			<edge source="37init" target="6addMethod" weight="1.0" />
+			<edge source="39addConnectedEntity" target="26addConnectedEntity" weight="1.0" />
+			<edge source="41getParentColour" target="23isHighlighed" weight="1.0" />
+			<edge source="41getParentColour" target="22getHighlighedColour" weight="1.0" />
+			<edge source="41getParentColour" target="21getColour" weight="1.0" />
+			<edge source="42containsSearchValue" target="30containsSearchValue" weight="1.0" />
+			<edge source="42containsSearchValue" target="29nameContains" weight="2.0" />
+			<edge source="45init" target="11init" weight="1.0" />
+			<edge source="46addConnectedEntity" target="26addConnectedEntity" weight="1.0" />
+			<edge source="47addClass" target="18incrementSize" weight="1.0" />
+			<edge source="49getParentColour" target="23isHighlighed" weight="1.0" />
+			<edge source="49getParentColour" target="22getHighlighedColour" weight="1.0" />
+			<edge source="49getParentColour" target="21getColour" weight="1.0" />
+			<edge source="50containsSearchValue" target="30containsSearchValue" weight="1.0" />
+			<edge source="50containsSearchValue" target="10containsSearchValue" weight="1.0" />
 		</edges>
 	</graph>
 </gexf>

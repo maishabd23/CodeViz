@@ -57,6 +57,8 @@ public class ConnectedClassVisitor extends ClassVisitor {
         @Override
         public void visitMethodInsn(int opcode, String owner, String name, String descriptor, boolean isInterface) {
 
+            boolean addedMethod = false;
+
             // the following opcodes should definitely be checked (could restrict to just these opcodes if performance becomes an issue)
             // 182 - Opcodes.INVOKEVIRTUAL
             // 183 - Opcodes.INVOKESPECIAL
@@ -64,23 +66,45 @@ public class ConnectedClassVisitor extends ClassVisitor {
 
             // NOTE: bcel uses . in the class name; asm uses / in the owner name; chose bcel as the standard
             String connectedClassName = owner.replace("/", ".");
-            String connectedMethodName = connectedClassName + "." + name.replace("<", "").replace(">", "");
-            // System.out.println("methodInsn : " + opcode + " :method: " + connectedMethodName);
+            String connectedMethodName = MethodEntity.getProperName(name);
+            String fullConnectedMethodName = connectedClassName + "." + connectedMethodName;
+            // System.out.println("methodInsn : " + opcode + " :method: " + fullConnectedMethodName);
 
             Entity connectedClass = graphGenerator.getClassEntities().get(connectedClassName);
             // if the class exists, the method should probably also exist
             if (connectedClass != null) {
                 // System.out.println("Connected class exists! " + connectedClassName);
-                MethodEntity connectedMethod = (MethodEntity) graphGenerator.getMethodEntities().get(connectedMethodName);
+                MethodEntity connectedMethod = (MethodEntity) graphGenerator.getMethodEntities().get(fullConnectedMethodName);
                 if (connectedMethod != null) {
-                    // System.out.println("Connected method exists! " + opcode + " " + connectedMethodName);
+                    // System.out.println("Connected method exists! " + opcode + " " + fullConnectedMethodName);
                     if (methodEntity != null) {
+                        if (methodEntity.equals(connectedMethod)){ // FIXME - figure out how to handle this (ex. a method recursively calling itself)
+                            System.out.println("NOTE, circular reference with class " + methodEntity.getName() + " calling " + fullConnectedMethodName);
+                        }
                         methodEntity.addConnectedEntity(connectedMethod);
+                        addedMethod = true;
                     }
                 } else {
-                    // TODO - might be from an inherited method
-                    System.out.println("ERROR, Method is null: " + connectedMethodName);
+                    // might be from an inherited method, check superclass
+                    ClassEntity superclass = methodEntity.getClassEntity().getSuperClass();
+                    if (superclass != null){
+                        connectedMethod = superclass.getMethod(connectedMethodName);
+                        if (connectedMethod != null) {
+                            // System.out.println("Connected method exists! " + opcode + " " + fullConnectedMethodName);
+                            if (methodEntity.equals(connectedMethod)) { // FIXME - figure out how to handle this (ex. a method recursively calling itself)
+                                System.out.println("NOTE, circular reference with class " + methodEntity.getName() + " calling " + fullConnectedMethodName);
+                            }
+                            methodEntity.addConnectedEntity(connectedMethod);
+                            addedMethod = true;
+                            System.out.println("Note, Method is from superclass: " + fullConnectedMethodName);
+                        }
+                    }
                 }
+
+                if (!addedMethod){
+                    System.out.println("ERROR, Method is null: " + fullConnectedMethodName);
+                }
+
             }
 
             super.visitMethodInsn(opcode, owner, name, descriptor, isInterface);

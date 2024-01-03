@@ -32,7 +32,7 @@ public abstract class Entity {
      * @param entityType    entity type
      */
     public Entity(String name, EntityType entityType){
-        this.name = name.replace("<", "").replace(">", "");
+        this.name = name;
         this.entityType = entityType;
         this.connectedEntitiesAndWeights = new LinkedHashMap<>();
         this.size = 1;
@@ -70,27 +70,30 @@ public abstract class Entity {
      * @author Thanuja Sivaananthan
      */
     private Color getRandomColour(){
-        Random rand = new Random(name.hashCode()); // could enforce a seed, ex. name.hashCode()
+        Random rand = new Random(name.hashCode()); // enforce a seed for some colour consistency
 
-        // Will produce only bright / light colours:
-        float r = (float) (rand.nextFloat() / 2f + 0.5);
-        float g = (float) (rand.nextFloat() / 2f + 0.5);
-        float b = (float) (rand.nextFloat() / 2f + 0.5);
+        while (true) {
 
-        return new Color(r, g, b);
+            // Will produce only bright / light colours:
+            float r = (float) (rand.nextFloat() / 2f + 0.5);
+            float g = (float) (rand.nextFloat() / 2f + 0.5);
+            float b = (float) (rand.nextFloat() / 2f + 0.5);
+
+            // avoid colours too similar to HIGHLIGHED_COLOUR (for ex, should not be r="244" g="252" b="130")
+            if (! (r > ((float) 240 /255) && g > ((float) 240 /255) && b < ((float) 150 /255))) {
+                return new Color(r, g, b);
+            }
+        }
     }
 
     /**
      * Get colour
+     * Only subclasses should call this method directly
      * @author Thanuja Sivaananthan
      * @return  colour
      */
-    public Color getColour() {
-        if (isHighlighed){
-            return HIGHLIGHED_COLOUR;
-        } else {
-            return colour;
-        }
+    protected Color getColour() {
+        return colour;
     }
 
     /**
@@ -134,5 +137,24 @@ public abstract class Entity {
     }
     public Map <Entity, Integer> getConnectedEntitiesAndWeights(){
         return connectedEntitiesAndWeights;
+    }
+
+    public boolean nameContains(String searchValue){
+        return name.contains(searchValue);
+    }
+
+    public boolean containsSearchValue(String searchValue){
+        if (nameContains(searchValue)){
+            return true;
+        }
+
+        for (Entity connectedEntity : connectedEntitiesAndWeights.keySet()){
+            // just do a simple search on the connected entity (don't call recursively, could highlight too much)
+            if (connectedEntity.nameContains(searchValue)){
+                return true;
+            }
+        }
+
+        return false;
     }
 }
