@@ -3,43 +3,43 @@
 	<graph mode="static" defaultedgetype="directed">
 		<nodes>
 			<node id="1ClassEntity" label="ClassEntity" >
-				<size value="23.0"></size>
-				 <position x="72.04276" y="88.97051" z="0.0"></position>
+				<size value="34.0"></size>
+				 <position x="44.605724" y="31.9716" z="0.0"></position>
 				<color r="248" g="179" b="169"></color>
 			</node>
 			<node id="2Entity" label="Entity" >
 				<size value="29.0"></size>
-				 <position x="63.93131" y="50.7806" z="0.0"></position>
+				 <position x="112.59552" y="68.59002" z="0.0"></position>
 				<color r="248" g="179" b="169"></color>
 			</node>
 			<node id="3EntityType" label="EntityType" >
 				<size value="9.0"></size>
-				 <position x="28.398382" y="57.403458" z="0.0"></position>
+				 <position x="97.388214" y="41.465397" z="0.0"></position>
 				<color r="248" g="179" b="169"></color>
 			</node>
 			<node id="4MethodEntity" label="MethodEntity" >
-				<size value="15.0"></size>
-				 <position x="49.49756" y="72.62275" z="0.0"></position>
+				<size value="26.0"></size>
+				 <position x="49.2551" y="100.17308" z="0.0"></position>
 				<color r="255" g="255" b="50"></color>
 			</node>
 			<node id="5PackageEntity" label="PackageEntity" >
-				<size value="14.0"></size>
-				 <position x="11.115583" y="43.51637" z="0.0"></position>
+				<size value="18.0"></size>
+				 <position x="46.361065" y="71.23634" z="0.0"></position>
 				<color r="248" g="179" b="169"></color>
 			</node>
 		</nodes>
 		<edges>
-			<edge source="1ClassEntity" target="2Entity" weight="4.0" />
+			<edge source="1ClassEntity" target="2Entity" weight="10.0" />
 			<edge source="1ClassEntity" target="5PackageEntity" weight="4.0" />
-			<edge source="1ClassEntity" target="1ClassEntity" weight="3.0" />
-			<edge source="1ClassEntity" target="4MethodEntity" weight="3.0" />
+			<edge source="1ClassEntity" target="1ClassEntity" weight="5.0" />
+			<edge source="1ClassEntity" target="4MethodEntity" weight="4.0" />
 			<edge source="2Entity" target="3EntityType" weight="3.0" />
 			<edge source="2Entity" target="2Entity" weight="4.0" />
 			<edge source="3EntityType" target="3EntityType" weight="3.0" />
-			<edge source="4MethodEntity" target="2Entity" weight="4.0" />
-			<edge source="4MethodEntity" target="1ClassEntity" weight="4.0" />
-			<edge source="4MethodEntity" target="4MethodEntity" weight="1.0" />
-			<edge source="5PackageEntity" target="2Entity" weight="4.0" />
+			<edge source="4MethodEntity" target="2Entity" weight="8.0" />
+			<edge source="4MethodEntity" target="1ClassEntity" weight="7.0" />
+			<edge source="4MethodEntity" target="4MethodEntity" weight="2.0" />
+			<edge source="5PackageEntity" target="2Entity" weight="8.0" />
 			<edge source="5PackageEntity" target="5PackageEntity" weight="1.0" />
 			<edge source="5PackageEntity" target="1ClassEntity" weight="2.0" />
 		</edges>
