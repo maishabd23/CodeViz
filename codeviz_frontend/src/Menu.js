@@ -20,13 +20,20 @@ function Menu() {
                 fetch('/api/viewGraphLevel?level=METHOD');
             });
 
-            const search = document.getElementById("myInput");
-
-            search.addEventListener("search", myFunction);
-            function myFunction() {
-                var x = document.getElementById("myInput");
+            const search = document.getElementById("searchInput");
+            search.addEventListener("search", mySearchFunction);
+            function mySearchFunction() {
+                var x = document.getElementById("searchInput");
                 document.getElementById("printSearch").innerHTML = "Searching for: " + x.value;
                 fetch('/api/viewGraphLevel?searchValue=' + x.value);
+            }
+
+            const detailedSearch = document.getElementById("detailedSearchInput");
+            detailedSearch.addEventListener("search", myDetailedSearchFunction);
+            function myDetailedSearchFunction() {
+                var x = document.getElementById("detailedSearchInput");
+                document.getElementById("printSearch").innerHTML = "Searching for: " + x.value;
+                fetch('/api/viewGraphLevel?detailed=true&searchValue=' + x.value);
             }
 
         };
@@ -37,7 +44,10 @@ function Menu() {
     return (
         <div className='menu'>
             <h2>Menu</h2>
-            <input type="search" id="myInput" placeholder="Search..."/>{/*TODO - add submit button?*/}
+            {/*TODO - add submit button?*/}
+            {/*TODO - remove duplicate search bars and use dropdown instead - either simple or detailed search*/}
+            <input type="search" id="searchInput" placeholder="Simple Search..."/>
+            <input type="search" id="detailedSearchInput" placeholder="Detailed Search..."/>
             <p id="printSearch"></p>
             <table className="center">
                 <tbody>

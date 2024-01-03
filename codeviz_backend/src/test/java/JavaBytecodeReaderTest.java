@@ -349,7 +349,10 @@ public class JavaBytecodeReaderTest {
         assertTrue(classInit.getConnectedEntities().contains(packageAddClass));
         assertTrue(methodInit.getConnectedEntities().contains(classAddMethod));
 
-        // FIXME - MethodEntity.getMethod should be connected to Entity.getName or a MethodEntity.getName
+        // superclass method connection - ClassEntity.getMethod should be connected to Entity.getName
+        Entity getMethod = methodEntities.get("codeViz.entity.ClassEntity.getMethod");
+        Entity getName = methodEntities.get("codeViz.entity.Entity.getName");
+        assertTrue(getMethod.getConnectedEntities().contains(getName));
     }
 
 
@@ -363,17 +366,23 @@ public class JavaBytecodeReaderTest {
 
         List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
         javaBytecodeReader.generateEntitiesAndConnections(filePaths);
-        String prefix = "MethodEntity";
-        javaBytecodeReader.getGraphGenerator().performSearch(prefix);
+        String prefix = "Method";
+        javaBytecodeReader.getGraphGenerator().performSearch(prefix, false);
 
         GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
         LinkedHashMap<String, Entity> packageEntities = graphGenerator.getPackageEntities();
         LinkedHashMap<String, Entity> classEntities = graphGenerator.getClassEntities();
         LinkedHashMap<String, Entity> methodEntities = graphGenerator.getMethodEntities();
 
-        assertNotEquals(Entity.getHighlighedColour(), packageEntities.get("codeViz.entity").getColour());
-        assertEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.MethodEntity").getColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.init").getColour());
+        assertNotEquals(Entity.getHighlighedColour(), packageEntities.get("codeViz.entity").getParentColour());
+        assertNotEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.PackageEntity").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.MethodEntity").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.init").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.getClassEntity").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.addConnectedEntity").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.addMethod").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.getMethods").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.getMethod").getParentColour());
 
         javaBytecodeReader.generateGraph(EntityType.PACKAGE, "./src/test/gexf/" + name + "/search_" + prefix + "_package.gexf");
         javaBytecodeReader.generateGraph(EntityType.CLASS, "./src/test/gexf/" + name + "/search_" + prefix + "_class.gexf");
@@ -391,16 +400,51 @@ public class JavaBytecodeReaderTest {
         List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
         javaBytecodeReader.generateEntitiesAndConnections(filePaths);
         String prefix = "addConnectedEntity";
-        javaBytecodeReader.getGraphGenerator().performSearch(prefix);
+        javaBytecodeReader.getGraphGenerator().performSearch(prefix, false);
 
         GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
         LinkedHashMap<String, Entity> methodEntities = graphGenerator.getMethodEntities();
 
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.Entity.addConnectedEntity").getColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.PackageEntity.addConnectedEntity").getColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.addConnectedEntity").getColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.addConnectedEntity").getColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.Entity.addConnectedEntity").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.PackageEntity.addConnectedEntity").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.addConnectedEntity").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.addConnectedEntity").getParentColour());
 
         javaBytecodeReader.generateGraph(EntityType.METHOD, "./src/test/gexf/" + name + "/search_" + prefix + "_method.gexf");
+    }
+
+    /**
+     * Test search of a class name
+     * @author Thanuja Sivaananthan
+     */
+    @Test
+    public void testSearchDetailed() {
+        LinkedHashMap<String, Entity> packageEntities, classEntities, methodEntities;
+
+        JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
+        GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
+
+        List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
+        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
+
+        javaBytecodeReader.getGraphGenerator().performSearch("addMethod", true);
+        methodEntities = graphGenerator.getMethodEntities();
+        classEntities = graphGenerator.getClassEntities();
+        assertNotEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.PackageEntity").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.ClassEntity").getParentColour()); // class that contains addMethod
+        assertEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.MethodEntity").getParentColour()); // class that calls addMethod
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.addMethod").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.init").getParentColour()); // calls addMethod
+
+        javaBytecodeReader.getGraphGenerator().performSearch("MethodEntity", true);
+        packageEntities = graphGenerator.getPackageEntities();
+        classEntities = graphGenerator.getClassEntities();
+        assertEquals(Entity.getHighlighedColour(), packageEntities.get("codeViz.entity").getParentColour()); // package that contains the class
+        assertNotEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.PackageEntity").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.ClassEntity").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.MethodEntity").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.addMethod").getParentColour()); // MethodEntity argument
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.getMethod").getParentColour()); // MethodEntity return type
+        //assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.getMethods").getParentColour()); // TODO - MethodEntity list return type
     }
 }

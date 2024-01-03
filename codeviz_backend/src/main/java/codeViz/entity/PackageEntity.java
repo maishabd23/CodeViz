@@ -44,4 +44,21 @@ public class PackageEntity extends Entity {
         }
         return getColour();
     }
+
+
+    @Override
+    public boolean containsSearchValue(String searchValue) {
+        if (super.containsSearchValue(searchValue)){
+            return true;
+        }
+
+        // check classes
+        for (ClassEntity classEntity : classes){
+            if (classEntity.containsSearchValue(searchValue)){
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

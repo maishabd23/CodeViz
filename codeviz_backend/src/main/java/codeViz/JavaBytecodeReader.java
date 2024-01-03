@@ -205,7 +205,7 @@ public class JavaBytecodeReader {
             List<Method> methodList = Arrays.stream(jc.getMethods()).toList();
             for (Method method : methodList){
 
-                // gephi cannot read names with character '<' (will keep them in the totalName for now)
+                // gephi cannot read names with character '<'
                 // NOTE: <init> and <clinit> are used for the constructors, manually changed those
                 // https://www.baeldung.com/jvm-init-clinit-methods
                 MethodEntity methodEntity = new MethodEntity(method.getName(), classEntity);
@@ -273,6 +273,7 @@ public class JavaBytecodeReader {
 
                 if (superClassEntity != null){
                     classEntity.addConnectedEntity(superClassEntity);
+                    classEntity.setSuperClass(superClassEntity);
                 } else {
                     // might be an imported class - not an error
                     System.out.println("ERROR, superclass entity for " + jc.getClassName() + " does not exist: " + jc.getSuperclassName());
@@ -300,6 +301,8 @@ public class JavaBytecodeReader {
             // check methods argument/return types and connect classes
             for (Method method : jc.getMethods()){
 
+                MethodEntity methodEntity = (MethodEntity) graphGenerator.getMethodEntities().get(jc.getClassName() + "." + MethodEntity.getProperName(method.getName()));
+
                 for (Type argumentType : method.getArgumentTypes()){
                     String stringArgumentType = String.valueOf(argumentType);
                     // System.out.println("argument: " + stringArgumentType);
@@ -313,6 +316,7 @@ public class JavaBytecodeReader {
                             System.out.println("NOTE, circular reference with class " + classEntity.getName() + " argument " + stringArgumentType);
                         }
                         classEntity.addConnectedEntity(argumentClassEntity);
+                        methodEntity.addArgument(argumentClassEntity);
                     }
                 }
 
@@ -323,6 +327,7 @@ public class JavaBytecodeReader {
                         System.out.println("NOTE, circular reference with class " + classEntity.getName() + " return " + method.getReturnType());
                     }
                     classEntity.addConnectedEntity(returnClassEntity);
+                    methodEntity.setReturnType(returnClassEntity);
                 }
 
             }
