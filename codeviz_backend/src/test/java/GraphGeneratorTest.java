@@ -197,29 +197,4 @@ public class GraphGeneratorTest {
         assertTrue(addressToString.isHighlighed());
     }
 
-    /**
-     * Test a basic graph with gexf4j
-     * @author Thanuja Sivaananthan
-     */
-    @Test
-    public void testSampleGexf(){
-
-        ClassEntity person = new ClassEntity("person");
-        ClassEntity student = new ClassEntity("student");
-        ClassEntity professor = new ClassEntity("professor");
-        ClassEntity address = new ClassEntity("address");
-
-        student.addConnectedEntity(person);
-        professor.addConnectedEntity(person);
-        person.addConnectedEntity(address);
-
-        GraphGenerator graphGenerator = new GraphGenerator();
-        graphGenerator.addEntity(person.getName(), person);
-        graphGenerator.addEntity(student.getName(), student);
-        graphGenerator.addEntity(professor.getName(), professor);
-        graphGenerator.addEntity(address.getName(), address);
-
-        graphGenerator.entitiesToGexf(EntityType.CLASS, "./src/test/gexf/class_gexf4j.gexf");
-
-    }
 }

@@ -2,11 +2,6 @@ package codeViz;
 
 import codeViz.entity.Entity;
 import codeViz.entity.EntityType;
-import it.uniroma1.dis.wsngroup.gexf4j.core.EdgeType;
-import it.uniroma1.dis.wsngroup.gexf4j.core.Gexf;
-import it.uniroma1.dis.wsngroup.gexf4j.core.Mode;
-import it.uniroma1.dis.wsngroup.gexf4j.core.impl.GexfImpl;
-import it.uniroma1.dis.wsngroup.gexf4j.core.impl.StaxGraphWriter;
 import org.gephi.graph.api.*;
 import org.gephi.project.api.ProjectController;
 import org.openide.util.Lookup;
@@ -82,70 +77,6 @@ public class GraphGenerator {
         return methodEntities;
     }
 
-    /**
-     * Convert entities to Gexf format using gexf4j
-     * NOTE: the produced file is not fully supported in latest gephi
-     *
-     * @author Thanuja Sivaananthan
-     * @param entityType entityType to create graph from
-     * @param filename filename to save as
-     */
-    public void entitiesToGexf(EntityType entityType, String filename){
-
-        // examples from https://github.com/francesco-ficarola/gexf4j/tree/master/src/examples/java/it/uniroma1/dis/wsngroup/gexf4j/examples
-
-        // NOTE: assuming all entities are properly set up with connections already
-        Collection<Entity> entities;
-
-        switch (entityType) {
-            case PACKAGE -> entities = packageEntities.values();
-            case CLASS -> entities =  classEntities.values();
-            case METHOD -> entities = methodEntities.values();
-            default -> throw new IllegalStateException("Unexpected value: " + entityType);
-        }
-
-        Gexf gexf = new GexfImpl();
-        Calendar date = Calendar.getInstance();
-
-        gexf.getMetadata()
-                .setLastModified(date.getTime())
-                .setCreator("Gephi.org")
-                .setDescription("A Web network");
-        gexf.setVisualization(true);
-
-        it.uniroma1.dis.wsngroup.gexf4j.core.Graph graph =  gexf.getGraph();
-
-        graph.setDefaultEdgeType(EdgeType.DIRECTED).setMode(Mode.STATIC); // not sure how to set as directed
-
-        // 1. create nodes for each entity
-        int id = 1; // add id in case there are duplicate names
-        for (Entity entity : entities){
-            it.uniroma1.dis.wsngroup.gexf4j.core.Node node = graph.createNode(id + entity.getName());
-            node.setLabel(entity.getName());
-            entity.setGexf4jNode(node);
-
-            id += 1;
-        }
-
-        // 2. create edges for each pair
-        for (Entity entity : entities){
-            for (Entity connectedEntity : entity.getConnectedEntities()){
-                it.uniroma1.dis.wsngroup.gexf4j.core.Edge edge = entity.getGexf4jNode().connectTo("1", connectedEntity.getGexf4jNode());
-            }
-        }
-
-
-        StaxGraphWriter graphWriter = new StaxGraphWriter();
-        File f = new File(filename);
-        Writer out;
-        try {
-            out =  new FileWriter(f, false);
-            graphWriter.writeToStream(gexf, out, "UTF-8");
-            System.out.println(f.getAbsolutePath());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * Set max size of coordinates based on the nodes in the graph
