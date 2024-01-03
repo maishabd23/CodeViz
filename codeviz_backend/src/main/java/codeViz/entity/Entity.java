@@ -22,9 +22,7 @@ public abstract class Entity {
     private static final Color HIGHLIGHED_COLOUR = new Color(255,255,50);
     private boolean isHighlighed;
 
-    // FIXME - keeping both Node types for now, until we decide which one to use
     private Node gephiNode;
-    private it.uniroma1.dis.wsngroup.gexf4j.core.Node gexf4jNode;
 
     /**
      * Set up an Entity
@@ -58,13 +56,6 @@ public abstract class Entity {
         return gephiNode;
     }
 
-    public void setGexf4jNode(it.uniroma1.dis.wsngroup.gexf4j.core.Node gexf4jNode) {
-        this.gexf4jNode = gexf4jNode;
-    }
-
-    public it.uniroma1.dis.wsngroup.gexf4j.core.Node getGexf4jNode() {
-        return gexf4jNode;
-    }
 
     public void incrementSize(){
         this.size += 1;
