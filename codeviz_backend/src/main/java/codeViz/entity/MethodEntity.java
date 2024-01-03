@@ -38,4 +38,19 @@ public class MethodEntity extends Entity {
         }
         return classEntity.getColour();
     }
+
+
+    @Override
+    public boolean containsSearchValue(String searchValue) {
+
+        if (super.containsSearchValue(searchValue)){
+            return true;
+        }
+
+        // TODO - add more checks
+        // check parameters
+        // check return type
+
+        return false;
+    }
 }

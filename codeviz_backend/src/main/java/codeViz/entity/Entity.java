@@ -144,4 +144,23 @@ public abstract class Entity {
     public Map <Entity, Integer> getConnectedEntitiesAndWeights(){
         return connectedEntitiesAndWeights;
     }
+
+    public boolean nameContains(String searchValue){
+        return name.contains(searchValue);
+    }
+
+    public boolean containsSearchValue(String searchValue){
+        if (nameContains(searchValue)){
+            return true;
+        }
+
+        for (Entity connectedEntity : connectedEntitiesAndWeights.keySet()){
+            // just do a simple search on the connected entity (don't call recursively, could highlight too much)
+            if (connectedEntity.nameContains(searchValue)){
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

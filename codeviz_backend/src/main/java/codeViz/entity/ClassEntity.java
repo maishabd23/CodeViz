@@ -88,4 +88,23 @@ public class ClassEntity extends Entity {
         }
     }
 
+    @Override
+    public boolean containsSearchValue(String searchValue) {
+
+        if (super.containsSearchValue(searchValue)){
+            return true;
+        }
+
+        // TODO check attributes
+
+        // check methods
+        for (MethodEntity methodEntity : methods){
+            if (methodEntity.containsSearchValue(searchValue)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }

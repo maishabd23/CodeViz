@@ -38,7 +38,7 @@ public class CodeVizController {
 
             if (!searchValue.isEmpty()) {
                 System.out.println("SEARCHING FOR " + searchValue);
-                javaBytecodeReader.getGraphGenerator().performSearch(searchValue);
+                javaBytecodeReader.getGraphGenerator().performSearch(searchValue, false);
             }
 
             javaBytecodeReader.generateGraph(entityType, "./codeviz_frontend/public/codeviz_demo.gexf");

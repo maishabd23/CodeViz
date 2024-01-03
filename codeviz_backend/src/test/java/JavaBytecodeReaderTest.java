@@ -364,7 +364,7 @@ public class JavaBytecodeReaderTest {
         List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
         javaBytecodeReader.generateEntitiesAndConnections(filePaths);
         String prefix = "MethodEntity";
-        javaBytecodeReader.getGraphGenerator().performSearch(prefix);
+        javaBytecodeReader.getGraphGenerator().performSearch(prefix, false);
 
         GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
         LinkedHashMap<String, Entity> packageEntities = graphGenerator.getPackageEntities();
@@ -391,7 +391,7 @@ public class JavaBytecodeReaderTest {
         List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
         javaBytecodeReader.generateEntitiesAndConnections(filePaths);
         String prefix = "addConnectedEntity";
-        javaBytecodeReader.getGraphGenerator().performSearch(prefix);
+        javaBytecodeReader.getGraphGenerator().performSearch(prefix, false);
 
         GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
         LinkedHashMap<String, Entity> methodEntities = graphGenerator.getMethodEntities();
