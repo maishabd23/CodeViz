@@ -79,14 +79,20 @@ public abstract class Entity {
      * @author Thanuja Sivaananthan
      */
     private Color getRandomColour(){
-        Random rand = new Random(name.hashCode()); // could enforce a seed, ex. name.hashCode()
+        Random rand = new Random(name.hashCode()); // enforce a seed for some colour consistency
 
-        // Will produce only bright / light colours:
-        float r = (float) (rand.nextFloat() / 2f + 0.5);
-        float g = (float) (rand.nextFloat() / 2f + 0.5);
-        float b = (float) (rand.nextFloat() / 2f + 0.5);
+        while (true) {
 
-        return new Color(r, g, b);
+            // Will produce only bright / light colours:
+            float r = (float) (rand.nextFloat() / 2f + 0.5);
+            float g = (float) (rand.nextFloat() / 2f + 0.5);
+            float b = (float) (rand.nextFloat() / 2f + 0.5);
+
+            // avoid colours too similar to HIGHLIGHED_COLOUR (for ex, should not be r="244" g="252" b="130")
+            if (! (r > ((float) 240 /255) && g > ((float) 240 /255) && b < ((float) 150 /255))) {
+                return new Color(r, g, b);
+            }
+        }
     }
 
     /**

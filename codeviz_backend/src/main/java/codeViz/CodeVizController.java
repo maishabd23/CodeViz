@@ -13,7 +13,7 @@ import java.util.Map;
 public class CodeVizController {
 
     private String currentTarget = "./codeviz_backend/target/classes/codeViz/entity";
-    private EntityType currentLevel = EntityType.PACKAGE;
+    private EntityType currentLevel = EntityType.CLASS;
 
     @GetMapping("/")
     public String index() {
@@ -29,16 +29,16 @@ public class CodeVizController {
     }
 
 
-    public void viewLevel(String targetLevel, EntityType entityType, String searchValue){
+    public void viewLevel(String targetLevel, EntityType entityType, String searchValue, boolean detailed){
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
         List<String> filePaths = javaBytecodeReader.getAllFilePaths(targetLevel);
         if (!filePaths.isEmpty()) {
-            currentTarget = targetLevel; // valid path, update target
+            currentTarget = targetLevel; // only if it's a valid path, update target
             javaBytecodeReader.generateEntitiesAndConnections(filePaths);
 
             if (!searchValue.isEmpty()) {
                 System.out.println("SEARCHING FOR " + searchValue);
-                javaBytecodeReader.getGraphGenerator().performSearch(searchValue, false);
+                javaBytecodeReader.getGraphGenerator().performSearch(searchValue, detailed);
             }
 
             javaBytecodeReader.generateGraph(entityType, "./codeviz_frontend/public/codeviz_demo.gexf");
@@ -49,7 +49,8 @@ public class CodeVizController {
     @GetMapping("/api/viewGraphLevel")
     public Map<String, String> viewGraphLevel(@RequestParam(name = "level", required = false, defaultValue = "") String level,
                                               @RequestParam(name = "searchValue", required = false, defaultValue = "") String searchValue,
-                                              @RequestParam(name = "targetFolder", required = false, defaultValue = "") String targetFolder) {
+                                              @RequestParam(name = "targetFolder", required = false, defaultValue = "") String targetFolder,
+                                              @RequestParam(name = "detailed", required = false, defaultValue = "false") boolean detailed) {
         Map<String, String> response = new HashMap<>();
 
         if (!level.isEmpty()) {
@@ -57,12 +58,12 @@ public class CodeVizController {
         }
 
         if (!targetFolder.isEmpty()) {
-            System.out.println("GENERATING FOR "  + currentTarget);
+            System.out.println("GENERATING FOR "  + targetFolder); // TODO - allow user to enter own path / github url
         } else {
             targetFolder = currentTarget;
         }
 
-        viewLevel(targetFolder, currentLevel, searchValue);
+        viewLevel(targetFolder, currentLevel, searchValue, detailed);
 
         response.put("file", "codeviz_demo.gexf");
         return response; //each API call returns a JSON object that the React app parses
