@@ -34,7 +34,7 @@ public abstract class Entity {
      * @param entityType    entity type
      */
     public Entity(String name, EntityType entityType){
-        this.name = name.replace("<", "").replace(">", "");
+        this.name = name;
         this.entityType = entityType;
         this.connectedEntitiesAndWeights = new LinkedHashMap<>();
         this.size = 1;

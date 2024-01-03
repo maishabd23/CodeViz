@@ -14,6 +14,8 @@ public class ClassEntity extends Entity {
     private final PackageEntity packageEntity;
     private Set<MethodEntity> methods;
 
+    private ClassEntity superClass; // may have methods not defined in this class alone
+
     public ClassEntity(String name, PackageEntity packageEntity){
         super(name, EntityType.CLASS);
         this.packageEntity = packageEntity;
@@ -34,6 +36,14 @@ public class ClassEntity extends Entity {
 
     public PackageEntity getPackageEntity() {
         return packageEntity;
+    }
+
+    public void setSuperClass(ClassEntity superClass) {
+        this.superClass = superClass;
+    }
+
+    public ClassEntity getSuperClass() {
+        return superClass;
     }
 
     /**
@@ -64,7 +74,7 @@ public class ClassEntity extends Entity {
      */
     public MethodEntity getMethod(String methodName){
         // could simplify this if methods is changed from Set to something like HashMap
-        methodName = methodName.replace("<", "").replace(">","");
+        methodName = MethodEntity.getProperName(methodName);
         for (MethodEntity method : methods){
             if (method.getName().equals(methodName)){
                 return method;

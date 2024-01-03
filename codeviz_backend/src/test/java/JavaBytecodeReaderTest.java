@@ -349,7 +349,10 @@ public class JavaBytecodeReaderTest {
         assertTrue(classInit.getConnectedEntities().contains(packageAddClass));
         assertTrue(methodInit.getConnectedEntities().contains(classAddMethod));
 
-        // FIXME - MethodEntity.getMethod should be connected to Entity.getName or a MethodEntity.getName
+        // superclass method connection - ClassEntity.getMethod should be connected to Entity.getName
+        Entity getMethod = methodEntities.get("codeViz.entity.ClassEntity.getMethod");
+        Entity getName = methodEntities.get("codeViz.entity.Entity.getName");
+        assertTrue(getMethod.getConnectedEntities().contains(getName));
     }
 
 
@@ -440,7 +443,8 @@ public class JavaBytecodeReaderTest {
         assertNotEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.PackageEntity").getParentColour());
         assertEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.ClassEntity").getParentColour());
         assertEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.MethodEntity").getParentColour());
-        // other values are also highlighted...
-
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.addMethod").getParentColour()); // MethodEntity argument
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.getMethod").getParentColour()); // MethodEntity return type
+        //assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.getMethods").getParentColour()); // TODO - MethodEntity list return type
     }
 }
