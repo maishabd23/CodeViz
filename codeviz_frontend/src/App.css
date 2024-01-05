@@ -76,6 +76,8 @@ canvas {
   right: 1em;
   top: 6em;
   text-align: left;
+  padding: 10px 10px;
+  background-color: lightgrey;
 }
 
 .menu {
