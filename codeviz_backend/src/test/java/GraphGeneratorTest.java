@@ -4,10 +4,10 @@ import codeViz.entity.EntityType;
 import codeViz.entity.MethodEntity;
 import codeViz.entity.PackageEntity;
 import org.gephi.graph.api.*;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test class for EntityGraphGeneratorTest.
@@ -26,8 +26,9 @@ public class GraphGeneratorTest {
 
     private GraphGenerator graphGenerator;
 
+    private final boolean GENERATE_GEXF = false;
 
-    @Before
+    @BeforeEach
     public void setupGraphGenerator() {
         // loosely following these uml/java examples:
         // https://agilemodeling.com/wp-content/uploads/2023/07/classDiagramInheritance.jpg
@@ -122,7 +123,9 @@ public class GraphGeneratorTest {
         assertEquals("Professor", edges[2].getSource().getLabel());
         assertEquals("Person", edges[2].getTarget().getLabel());
 
-        graphGenerator.directedGraphToGexf(directedGraph, "./src/test/gexf/class_gephi.gexf");
+        if (GENERATE_GEXF) {
+            graphGenerator.directedGraphToGexf(directedGraph, "./src/test/gexf/class_gephi.gexf");
+        }
 
     }
 
@@ -134,12 +137,15 @@ public class GraphGeneratorTest {
     public void testSimpleSearch(){
         boolean isDetailed = false;
 
-        // searching a class name will only highlight that class
+        // searching a class name will only highlight that class and it's methods
         graphGenerator.performSearch("Person", isDetailed);
         assertTrue(person.isHighlighed());
         assertFalse(student.isHighlighed());
         assertFalse(professor.isHighlighed());
         assertFalse(address.isHighlighed());
+        assertTrue(personInit.isHighlighed());
+        assertTrue(getName.isHighlighed());
+        assertTrue(getAge.isHighlighed());
 
         // searching a method name will only highlight the methods - not the classes they are in
         graphGenerator.performSearch("getName", isDetailed);
@@ -173,6 +179,7 @@ public class GraphGeneratorTest {
         assertTrue(student.isHighlighed());
         assertTrue(professor.isHighlighed());
         assertFalse(address.isHighlighed());
+        assertTrue(personInit.isHighlighed());
 
         graphGenerator.performSearch("Address", isDetailed);
         assertTrue(person.isHighlighed());

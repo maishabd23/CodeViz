@@ -1,13 +1,13 @@
 import codeViz.GraphGenerator;
 import codeViz.JavaBytecodeReader;
 import codeViz.entity.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test class for JavaBytecodeReader.
@@ -20,6 +20,7 @@ public class JavaBytecodeReaderTest {
 
     private final String folderPath = "./target/classes/codeViz/entity";
     private final String name = "codeViz/entity";
+    private final boolean GENERATE_GEXF = false;
 
 
     /**
@@ -226,19 +227,23 @@ public class JavaBytecodeReaderTest {
         List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
         javaBytecodeReader.generateEntitiesAndConnections(filePaths);
 
-        javaBytecodeReader.generateGraph(EntityType.PACKAGE, "./src/test/gexf/" + name + "/package.gexf");
-        javaBytecodeReader.generateGraph(EntityType.CLASS, "./src/test/gexf/" + name + "/class.gexf");
-        javaBytecodeReader.generateGraph(EntityType.METHOD, "./src/test/gexf/" + name + "/method.gexf");
+        if (GENERATE_GEXF) {
+            javaBytecodeReader.generateGraph(EntityType.PACKAGE, "./src/test/gexf/" + name + "/package.gexf");
+            javaBytecodeReader.generateGraph(EntityType.CLASS, "./src/test/gexf/" + name + "/class.gexf");
+            javaBytecodeReader.generateGraph(EntityType.METHOD, "./src/test/gexf/" + name + "/method.gexf");
+        }
 
-//        String folderPath2 = "./target/classes/codeViz";
-//        String name2 = "codeViz";
-//
-//        filePaths = javaBytecodeReader.getAllFilePaths(folderPath2);
-//        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
-//
-//        javaBytecodeReader.generateGraph(EntityType.PACKAGE, "./src/test/gexf/" + name2 + "/package.gexf");
-//        javaBytecodeReader.generateGraph(EntityType.CLASS, "./src/test/gexf/" + name2 + "/class.gexf");
-//        javaBytecodeReader.generateGraph(EntityType.METHOD, "./src/test/gexf/" + name2 + "/method.gexf");
+        String folderPath2 = "./target/classes/codeViz";
+        String name2 = "codeViz";
+
+        filePaths = javaBytecodeReader.getAllFilePaths(folderPath2);
+        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
+
+        if (GENERATE_GEXF) {
+            javaBytecodeReader.generateGraph(EntityType.PACKAGE, "./src/test/gexf/" + name2 + "/package.gexf");
+            javaBytecodeReader.generateGraph(EntityType.CLASS, "./src/test/gexf/" + name2 + "/class.gexf");
+            javaBytecodeReader.generateGraph(EntityType.METHOD, "./src/test/gexf/" + name2 + "/method.gexf");
+        }
     }
 
     /**
@@ -384,9 +389,11 @@ public class JavaBytecodeReaderTest {
         assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.getMethods").getParentColour());
         assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.getMethod").getParentColour());
 
-        javaBytecodeReader.generateGraph(EntityType.PACKAGE, "./src/test/gexf/" + name + "/search_" + prefix + "_package.gexf");
-        javaBytecodeReader.generateGraph(EntityType.CLASS, "./src/test/gexf/" + name + "/search_" + prefix + "_class.gexf");
-        javaBytecodeReader.generateGraph(EntityType.METHOD, "./src/test/gexf/" + name + "/search_" + prefix + "_method.gexf");
+        if (GENERATE_GEXF) {
+            javaBytecodeReader.generateGraph(EntityType.PACKAGE, "./src/test/gexf/" + name + "/search_" + prefix + "_package.gexf");
+            javaBytecodeReader.generateGraph(EntityType.CLASS, "./src/test/gexf/" + name + "/search_" + prefix + "_class.gexf");
+            javaBytecodeReader.generateGraph(EntityType.METHOD, "./src/test/gexf/" + name + "/search_" + prefix + "_method.gexf");
+        }
     }
 
     /**
@@ -410,7 +417,9 @@ public class JavaBytecodeReaderTest {
         assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.addConnectedEntity").getParentColour());
         assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.addConnectedEntity").getParentColour());
 
-        javaBytecodeReader.generateGraph(EntityType.METHOD, "./src/test/gexf/" + name + "/search_" + prefix + "_method.gexf");
+        if (GENERATE_GEXF) {
+            javaBytecodeReader.generateGraph(EntityType.METHOD, "./src/test/gexf/" + name + "/search_" + prefix + "_method.gexf");
+        }
     }
 
     /**

@@ -1,8 +1,13 @@
 # CodeViz
 
+## Setup
+
+To clone the repo (note that if the default folder name "CodeViz" is used, IntelliJ may not recognize `codeviz_frontend` as a module properly):
+```git clone https://github.com/maishabd23/CodeViz.git CodeVizFolder```
+
 ## Running the Application in Development Mode (locally)
 
-To start up the backend, run the main method in the `SpringBootApp` class in the `codeViz` package.\
+To start up the backend, run the main method in the `App` class in the `codeViz` package.\
 This should run the app on [http://localhost:8080](http://localhost:8080).
 
 Navigate to the frontend directory on the terminal, and run the following:
