@@ -24,7 +24,7 @@ function GraphViz() {
       });
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
       const fetchData = async () => {
         const response = await fetch("codeviz_demo.gexf"); //needs to be in 'public' folder // TODO - don't hardcode here
         const gexf = await response.text();
@@ -37,6 +37,9 @@ function GraphViz() {
         const zoomInBtn = document.getElementById("zoom-in");
         const zoomOutBtn = document.getElementById("zoom-out");
         const zoomResetBtn = document.getElementById("zoom-reset");
+
+        const labelsThresholdRange = document.getElementById("labels-threshold");
+        const updateThresholdSettings = document.getElementById("update-threshold-settings");
 
         // Instantiate sigma:
         const renderer = new Sigma(graph, container, {
@@ -56,19 +59,58 @@ function GraphViz() {
         zoomResetBtn.addEventListener("click", () => {
           camera.animatedReset({ duration: 600 });
         });
+
+        // Bind labels threshold to range input
+        labelsThresholdRange.addEventListener("input", () => {
+          renderer.setSetting("labelRenderedSizeThreshold", +labelsThresholdRange.value);
+          document.getElementById("thresholdLabel").innerHTML = "Threshold: " + labelsThresholdRange.value;
+        });
+
+        // Set proper range initial value:
+        labelsThresholdRange.value = renderer.getSetting("labelRenderedSizeThreshold") + "";
+
+        // update threshold settings to match inputs
+        updateThresholdSettings.addEventListener("click", () => {
+          labelsThresholdRange.min = document.getElementById("min").value;
+          labelsThresholdRange.max = document.getElementById("max").value;
+          labelsThresholdRange.step = document.getElementById("step").value;
+        });
+
       };
   
       fetchData();
     }, []);
 
-  
+
     return (
       <div className="graphDisplay">
         <div className="graphDisplay--image"></div>
         <div id="controls">
-          <div className="input"><label htmlFor="zoom-in">Zoom in</label><button id="zoom-in">+</button></div>
-          <div className="input"><label htmlFor="zoom-out">Zoom out</label><button id="zoom-out">-</button></div>
-          <div className="input"><label htmlFor="zoom-reset">Reset zoom</label><button id="zoom-reset">⊙</button></div>
+          <h2>Controls</h2>
+          <div className="input"><label htmlFor="zoom-in">Zoom in </label><button id="zoom-in">+</button></div>
+          <div className="input"><label htmlFor="zoom-out">Zoom out </label><button id="zoom-out">-</button></div>
+          <div className="input"><label htmlFor="zoom-reset">Reset zoom </label><button id="zoom-reset">⊙</button></div>
+          <div className="input">
+            <label htmlFor="labels-threshold">Threshold </label>
+            <input id="labels-threshold" type="range" min="0" max="15" step="0.5" />
+            <table className="center">{/*for ease of use, ideally these values should be set dynamically based on the graph*/}
+              <tbody>
+              <tr><td>
+                <label htmlFor="min">min </label><input id="min" type="number" min="0" step="1" defaultValue={"0"}/>
+              </td></tr>
+              <tr><td>
+                <label htmlFor="max">max </label><input id="max" type="number" max="100" step="1" defaultValue={"15"}/>
+              </td></tr>
+              <tr><td>
+                <label htmlFor="step">step </label><input id="step" type="number" min="0.01" step="0.01" defaultValue={"0.5"}/>
+              </td></tr>
+              <tr><td>
+                <button id="update-threshold-settings">Update Threshold Settings</button>
+              </td></tr>
+              </tbody>
+            </table>
+            <p id="thresholdLabel"></p>
+          </div>
         </div>
       </div>
     );
