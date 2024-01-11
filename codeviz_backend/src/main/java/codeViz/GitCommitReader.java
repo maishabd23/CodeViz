@@ -12,20 +12,24 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.*;
 import org.eclipse.jgit.treewalk.filter.PathSuffixFilter;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GitCommitReader {
 
-    // must be the root of the repo
-    private static final String currentTarget = "./"; // weird things happen in intelliJ's project/vcs if I try setting this as anything else like ./codeviz_backend, ./codeviz_backend/src, etc
-    private static final String gitHubURI = "https://github.com/thanujasiva/CodeViz.git"; // using own fork for now
     private static final String gitCloneDirectory = "./testgithistory"; // local directory to clone into
 
     private final Git git;
+    private final GraphGenerator graphGenerator;
+    private ArrayList<CommitInformation> commitInformations;
     
-    public GitCommitReader(String localDirectory){
+    public GitCommitReader(GraphGenerator graphGenerator, String localDirectory){
+        this.graphGenerator = graphGenerator;
+        this.commitInformations = new ArrayList<>();
         try {
             this.git = Git.init().setDirectory(new File(localDirectory)).call();
         } catch (GitAPIException e) {
@@ -33,7 +37,9 @@ public class GitCommitReader {
         }
     }
 
-    public GitCommitReader(String gitHubURI, String tokenPassword){
+    public GitCommitReader(GraphGenerator graphGenerator, String gitHubURI, String tokenPassword){
+        this.graphGenerator = graphGenerator;
+        this.commitInformations = new ArrayList<>();
         // TODO - make this properly secure
         try {
             FileUtils.deleteDirectory(new File(gitCloneDirectory));
@@ -51,23 +57,8 @@ public class GitCommitReader {
         return git;
     }
 
-    public static void main(String[] args) {
-
-        boolean isLocal = true;
-        GitCommitReader gitCommitReader;
-
-        // could either read locally or through the gitHub link
-        if (isLocal) {
-            gitCommitReader = new GitCommitReader(currentTarget);
-        } else {
-            // https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
-            // in the GitHub Developer Settings, create a token with the "repo" settings selected
-            // (don't commit the actual value here)
-            String tokenPassword = "";
-            gitCommitReader = new GitCommitReader(gitHubURI, tokenPassword);
-        }
-
-        gitCommitReader.getCommitHistory(10);
+    public ArrayList<CommitInformation> getCommitInformations() {
+        return commitInformations;
     }
 
     /**
@@ -100,9 +91,9 @@ public class GitCommitReader {
                 } catch (IOException | GitAPIException e) {
                     throw new RuntimeException(e);
                 }
-            }
 
-            this.getCommitInfo(commit);
+                //this.getCommitInfo(nextCommit);
+            }
 
             firstCommit = false;
             nextCommit = commit;
@@ -111,8 +102,8 @@ public class GitCommitReader {
     }
 
     private void getCommitInfo(RevCommit currentCommit){
-        System.out.println(currentCommit.getId());
-        System.out.println(currentCommit.getTree().getId());
+        System.out.println(currentCommit.getId().getName());
+        System.out.println(currentCommit.getTree().getId().getName());
         System.out.println(currentCommit.getAuthorIdent().getName());
         System.out.println(currentCommit.getShortMessage());
     }
@@ -138,28 +129,43 @@ public class GitCommitReader {
                 call();
 
         for (DiffEntry entry : diff) {
-            System.out.println("Entry: " + entry + ", from: " + entry.getOldId() + ", to: " + entry.getNewId());
+            //System.out.println("Entry: " + entry + ", from: " + entry.getOldId() + ", to: " + entry.getNewId());
 
+            CommitType commitType;
             if (entry.getOldPath().equals(entry.getNewPath())) {
-                System.out.println("Filename: " + entry.getNewPath());
+                //System.out.println("Filename: " + entry.getNewPath());
+                commitType = CommitType.EDIT;
             } else if (entry.getOldPath().equals("/dev/null")){
-                System.out.println("Newly created Filename: " + entry.getNewPath());
+                //System.out.println("Newly created Filename: " + entry.getNewPath());
+                commitType = CommitType.CREATE;
             } else if (entry.getNewPath().equals("/dev/null")){
-                System.out.println("Deleted Filename: " + entry.getOldPath());
+                //System.out.println("Deleted Filename: " + entry.getOldPath());
+                commitType = CommitType.DELETE;
             } else {
                 // renamed file
-                System.out.println("Old Filename: " + entry.getOldPath());
-                System.out.println("New Filename: " + entry.getNewPath());
+                //System.out.println("Old Filename: " + entry.getOldPath());
+                //System.out.println("New Filename: " + entry.getNewPath());
+                commitType = CommitType.RENAME;
             }
 
-            try (DiffFormatter formatter = new DiffFormatter(System.out)) {
-                formatter.setRepository(repository);
-                formatter.format(entry);
-            }
+            OutputStream outputStream = new ByteArrayOutputStream();
+            DiffFormatter formatter = new DiffFormatter(outputStream);
+            formatter.setRepository(repository);
+            formatter.format(entry);
+//            System.out.println(outputStream.toString());
+
+            CommitInformation commitInformation = new CommitInformation(
+                    newCommit.getId().getName(),
+                    newCommit.getAuthorIdent().getName(),
+                    entry.getOldPath(), entry.getNewPath(), commitType, newCommit.getShortMessage(),
+                    outputStream.toString()
+            );
+            commitInformations.add(commitInformation);
+
 
         }
 
-        System.out.println("===============================");
+        //System.out.println("===============================");
 
     }
 
