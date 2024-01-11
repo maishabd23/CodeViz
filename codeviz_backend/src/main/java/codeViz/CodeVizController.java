@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -31,10 +30,9 @@ public class CodeVizController {
 
     public void viewLevel(String targetLevel, EntityType entityType, String searchValue, boolean detailed){
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
-        List<String> filePaths = javaBytecodeReader.getAllFilePaths(targetLevel);
-        if (!filePaths.isEmpty()) {
+        boolean success = javaBytecodeReader.generateEntitiesAndConnections(targetLevel);
+        if (success) {
             currentTarget = targetLevel; // only if it's a valid path, update target
-            javaBytecodeReader.generateEntitiesAndConnections(filePaths);
 
             if (!searchValue.isEmpty()) {
                 System.out.println("SEARCHING FOR " + searchValue);

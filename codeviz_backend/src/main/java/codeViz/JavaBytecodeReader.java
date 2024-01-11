@@ -403,6 +403,21 @@ public class JavaBytecodeReader {
     /**
      * Generate the entities and connections between them
      * @author Thanuja Sivaananthan
+     * @param folderName      folder name to get file paths from
+     * @return boolean, whether the entity generation was successful
+     */
+    public boolean generateEntitiesAndConnections(String folderName) {
+        List<String> filePaths = getAllFilePaths(folderName);
+        if (!filePaths.isEmpty()) {
+            generateEntitiesAndConnections(filePaths);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Generate the entities and connections between them
+     * @author Thanuja Sivaananthan
      * @param filePaths     filepaths to get entities from
      */
     public void generateEntitiesAndConnections(List<String> filePaths){

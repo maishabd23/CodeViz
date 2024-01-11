@@ -46,22 +46,22 @@ public class GraphGenerator {
      * @param entity    entity
      */
     public boolean addEntity(String key, Entity entity){
-        LinkedHashMap<String, Entity> entites;
+        LinkedHashMap<String, Entity> entities;
         switch (entity.getEntityType()) {
-            case PACKAGE -> entites = packageEntities;
-            case CLASS -> entites = classEntities;
-            case METHOD -> entites = methodEntities;
+            case PACKAGE -> entities = packageEntities;
+            case CLASS -> entities = classEntities;
+            case METHOD -> entities = methodEntities;
             default -> throw new IllegalStateException("Unexpected value: " + entity.getEntityType());
         }
 
         // If the key already exists, normally its old value is replaced with a new one
         // Do not want to replace with new value, as any connections that were made could get messed up
-        if (entites.containsKey(key)){
+        if (entities.containsKey(key)){
             System.out.println("NOTE, list of type " + entity.getEntityType() + " already has name: " + key);
             return false;
         }
 
-        entites.put(key, entity);
+        entities.put(key, entity);
         return true;
     }
 

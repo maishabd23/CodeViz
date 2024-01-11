@@ -53,8 +53,7 @@ public class JavaBytecodeReaderTest {
     public void testGeneratePackages(){
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
 
-        List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
-        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
+        javaBytecodeReader.generateEntitiesAndConnections(folderPath);
 
         GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
         LinkedHashMap<String, Entity> packageEntities = graphGenerator.getPackageEntities();
@@ -78,8 +77,7 @@ public class JavaBytecodeReaderTest {
     public void testGenerateClasses(){
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
 
-        List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
-        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
+        javaBytecodeReader.generateEntitiesAndConnections(folderPath);
 
         GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
         LinkedHashMap<String, Entity> classEntities = graphGenerator.getClassEntities();
@@ -106,8 +104,7 @@ public class JavaBytecodeReaderTest {
     public void testGenerateMethods(){
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
 
-        List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
-        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
+        javaBytecodeReader.generateEntitiesAndConnections(folderPath);
 
         GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
         LinkedHashMap<String, Entity> methodEntities = graphGenerator.getMethodEntities();
@@ -146,8 +143,7 @@ public class JavaBytecodeReaderTest {
     public void testGenerateLevelPackageClassConnections(){
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
 
-        List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
-        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
+        javaBytecodeReader.generateEntitiesAndConnections(folderPath);
 
         GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
 
@@ -182,8 +178,7 @@ public class JavaBytecodeReaderTest {
     public void testGenerateLevelClassMethodConnections(){
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
 
-        List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
-        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
+        javaBytecodeReader.generateEntitiesAndConnections(folderPath);
 
         GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
 
@@ -224,8 +219,7 @@ public class JavaBytecodeReaderTest {
     public void testGenerateGexfGraphs(){
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
 
-        List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
-        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
+        javaBytecodeReader.generateEntitiesAndConnections(folderPath);
 
         if (GENERATE_GEXF) {
             javaBytecodeReader.generateGraph(EntityType.PACKAGE, "./src/test/gexf/" + name + "/package.gexf");
@@ -236,8 +230,7 @@ public class JavaBytecodeReaderTest {
         String folderPath2 = "./target/classes/codeViz";
         String name2 = "codeViz";
 
-        filePaths = javaBytecodeReader.getAllFilePaths(folderPath2);
-        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
+        javaBytecodeReader.generateEntitiesAndConnections(folderPath2);
 
         if (GENERATE_GEXF) {
             javaBytecodeReader.generateGraph(EntityType.PACKAGE, "./src/test/gexf/" + name2 + "/package.gexf");
@@ -254,8 +247,7 @@ public class JavaBytecodeReaderTest {
     public void testGenerateSuperclassEdges(){
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
 
-        List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
-        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
+        javaBytecodeReader.generateEntitiesAndConnections(folderPath);
 
         GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
         LinkedHashMap<String, Entity> classEntities = graphGenerator.getClassEntities();
@@ -286,8 +278,7 @@ public class JavaBytecodeReaderTest {
     public void testGenerateFieldEdges(){
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
 
-        List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
-        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
+        javaBytecodeReader.generateEntitiesAndConnections(folderPath);
 
         GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
         LinkedHashMap<String, Entity> classEntities = graphGenerator.getClassEntities();
@@ -322,8 +313,7 @@ public class JavaBytecodeReaderTest {
     public void testGenerateMethodEdges() {
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
 
-        List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
-        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
+        javaBytecodeReader.generateEntitiesAndConnections(folderPath);
 
         GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
         LinkedHashMap<String, Entity> methodEntities = graphGenerator.getMethodEntities();
@@ -369,8 +359,7 @@ public class JavaBytecodeReaderTest {
     public void testSearchClassColours() {
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
 
-        List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
-        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
+        javaBytecodeReader.generateEntitiesAndConnections(folderPath);
         String prefix = "Method";
         javaBytecodeReader.getGraphGenerator().performSearch(prefix, false);
 
@@ -404,8 +393,7 @@ public class JavaBytecodeReaderTest {
     public void testSearchMethodColours() {
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
 
-        List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
-        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
+        javaBytecodeReader.generateEntitiesAndConnections(folderPath);
         String prefix = "addConnectedEntity";
         javaBytecodeReader.getGraphGenerator().performSearch(prefix, false);
 
@@ -433,8 +421,7 @@ public class JavaBytecodeReaderTest {
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
         GraphGenerator graphGenerator = javaBytecodeReader.getGraphGenerator();
 
-        List<String> filePaths = javaBytecodeReader.getAllFilePaths(folderPath);
-        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
+        javaBytecodeReader.generateEntitiesAndConnections(folderPath);
 
         javaBytecodeReader.getGraphGenerator().performSearch("addMethod", true);
         methodEntities = graphGenerator.getMethodEntities();
