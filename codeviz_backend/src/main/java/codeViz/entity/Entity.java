@@ -1,11 +1,9 @@
 package codeViz.entity;
 
+import codeViz.CommitInformation;
 import org.gephi.graph.api.Node;
-import java.util.Map;
-import java.util.LinkedHashMap;
-import java.util.Set;
+import java.util.*;
 import java.awt.Color;
-import java.util.Random;
 
 /**
  * Abstract entity class with common behavior, such as connected components
@@ -24,6 +22,8 @@ public abstract class Entity {
 
     private Node gephiNode;
 
+    private ArrayList<CommitInformation> commitInformations;
+
     /**
      * Set up an Entity
      * @author Thanuja Sivaananthan
@@ -38,6 +38,7 @@ public abstract class Entity {
         this.size = 1;
         this.colour = getRandomColour();
         this.isHighlighed = false;
+        this.commitInformations = new ArrayList<>();
     }
 
     public String getName() {
@@ -156,5 +157,13 @@ public abstract class Entity {
         }
 
         return false;
+    }
+
+    public ArrayList<CommitInformation> getCommitInformations() {
+        return commitInformations;
+    }
+
+    protected void addCommitInformation(CommitInformation commitInformation){
+        this.commitInformations.add(commitInformation);
     }
 }

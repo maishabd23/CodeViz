@@ -1,5 +1,7 @@
 package codeViz.entity;
 
+import codeViz.CommitInformation;
+
 import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -115,6 +117,12 @@ public class ClassEntity extends Entity {
         }
 
         return false;
+    }
+
+    public void addCommitInformation(CommitInformation commitInformation){
+        super.addCommitInformation(commitInformation);
+
+        // add to method?
     }
 
 }

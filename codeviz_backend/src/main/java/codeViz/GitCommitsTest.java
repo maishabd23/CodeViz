@@ -6,14 +6,13 @@ public class GitCommitsTest {
     // must be the root of the repo
     private static final String currentSrc = "./"; // weird things happen in intelliJ's project/vcs if I try setting this as anything else like ./codeviz_backend, ./codeviz_backend/src, etc
     private static final String gitHubURI = "https://github.com/thanujasiva/CodeViz.git"; // using own fork for now
-    private static final String currentTarget = "./codeviz_backend/target/classes/codeViz/entity";
+    private static final String currentTarget = "./codeviz_backend/target/classes"; // /codeViz/entity";
 
 
     public static void main(String[] args) {
 
         JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
-//        List<String> filePaths = javaBytecodeReader.getAllFilePaths(currentTarget);
-//        javaBytecodeReader.generateEntitiesAndConnections(filePaths);
+        javaBytecodeReader.generateEntitiesAndConnections(currentTarget);
 
         boolean isLocal = true;
         GitCommitReader gitCommitReader;
@@ -33,7 +32,7 @@ public class GitCommitsTest {
 
         System.out.println("Commit Information:");
         for (CommitInformation commitInformation : gitCommitReader.getCommitInformations()){
-            System.out.println(commitInformation.toString());
+            System.out.println(commitInformation.toString() + "\n");
         }
 
     }
