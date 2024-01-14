@@ -8,6 +8,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.diff.RenameDetector;
 import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
@@ -19,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -34,7 +36,7 @@ public class GitCommitReader {
 
     private final Git git;
     private final GraphGenerator graphGenerator;
-    private LinkedHashMap<String, CommitInfo> commitIdsAndInfos;
+    private ArrayList<CommitInfo> commitInfos; // may not need to store here if using from entities directly? mainly used for previous commit
     private LinkedHashMap<String, String> renamedClassEntityNames;
 
     /**
@@ -44,7 +46,7 @@ public class GitCommitReader {
      */
     public GitCommitReader(GraphGenerator graphGenerator, String localDirectory){
         this.graphGenerator = graphGenerator;
-        this.commitIdsAndInfos = new LinkedHashMap<>();
+        this.commitInfos = new ArrayList<>();
         this.renamedClassEntityNames = new LinkedHashMap<>();
         try {
             this.git = Git.init().setDirectory(new File(localDirectory)).call();
@@ -61,7 +63,7 @@ public class GitCommitReader {
      */
     public GitCommitReader(GraphGenerator graphGenerator, String gitHubURI, String tokenPassword){
         this.graphGenerator = graphGenerator;
-        this.commitIdsAndInfos = new LinkedHashMap<>();
+        this.commitInfos = new ArrayList<>();
         this.renamedClassEntityNames = new LinkedHashMap<>();
         // TODO - make this properly secure
         try {
@@ -76,20 +78,15 @@ public class GitCommitReader {
         }
     }
 
-    public Git getGit() {
-        return git;
-    }
-
     public Collection<CommitInfo> getCommitInfos() {
-        return commitIdsAndInfos.values();
+        return commitInfos;
     }
 
     /**
      * Store the commit history in order of most recent commit to the oldest commit
-     * @param maxNumCommits the number of commits to get the history from
+     * @param maxNumCommits the number of commits to get the history from, -1 if all commits
      */
     public void storeCommitHistory(int maxNumCommits) { // Note: public methods should probably not throw exceptions
-        Git git = this.getGit();
         Iterable<RevCommit> log;
         try {
             log = git.log().call();
@@ -105,7 +102,7 @@ public class GitCommitReader {
         for (RevCommit commit : log) {
 
             numCommits += 1;
-            if (numCommits >= maxNumCommits) {
+            if (maxNumCommits > 0 && numCommits >= maxNumCommits) {
                 break;
             }
 
@@ -147,8 +144,18 @@ public class GitCommitReader {
                         setPathFilter(PathSuffixFilter.create(".java")).
                 call();
 
+        RenameDetector renameDetector = new RenameDetector(repository); // TODO - test renamed files
+        renameDetector.addAll(diff);
+        diff = renameDetector.compute();
+
+
         for (DiffEntry entry : diff) {
             //System.out.println("Entry: " + entry + ", from: " + entry.getOldId() + ", to: " + entry.getNewId());
+
+            if (entry.getScore() >= renameDetector.getRenameScore()) {
+                System.out.println("file: " + entry.getOldPath() + " copied/moved to: " + entry.getNewPath());
+                renamedClassEntityNames.put(entry.getOldPath(), entry.getNewPath()); // keep track of oldPath, a previous commit would have it as a newPath // FIXME could have duplicates
+            }
 
             OutputStream outputStream = new ByteArrayOutputStream();
             DiffFormatter formatter = new DiffFormatter(outputStream);
@@ -164,30 +171,20 @@ public class GitCommitReader {
                     entry.getOldPath(), entry.getNewPath(),
                     outputStream.toString()
             );
-            commitIdsAndInfos.put(commitInfo.getId(), commitInfo);
+            commitInfos.add(commitInfo);
 
-            // connect commits like a linked list - might not be needed
-            if (futureCommit != null && commitIdsAndInfos.containsKey(futureCommit.getId().getName())){
-                CommitInfo futureCommitInfo = commitIdsAndInfos.get(futureCommit.getId().getName());
-                if (futureCommitInfo != null){
-                    futureCommitInfo.setPreviousCommit(commitInfo);
-                }
-            }
+//            // FIXME connect commits like a linked list - might not be needed
+//            if (futureCommit != null && commitIdsAndInfos.containsKey(futureCommit.getId().getName())){
+//                CommitInfo futureCommitInfo = commitIdsAndInfos.get(futureCommit.getId().getName());
+//                if (futureCommitInfo != null){
+//                    futureCommitInfo.setPreviousCommit(commitInfo);
+//                }
+//            }
 
-            if (commitInfo.getCommitType() != CommitType.DELETE) { // Note: deletes will not have their code details stored
+            if (commitInfo.getCommitType() != CommitType.DELETE && graphGenerator != null) { // Note: deletes will not have their code details stored
                 ClassEntity classEntity = getClassEntity(entry.getNewPath());
                 if (classEntity != null) {
                     classEntity.addCommitInfo(commitInfo);
-                } else {
-                    System.out.println("was null, try with " + entry.getOldPath());
-                    classEntity = getClassEntity(entry.getOldPath());
-                    if (classEntity != null) { // store previously named file list somewhere? FIXME could have duplicates
-                        classEntity.addCommitInfo(commitInfo);
-                        renamedClassEntityNames.put(entry.getOldPath(), entry.getNewPath());
-                        System.out.println("PUT renamed :" + entry.getOldPath() + ", " + entry.getNewPath());
-                    } else {
-                        System.out.println("still null");
-                    }
                 }
             }
 
@@ -204,12 +201,13 @@ public class GitCommitReader {
      * @return  the classEntity, or null if it doesn't exist in the graph generator
      */
     private ClassEntity getClassEntity(String fullFilename) {
-        String[] fileSections = fullFilename.split("/");
 
-        if (renamedClassEntityNames.containsKey(fullFilename)){
+        while (renamedClassEntityNames.containsKey(fullFilename)){ // TODO test multiple renames on a file // TODO - test with package creates/changes as well
             fullFilename = renamedClassEntityNames.get(fullFilename);
             System.out.println("renamed file, try with :" + fullFilename);
         }
+
+        String[] fileSections = fullFilename.split("/");
 
         LinkedHashMap<String, Entity> packages = graphGenerator.getPackageEntities();
         LinkedHashMap<String, Entity> classes = graphGenerator.getClassEntities();

@@ -22,7 +22,7 @@ public abstract class Entity {
 
     private Node gephiNode;
 
-    private ArrayList<CommitInfo> commitInfos;
+    private ArrayList<CommitInfo> commitInfos; //could store as LinkedHashMap - a file can only be changed once per commit
 
     /**
      * Set up an Entity

@@ -162,7 +162,7 @@ public class CommitInfo {
         if (previousCommit != null) previousCommitId = previousCommit.getId();
         return "CommitInfo{" +
                 "id='" + id + '\''  +
-                "\n, previousCommit=" + previousCommitId +
+                //"\n, previousCommit=" + previousCommitId +
                 "\n, author='" + author + '\'' +
                 "\n, date='" + dateToString() + '\'' +
                 "\n, message='" + message + '\'' +
