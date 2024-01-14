@@ -1,4 +1,4 @@
-package codeViz;
+package codeViz.gitHistory;
 
 /**
  * Types of file changes

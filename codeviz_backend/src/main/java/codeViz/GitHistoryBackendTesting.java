@@ -1,7 +1,10 @@
 package codeViz;
 
+import codeViz.gitHistory.CommitInfo;
+import codeViz.gitHistory.GitCommitReader;
+
 // For backend testing
-public class GitCommitsTest {
+public class GitHistoryBackendTesting {
 
     // must be the root of the repo
     private static final String currentSrc = "./"; // weird things happen in intelliJ's project/vcs if I try setting this as anything else like ./codeviz_backend, ./codeviz_backend/src, etc
@@ -28,11 +31,11 @@ public class GitCommitsTest {
             gitCommitReader = new GitCommitReader(javaBytecodeReader.getGraphGenerator(), gitHubURI, tokenPassword);
         }
 
-        gitCommitReader.getCommitHistory(10);
+        gitCommitReader.storeCommitHistory(10);
 
-        System.out.println("Commit Information:");
-        for (CommitInformation commitInformation : gitCommitReader.getCommitInformations()){
-            System.out.println(commitInformation.toString() + "\n");
+        System.out.println("Commit Info:");
+        for (CommitInfo commitInfo : gitCommitReader.getCommitInfos()){
+            System.out.println(commitInfo.toString() + "\n");
         }
 
     }

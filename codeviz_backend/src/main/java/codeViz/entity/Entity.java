@@ -1,6 +1,6 @@
 package codeViz.entity;
 
-import codeViz.CommitInformation;
+import codeViz.gitHistory.CommitInfo;
 import org.gephi.graph.api.Node;
 import java.util.*;
 import java.awt.Color;
@@ -22,7 +22,7 @@ public abstract class Entity {
 
     private Node gephiNode;
 
-    private ArrayList<CommitInformation> commitInformations;
+    private ArrayList<CommitInfo> commitInfos;
 
     /**
      * Set up an Entity
@@ -38,7 +38,7 @@ public abstract class Entity {
         this.size = 1;
         this.colour = getRandomColour();
         this.isHighlighed = false;
-        this.commitInformations = new ArrayList<>();
+        this.commitInfos = new ArrayList<>();
     }
 
     public String getName() {
@@ -159,11 +159,11 @@ public abstract class Entity {
         return false;
     }
 
-    public ArrayList<CommitInformation> getCommitInformations() {
-        return commitInformations;
+    public ArrayList<CommitInfo> getCommitInfos() {
+        return commitInfos;
     }
 
-    protected void addCommitInformation(CommitInformation commitInformation){
-        this.commitInformations.add(commitInformation);
+    protected void addCommitInfo(CommitInfo commitInfo){
+        this.commitInfos.add(commitInfo);
     }
 }

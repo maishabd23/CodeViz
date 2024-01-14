@@ -1,4 +1,4 @@
-package codeViz;
+package codeViz.gitHistory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,12 +12,12 @@ import java.time.ZoneId;
  *
  * @author Thanuja Sivaananthan
  */
-public class CommitInformation {
+public class CommitInfo {
     private final String id;
     private final String author;
     private final LocalDateTime date;
     private final String message;
-    private CommitInformation previousCommit;
+    private CommitInfo previousCommit;
     private final String diff;
     private final String previousFilename; // TODO - handle file renames // TODO handle deletes
     private final String newFilename;
@@ -37,7 +37,7 @@ public class CommitInformation {
      * @param newFilename       new filename
      * @param diff              diff
      */
-    public CommitInformation(
+    public CommitInfo(
             String id,
             String author,
             long date,
@@ -87,7 +87,7 @@ public class CommitInformation {
         return commitType;
     }
 
-    public void setPreviousCommit(CommitInformation previousCommit) {
+    public void setPreviousCommit(CommitInfo previousCommit) {
         this.previousCommit = previousCommit;
     }
 
@@ -135,13 +135,13 @@ public class CommitInformation {
      * @return string with the filename(s)
      */
     private String filenameToString(){
-        switch (commitType){
-            case CREATE: return "\n, newFilename='" + newFilename + '\'';
-            case EDIT: return "\n, filename='" + newFilename + '\'';
-            case DELETE: return "\n, deletedFilename='" + previousFilename + '\'';
-            case RENAME: return "\n, previousFilename='" + previousFilename + '\'' + "\n, newFilename='" + newFilename + '\'';
-        }
-        return "";
+        return switch (commitType) {
+            case CREATE -> "\n, newFilename='" + newFilename + '\'';
+            case EDIT -> "\n, filename='" + newFilename + '\'';
+            case DELETE -> "\n, deletedFilename='" + previousFilename + '\'';
+            case RENAME ->
+                    "\n, previousFilename='" + previousFilename + '\'' + "\n, newFilename='" + newFilename + '\'';
+        };
     }
 
     /**
@@ -160,7 +160,7 @@ public class CommitInformation {
     public String toString() {
         String previousCommitId = null;
         if (previousCommit != null) previousCommitId = previousCommit.getId();
-        return "CommitInformation{" +
+        return "CommitInfo{" +
                 "id='" + id + '\''  +
                 "\n, previousCommit=" + previousCommitId +
                 "\n, author='" + author + '\'' +

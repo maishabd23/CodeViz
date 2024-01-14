@@ -1,5 +1,6 @@
-package codeViz;
+package codeViz.gitHistory;
 
+import codeViz.GraphGenerator;
 import codeViz.entity.ClassEntity;
 import codeViz.entity.Entity;
 import org.apache.commons.io.FileUtils;
@@ -33,12 +34,17 @@ public class GitCommitReader {
 
     private final Git git;
     private final GraphGenerator graphGenerator;
-    private LinkedHashMap<String, CommitInformation> commitInformations;
+    private LinkedHashMap<String, CommitInfo> commitIdsAndInfos;
     private LinkedHashMap<String, String> renamedClassEntityNames;
 
+    /**
+     * Create GitCommitReader that reads details locally
+     * @param graphGenerator    the graph generator to use
+     * @param localDirectory    the local directory to read from
+     */
     public GitCommitReader(GraphGenerator graphGenerator, String localDirectory){
         this.graphGenerator = graphGenerator;
-        this.commitInformations = new LinkedHashMap<>();
+        this.commitIdsAndInfos = new LinkedHashMap<>();
         this.renamedClassEntityNames = new LinkedHashMap<>();
         try {
             this.git = Git.init().setDirectory(new File(localDirectory)).call();
@@ -47,9 +53,15 @@ public class GitCommitReader {
         }
     }
 
+    /**
+     * Create GitCommitReader that reads details via gitHub
+     * @param graphGenerator    the graph generator to use
+     * @param gitHubURI         the URI of the gitHub repository/fork
+     * @param tokenPassword     the token password of the user
+     */
     public GitCommitReader(GraphGenerator graphGenerator, String gitHubURI, String tokenPassword){
         this.graphGenerator = graphGenerator;
-        this.commitInformations = new LinkedHashMap<>();
+        this.commitIdsAndInfos = new LinkedHashMap<>();
         this.renamedClassEntityNames = new LinkedHashMap<>();
         // TODO - make this properly secure
         try {
@@ -68,15 +80,15 @@ public class GitCommitReader {
         return git;
     }
 
-    public Collection<CommitInformation> getCommitInformations() {
-        return commitInformations.values();
+    public Collection<CommitInfo> getCommitInfos() {
+        return commitIdsAndInfos.values();
     }
 
     /**
-     * Get the commit history in order of most recent commit to the oldest commit
+     * Store the commit history in order of most recent commit to the oldest commit
      * @param maxNumCommits the number of commits to get the history from
      */
-    public void getCommitHistory(int maxNumCommits) { // Note: public methods should probably not throw exceptions
+    public void storeCommitHistory(int maxNumCommits) { // Note: public methods should probably not throw exceptions
         Git git = this.getGit();
         Iterable<RevCommit> log;
         try {
@@ -144,7 +156,7 @@ public class GitCommitReader {
             formatter.format(entry);
 //            System.out.println(outputStream.toString());
 
-            CommitInformation commitInformation = new CommitInformation(
+            CommitInfo commitInfo = new CommitInfo(
                     currentCommit.getId().getName(),
                     currentCommit.getAuthorIdent().getName(),
                     currentCommit.getCommitTime(),
@@ -152,25 +164,25 @@ public class GitCommitReader {
                     entry.getOldPath(), entry.getNewPath(),
                     outputStream.toString()
             );
-            commitInformations.put(commitInformation.getId(), commitInformation);
+            commitIdsAndInfos.put(commitInfo.getId(), commitInfo);
 
             // connect commits like a linked list - might not be needed
-            if (futureCommit != null && commitInformations.containsKey(futureCommit.getId().getName())){
-                CommitInformation futureCommitInformation = commitInformations.get(futureCommit.getId().getName());
-                if (futureCommitInformation != null){
-                    futureCommitInformation.setPreviousCommit(commitInformation);
+            if (futureCommit != null && commitIdsAndInfos.containsKey(futureCommit.getId().getName())){
+                CommitInfo futureCommitInfo = commitIdsAndInfos.get(futureCommit.getId().getName());
+                if (futureCommitInfo != null){
+                    futureCommitInfo.setPreviousCommit(commitInfo);
                 }
             }
 
-            if (commitInformation.getCommitType() != CommitType.DELETE) { // Note: deletes will not have their code details stored
+            if (commitInfo.getCommitType() != CommitType.DELETE) { // Note: deletes will not have their code details stored
                 ClassEntity classEntity = getClassEntity(entry.getNewPath());
                 if (classEntity != null) {
-                    classEntity.addCommitInformation(commitInformation);
+                    classEntity.addCommitInfo(commitInfo);
                 } else {
                     System.out.println("was null, try with " + entry.getOldPath());
                     classEntity = getClassEntity(entry.getOldPath());
                     if (classEntity != null) { // store previously named file list somewhere? FIXME could have duplicates
-                        classEntity.addCommitInformation(commitInformation);
+                        classEntity.addCommitInfo(commitInfo);
                         renamedClassEntityNames.put(entry.getOldPath(), entry.getNewPath());
                         System.out.println("PUT renamed :" + entry.getOldPath() + ", " + entry.getNewPath());
                     } else {
@@ -186,6 +198,11 @@ public class GitCommitReader {
     }
 
 
+    /**
+     * Get the classEntity that corresponds with the filename
+     * @param fullFilename      the filename
+     * @return  the classEntity, or null if it doesn't exist in the graph generator
+     */
     private ClassEntity getClassEntity(String fullFilename) {
         String[] fileSections = fullFilename.split("/");
 
