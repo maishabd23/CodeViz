@@ -1,5 +1,7 @@
 package codeViz.entity;
 
+import codeViz.gitHistory.CommitInfo;
+
 import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -115,6 +117,13 @@ public class ClassEntity extends Entity {
         }
 
         return false;
+    }
+
+    @Override
+    public void addCommitInfo(CommitInfo commitInfo){
+        super.addCommitInfo(commitInfo);
+
+        // add to method?
     }
 
 }
