@@ -23,9 +23,6 @@ public class GraphGenerator {
     private final LinkedHashMap<String, Entity> classEntities;
     private final LinkedHashMap<String, Entity> methodEntities;
 
-    private float max_x;
-    private float max_y;
-
     /**
      * Create an EntityGraphGenerator
      * @author Thanuja Sivaananthan
@@ -34,9 +31,6 @@ public class GraphGenerator {
         packageEntities = new LinkedHashMap<>();
         classEntities = new LinkedHashMap<>();
         methodEntities = new LinkedHashMap<>();
-        // initial values, these are dynamically set based on the graph size
-        this.max_x = 500;
-        this.max_y = 500;
     }
 
     /**
@@ -120,11 +114,6 @@ public class GraphGenerator {
             default -> throw new IllegalStateException("Unexpected value: " + entityType);
         }
 
-        //System.out.println("Get coordinates for " + entityType);
-        float max_graph_size = getGraphSize(entities);
-        max_x = max_graph_size;
-        max_y = max_graph_size;
-
         List<Node> nodes = new ArrayList<>();
         List<Edge> edges = new ArrayList<>();
 
@@ -137,17 +126,15 @@ public class GraphGenerator {
 
         // 1. create nodes for each entity
         int id = 1; // add id in case there are duplicate names
-        for (String entityKey : entities.keySet()){
-            Entity entity = entities.get(entityKey);
+        for (Entity entity : entities.values()){
             String nodeName = entity.getName(); // FIXME - might want this as entityKey, but the name might get really long
             Node node = graphModel.factory().newNode(id + nodeName);
             node.setLabel(nodeName);
             node.setSize(entity.getSize()); // might need to scale up node size so it appears nicely?
             node.setColor(entity.getParentColour());
 
-            Random rand = new Random();
-            float pos_x = rand.nextFloat() * max_x;
-            float pos_y = rand.nextFloat() * max_y;
+            float pos_x = entity.getX_pos();
+            float pos_y = entity.getY_pos();
             node.setPosition(pos_x, pos_y); // TODO - determine proper coordinates
 
             entity.setGephiNode(node);
@@ -318,5 +305,25 @@ public class GraphGenerator {
         clearSearch(classEntities);
         clearSearch(methodEntities);
 
+    }
+
+    private void setEntitiesCoordinates(LinkedHashMap<String, Entity> entities){
+        //System.out.println("Get coordinates for " + entityType);
+        float max_graph_size = getGraphSize(entities);
+        float max_x = max_graph_size;
+        float max_y = max_graph_size;
+
+        Random rand = new Random();
+        for (Entity entity : entities.values()){
+            float pos_x = rand.nextFloat() * max_x;
+            float pos_y = rand.nextFloat() * max_y;
+            entity.setPosition(pos_x, pos_y); // TODO - determine proper coordinates
+        }
+    }
+
+    public void setEntitiesCoordinates() {
+        setEntitiesCoordinates(packageEntities);
+        setEntitiesCoordinates(classEntities);
+        setEntitiesCoordinates(methodEntities);
     }
 }

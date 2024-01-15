@@ -22,6 +22,8 @@ public abstract class Entity {
 
     private Node gephiNode;
 
+    private float x_pos, y_pos;
+
     private ArrayList<CommitInfo> commitInfos; //could store as LinkedHashMap - a file can only be changed once per commit
 
     /**
@@ -39,6 +41,8 @@ public abstract class Entity {
         this.colour = getRandomColour();
         this.isHighlighed = false;
         this.commitInfos = new ArrayList<>();
+        this.x_pos = 0;
+        this.y_pos = 0;
     }
 
     public String getName() {
@@ -64,6 +68,19 @@ public abstract class Entity {
 
     public int getSize() {
         return size;
+    }
+
+    public void setPosition(float x_pos, float y_pos) {
+        this.x_pos = x_pos;
+        this.y_pos = y_pos;
+    }
+
+    public float getX_pos() {
+        return x_pos;
+    }
+
+    public float getY_pos() {
+        return y_pos;
     }
 
     /**
