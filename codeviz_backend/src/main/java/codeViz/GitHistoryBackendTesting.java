@@ -18,20 +18,18 @@ public class GitHistoryBackendTesting {
         javaBytecodeReader.generateEntitiesAndConnections(currentTarget);
 
         boolean isLocal = true;
-        GitCommitReader gitCommitReader;
+        GitCommitReader gitCommitReader = new GitCommitReader(javaBytecodeReader.getGraphGenerator());
 
         // could either read locally or through the gitHub link
         if (isLocal) {
-            gitCommitReader = new GitCommitReader(javaBytecodeReader.getGraphGenerator(), currentSrc);
+            gitCommitReader.extractCommitHistory(currentSrc, 10);
         } else {
             // https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
             // in the GitHub Developer Settings, create a token with the "repo" settings selected
             // (don't commit the actual value here)
             String tokenPassword = "";
-            gitCommitReader = new GitCommitReader(javaBytecodeReader.getGraphGenerator(), gitHubURI, tokenPassword);
+            gitCommitReader.extractCommitHistory(gitHubURI, tokenPassword, 10);
         }
-
-        gitCommitReader.storeCommitHistory(10);
 
         System.out.println("Commit Info:");
         for (CommitInfo commitInfo : gitCommitReader.getCommitInfos()){
