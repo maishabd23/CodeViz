@@ -7,6 +7,10 @@ import codeViz.gitHistory.GitCommitReader;
 
 import java.util.ArrayList;
 
+/**
+ * CodeViz Interface that connects the CodeViz classes to the CodeVizController
+ * Note: This class should not introduce any new behavior, only follow existing behavior set by the CodeViz classes
+ */
 public class CodeVizInterface {
     private JavaBytecodeReader javaBytecodeReader;
     private GraphGenerator graphGenerator;
@@ -17,7 +21,7 @@ public class CodeVizInterface {
         this.javaBytecodeReader = new JavaBytecodeReader();
         this.graphGenerator = javaBytecodeReader.getGraphGenerator();
         this.gitCommitReader = new GitCommitReader(graphGenerator);
-        this.success = false;
+        this.success = true; // FIXME - change back to false once stuff are working
     }
 
     /**
@@ -59,5 +63,9 @@ public class CodeVizInterface {
         if (success) {
             graphGenerator.directedGraphToGexf(graphGenerator.entitiesToNodes(entityType), filename);
         }
+    }
+
+    public String getNodeDetails(String nodeName, EntityType currentLevel) {
+        return graphGenerator.getNodeDetails(nodeName, currentLevel);
     }
 }

@@ -40,13 +40,7 @@ public class GraphGenerator {
      * @param entity    entity
      */
     public boolean addEntity(String key, Entity entity){
-        LinkedHashMap<String, Entity> entities;
-        switch (entity.getEntityType()) {
-            case PACKAGE -> entities = packageEntities;
-            case CLASS -> entities = classEntities;
-            case METHOD -> entities = methodEntities;
-            default -> throw new IllegalStateException("Unexpected value: " + entity.getEntityType());
-        }
+        LinkedHashMap<String, Entity> entities = getEntities(entity.getEntityType());
 
         // If the key already exists, normally its old value is replaced with a new one
         // Do not want to replace with new value, as any connections that were made could get messed up
@@ -105,14 +99,7 @@ public class GraphGenerator {
      */
     public DirectedGraph entitiesToNodes(EntityType entityType){
         // NOTE: assuming all entities are properly set up with connections already
-        LinkedHashMap<String, Entity> entities;
-
-        switch (entityType) {
-            case PACKAGE -> entities = packageEntities;
-            case CLASS -> entities =  classEntities;
-            case METHOD -> entities = methodEntities;
-            default -> throw new IllegalStateException("Unexpected value: " + entityType);
-        }
+        LinkedHashMap<String, Entity> entities = getEntities(entityType);
 
         List<Node> nodes = new ArrayList<>();
         List<Edge> edges = new ArrayList<>();
@@ -126,9 +113,10 @@ public class GraphGenerator {
 
         // 1. create nodes for each entity
         int id = 1; // add id in case there are duplicate names
-        for (Entity entity : entities.values()){
-            String nodeName = entity.getName(); // FIXME - might want this as entityKey, but the name might get really long
-            Node node = graphModel.factory().newNode(id + nodeName);
+        for (String entityKey : entities.keySet()){
+            Entity entity = entities.get(entityKey);
+            String nodeName = entity.getName();
+            Node node = graphModel.factory().newNode(id + "_" + entityKey); // want this as entityKey, is okay because only label is displayed
             node.setLabel(nodeName);
             node.setSize(entity.getSize()); // might need to scale up node size so it appears nicely?
             node.setColor(entity.getParentColour());
@@ -325,5 +313,37 @@ public class GraphGenerator {
         setEntitiesCoordinates(packageEntities);
         setEntitiesCoordinates(classEntities);
         setEntitiesCoordinates(methodEntities);
+    }
+
+    private LinkedHashMap<String, Entity> getEntities(EntityType entityType){
+        LinkedHashMap<String, Entity> entities;
+
+        switch (entityType) {
+            case PACKAGE -> entities = packageEntities;
+            case CLASS -> entities =  classEntities;
+            case METHOD -> entities = methodEntities;
+            default -> throw new IllegalStateException("Unexpected value: " + entityType);
+        }
+
+        return entities;
+    }
+
+    public String getNodeDetails(String nodeName, EntityType entityType) {
+        LinkedHashMap<String, Entity> entities = getEntities(entityType);
+
+        String[] newNodeNames = nodeName.split("_", 2);
+        if (newNodeNames.length != 2){
+            return "INVALID NAME," + nodeName + " LENGTH IS " + newNodeNames.length;
+        }
+
+        nodeName = newNodeNames[1];
+        Entity entity = entities.getOrDefault(nodeName, null);
+
+        if (entity == null){
+            return "KEY DOESN'T EXIST FOR " + nodeName;
+        }
+
+        return entity.toString(); //"FOUND KEY FOR " + nodeName;
+
     }
 }

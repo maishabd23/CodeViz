@@ -48,6 +48,21 @@ function GraphViz() {
         });
         const camera = renderer.getCamera();
         renderer.clear();
+
+        let selectedNode= null;
+
+        // On mouse down on a node
+        //  - display node details
+        //  - save in the dragged node in the state
+        renderer.on("downNode", (e) => {
+          selectedNode = e.node;
+          // graph.setNodeAttribute(draggedNode, "highlighted", true);
+          fetch('/api/getNodeDetails?nodeName=' + selectedNode.toString())
+              .then((response) => response.json())
+              .then((responseData) => {
+                document.getElementById("nodeDetails").innerHTML = responseData.string;
+              });
+        });
   
         // Bind zoom manipulation buttons
         zoomInBtn.addEventListener("click", () => {
@@ -112,7 +127,13 @@ function GraphViz() {
             <p id="thresholdLabel"></p>
           </div>
         </div>
-      </div>
+        <div id="nodeDetailsDisplay">
+            <h2>Node Details:</h2>
+            <p id="nodeDetails">
+            Select a node to view its details
+            </p>
+        </div>
+        </div>
     );
   }
 

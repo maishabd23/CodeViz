@@ -19,10 +19,11 @@ public class CodeVizController {
     private boolean success;
     public CodeVizController(){
         this.codeVizInterface = new CodeVizInterface();
-        this.success = false;
+        this.success = true; // TODO - change to false after target can be chosen
 
         // TODO - only call this method when a new target is chosen
         success = codeVizInterface.generateEntitiesAndConnections(currentTarget, currentSrc, 10);
+        codeVizInterface.generateGraph(currentLevel, "./codeviz_frontend/public/codeviz_demo.gexf"); // FIXME
     }
 
     @GetMapping("/")
@@ -69,6 +70,18 @@ public class CodeVizController {
         }
 
         response.put("file", "codeviz_demo.gexf");
+        return response; //each API call returns a JSON object that the React app parses
+    }
+
+    @CrossOrigin
+    @GetMapping("/api/getNodeDetails")
+    public Map<String, String> getNodeDetails(@RequestParam(name = "nodeName", required = true, defaultValue = "") String nodeName) {
+        Map<String, String> response = new HashMap<>();
+
+        String results = codeVizInterface.getNodeDetails(nodeName, currentLevel);
+        results = results.replace("\n", "<br>"); // for html format
+
+        response.put("string", results);
         return response; //each API call returns a JSON object that the React app parses
     }
 
