@@ -24,6 +24,7 @@ public class MethodEntity extends Entity {
         classEntity.addMethod(this);
 
         arguments = new HashSet<>();
+        returnType = null;
     }
 
     public static String getProperName(String name){
@@ -80,5 +81,26 @@ public class MethodEntity extends Entity {
 
     public void setReturnType(ClassEntity returnType) {
         this.returnType = returnType;
+    }
+
+
+    @Override
+    public String toString() {
+        StringBuilder argumentsString = new StringBuilder();
+        argumentsString.append("{");
+        for (ClassEntity classEntity : arguments){
+            argumentsString.append(classEntity.getName()).append(", ");
+        }
+        argumentsString.append("}");
+
+        String returnTypeName = "null";
+        if (returnType != null) returnTypeName = returnType.getName();
+
+        return "MethodEntity{" + "\n" +
+                "name=" + getName() + "\n" +
+                ", classEntity=" + classEntity.getName() + "\n" +
+                ", arguments=" + argumentsString + "\n" +
+                ", returnType=" + returnTypeName + "\n" +
+                '}';
     }
 }

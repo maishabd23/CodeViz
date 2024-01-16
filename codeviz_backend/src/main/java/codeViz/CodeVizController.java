@@ -11,8 +11,20 @@ import java.util.Map;
 @RestController
 public class CodeVizController {
 
+    private static final String currentSrc = "./"; // weird things happen in intelliJ's project/vcs if I try setting this as anything else like ./codeviz_backend, ./codeviz_backend/src, etc
     private String currentTarget = "./codeviz_backend/target/classes/codeViz/entity";
     private EntityType currentLevel = EntityType.CLASS;
+
+    private CodeVizInterface codeVizInterface;
+    private boolean success;
+    public CodeVizController(){
+        this.codeVizInterface = new CodeVizInterface();
+        this.success = true; // TODO - change to false after target can be chosen
+
+        // TODO - only call this method when a new target is chosen
+        success = codeVizInterface.generateEntitiesAndConnections(currentTarget, currentSrc, 10);
+        codeVizInterface.generateGraph(currentLevel, "./codeviz_frontend/public/codeviz_demo.gexf"); // FIXME
+    }
 
     @GetMapping("/")
     public String index() {
@@ -28,21 +40,6 @@ public class CodeVizController {
     }
 
 
-    public void viewLevel(String targetLevel, EntityType entityType, String searchValue, boolean detailed){
-        JavaBytecodeReader javaBytecodeReader = new JavaBytecodeReader();
-        boolean success = javaBytecodeReader.generateEntitiesAndConnections(targetLevel);
-        if (success) {
-            currentTarget = targetLevel; // only if it's a valid path, update target
-
-            if (!searchValue.isEmpty()) {
-                System.out.println("SEARCHING FOR " + searchValue);
-                javaBytecodeReader.getGraphGenerator().performSearch(searchValue, detailed);
-            }
-
-            javaBytecodeReader.generateGraph(entityType, "./codeviz_frontend/public/codeviz_demo.gexf");
-        }
-    }
-
     @CrossOrigin
     @GetMapping("/api/viewGraphLevel")
     public Map<String, String> viewGraphLevel(@RequestParam(name = "level", required = false, defaultValue = "") String level,
@@ -55,15 +52,36 @@ public class CodeVizController {
             currentLevel = EntityType.valueOf(level);
         }
 
-        if (!targetFolder.isEmpty()) {
+        if (!targetFolder.isEmpty() && !targetFolder.equals(currentTarget)){
             System.out.println("GENERATING FOR "  + targetFolder); // TODO - allow user to enter own path / github url
-        } else {
-            targetFolder = currentTarget;
+            success = codeVizInterface.generateEntitiesAndConnections(targetFolder, currentSrc, 10);
         }
 
-        viewLevel(targetFolder, currentLevel, searchValue, detailed);
+        if (success) {
+            if (!targetFolder.isEmpty()) {
+                currentTarget = targetFolder; // only if it's a valid non-empty path, update target
+            }
+
+            if (!searchValue.isEmpty()) {
+                System.out.println("SEARCHING FOR " + searchValue);
+                codeVizInterface.performSearch(searchValue, detailed);
+            }
+            codeVizInterface.generateGraph(currentLevel, "./codeviz_frontend/public/codeviz_demo.gexf");
+        }
 
         response.put("file", "codeviz_demo.gexf");
+        return response; //each API call returns a JSON object that the React app parses
+    }
+
+    @CrossOrigin
+    @GetMapping("/api/getNodeDetails")
+    public Map<String, String> getNodeDetails(@RequestParam(name = "nodeName", required = true, defaultValue = "") String nodeName) {
+        Map<String, String> response = new HashMap<>();
+
+        String results = codeVizInterface.getNodeDetails(nodeName, currentLevel);
+        results = results.replace("\n", "<br>"); // for html format
+
+        response.put("string", results);
         return response; //each API call returns a JSON object that the React app parses
     }
 

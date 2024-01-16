@@ -34,37 +34,42 @@ public class GitCommitReader {
 
     private static final String gitCloneDirectory = "./testgithistory"; // local directory to clone into
 
-    private final Git git;
+    private Git git;
     private final GraphGenerator graphGenerator;
     private ArrayList<CommitInfo> commitInfos; // may not need to store here if using from entities directly? mainly used for previous commit
     private LinkedHashMap<String, String> renamedClassEntityNames;
 
     /**
-     * Create GitCommitReader that reads details locally
+     * Create GitCommitReader
      * @param graphGenerator    the graph generator to use
-     * @param localDirectory    the local directory to read from
      */
-    public GitCommitReader(GraphGenerator graphGenerator, String localDirectory){
+    public GitCommitReader(GraphGenerator graphGenerator){
         this.graphGenerator = graphGenerator;
         this.commitInfos = new ArrayList<>();
         this.renamedClassEntityNames = new LinkedHashMap<>();
-        try {
-            this.git = Git.init().setDirectory(new File(localDirectory)).call();
-        } catch (GitAPIException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /**
-     * Create GitCommitReader that reads details via gitHub
-     * @param graphGenerator    the graph generator to use
+     * Read commit history locally
+     * @param localDirectory    the local directory to read from
+     * @param maxNumCommits the number of commits to get the history from, -1 if all commits
+     */
+    public void extractCommitHistory(String localDirectory, int maxNumCommits){
+        try {
+            git = Git.init().setDirectory(new File(localDirectory)).call();
+        } catch (GitAPIException e) {
+            throw new RuntimeException(e);
+        }
+        storeCommitHistory(maxNumCommits);
+    }
+
+    /**
+     * Read commit history via gitHub
      * @param gitHubURI         the URI of the gitHub repository/fork
      * @param tokenPassword     the token password of the user
+     * @param maxNumCommits the number of commits to get the history from, -1 if all commits
      */
-    public GitCommitReader(GraphGenerator graphGenerator, String gitHubURI, String tokenPassword){
-        this.graphGenerator = graphGenerator;
-        this.commitInfos = new ArrayList<>();
-        this.renamedClassEntityNames = new LinkedHashMap<>();
+    public void extractCommitHistory(String gitHubURI, String tokenPassword, int maxNumCommits){
         // TODO - make this properly secure
         try {
             FileUtils.deleteDirectory(new File(gitCloneDirectory));
@@ -76,6 +81,7 @@ public class GitCommitReader {
         } catch (IOException | GitAPIException e) {
             throw new RuntimeException(e);
         }
+        storeCommitHistory(maxNumCommits);
     }
 
     public Collection<CommitInfo> getCommitInfos() {
@@ -86,7 +92,11 @@ public class GitCommitReader {
      * Store the commit history in order of most recent commit to the oldest commit
      * @param maxNumCommits the number of commits to get the history from, -1 if all commits
      */
-    public void storeCommitHistory(int maxNumCommits) { // Note: public methods should probably not throw exceptions
+    private void storeCommitHistory(int maxNumCommits) { // Note: public methods should probably not throw exceptions
+        // is an annotation - do not clear graphGenerator
+        //TODO - make sure graphGenerator has commits cleared before adding a new set? or only add commits that are new
+        commitInfos.clear(); // FIXME - what if appending commits?
+        renamedClassEntityNames.clear(); // FIXME - what if appending commits?
         Iterable<RevCommit> log;
         try {
             log = git.log().call();

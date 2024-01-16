@@ -2,20 +2,20 @@
 <gexf xmlns="http://gexf.net/1.3" version="1.3">
 	<graph mode="static" defaultedgetype="directed">
 		<nodes>
-			<node id="1codeViz" label="codeViz" >
+			<node id="1_codeViz" label="codeViz" >
 				<size value="1.0"></size>
-				 <position x="15.920157" y="10.013167" z="0.0"></position>
+				 <position x="8.195293" y="10.4110985" z="0.0"></position>
 				<color r="199" g="167" b="215"></color>
 			</node>
-			<node id="2codeViz.entity" label="codeViz.entity" >
+			<node id="2_codeViz.entity" label="codeViz.entity" >
 				<size value="20.0"></size>
-				 <position x="12.947576" y="6.414467" z="0.0"></position>
+				 <position x="4.068742" y="20.989538" z="0.0"></position>
 				<color r="248" g="179" b="169"></color>
 			</node>
 		</nodes>
 		<edges>
-			<edge source="2codeViz.entity" target="1codeViz" weight="1.0" />
-			<edge source="2codeViz.entity" target="2codeViz.entity" weight="13.0" />
+			<edge source="2_codeViz.entity" target="1_codeViz" weight="1.0" />
+			<edge source="2_codeViz.entity" target="2_codeViz.entity" weight="13.0" />
 		</edges>
 	</graph>
 </gexf>

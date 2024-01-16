@@ -23,9 +23,6 @@ public class GraphGenerator {
     private final LinkedHashMap<String, Entity> classEntities;
     private final LinkedHashMap<String, Entity> methodEntities;
 
-    private float max_x;
-    private float max_y;
-
     /**
      * Create an EntityGraphGenerator
      * @author Thanuja Sivaananthan
@@ -34,9 +31,6 @@ public class GraphGenerator {
         packageEntities = new LinkedHashMap<>();
         classEntities = new LinkedHashMap<>();
         methodEntities = new LinkedHashMap<>();
-        // initial values, these are dynamically set based on the graph size
-        this.max_x = 500;
-        this.max_y = 500;
     }
 
     /**
@@ -46,13 +40,7 @@ public class GraphGenerator {
      * @param entity    entity
      */
     public boolean addEntity(String key, Entity entity){
-        LinkedHashMap<String, Entity> entities;
-        switch (entity.getEntityType()) {
-            case PACKAGE -> entities = packageEntities;
-            case CLASS -> entities = classEntities;
-            case METHOD -> entities = methodEntities;
-            default -> throw new IllegalStateException("Unexpected value: " + entity.getEntityType());
-        }
+        LinkedHashMap<String, Entity> entities = getEntities(entity.getEntityType());
 
         // If the key already exists, normally its old value is replaced with a new one
         // Do not want to replace with new value, as any connections that were made could get messed up
@@ -111,19 +99,7 @@ public class GraphGenerator {
      */
     public DirectedGraph entitiesToNodes(EntityType entityType){
         // NOTE: assuming all entities are properly set up with connections already
-        LinkedHashMap<String, Entity> entities;
-
-        switch (entityType) {
-            case PACKAGE -> entities = packageEntities;
-            case CLASS -> entities =  classEntities;
-            case METHOD -> entities = methodEntities;
-            default -> throw new IllegalStateException("Unexpected value: " + entityType);
-        }
-
-        //System.out.println("Get coordinates for " + entityType);
-        float max_graph_size = getGraphSize(entities);
-        max_x = max_graph_size;
-        max_y = max_graph_size;
+        LinkedHashMap<String, Entity> entities = getEntities(entityType);
 
         List<Node> nodes = new ArrayList<>();
         List<Edge> edges = new ArrayList<>();
@@ -139,15 +115,14 @@ public class GraphGenerator {
         int id = 1; // add id in case there are duplicate names
         for (String entityKey : entities.keySet()){
             Entity entity = entities.get(entityKey);
-            String nodeName = entity.getName(); // FIXME - might want this as entityKey, but the name might get really long
-            Node node = graphModel.factory().newNode(id + nodeName);
+            String nodeName = entity.getName();
+            Node node = graphModel.factory().newNode(id + "_" + entityKey); // want this as entityKey, is okay because only label is displayed
             node.setLabel(nodeName);
             node.setSize(entity.getSize()); // might need to scale up node size so it appears nicely?
             node.setColor(entity.getParentColour());
 
-            Random rand = new Random();
-            float pos_x = rand.nextFloat() * max_x;
-            float pos_y = rand.nextFloat() * max_y;
+            float pos_x = entity.getX_pos();
+            float pos_y = entity.getY_pos();
             node.setPosition(pos_x, pos_y); // TODO - determine proper coordinates
 
             entity.setGephiNode(node);
@@ -317,6 +292,58 @@ public class GraphGenerator {
         clearSearch(packageEntities);
         clearSearch(classEntities);
         clearSearch(methodEntities);
+
+    }
+
+    private void setEntitiesCoordinates(LinkedHashMap<String, Entity> entities){
+        //System.out.println("Get coordinates for " + entityType);
+        float max_graph_size = getGraphSize(entities);
+        float max_x = max_graph_size;
+        float max_y = max_graph_size;
+
+        Random rand = new Random();
+        for (Entity entity : entities.values()){
+            float pos_x = rand.nextFloat() * max_x;
+            float pos_y = rand.nextFloat() * max_y;
+            entity.setPosition(pos_x, pos_y); // TODO - determine proper coordinates
+        }
+    }
+
+    public void setEntitiesCoordinates() {
+        setEntitiesCoordinates(packageEntities);
+        setEntitiesCoordinates(classEntities);
+        setEntitiesCoordinates(methodEntities);
+    }
+
+    private LinkedHashMap<String, Entity> getEntities(EntityType entityType){
+        LinkedHashMap<String, Entity> entities;
+
+        switch (entityType) {
+            case PACKAGE -> entities = packageEntities;
+            case CLASS -> entities =  classEntities;
+            case METHOD -> entities = methodEntities;
+            default -> throw new IllegalStateException("Unexpected value: " + entityType);
+        }
+
+        return entities;
+    }
+
+    public String getNodeDetails(String nodeName, EntityType entityType) {
+        LinkedHashMap<String, Entity> entities = getEntities(entityType);
+
+        String[] newNodeNames = nodeName.split("_", 2);
+        if (newNodeNames.length != 2){
+            return "INVALID NAME," + nodeName + " LENGTH IS " + newNodeNames.length;
+        }
+
+        nodeName = newNodeNames[1];
+        Entity entity = entities.getOrDefault(nodeName, null);
+
+        if (entity == null){
+            return "KEY DOESN'T EXIST FOR " + nodeName;
+        }
+
+        return entity.toString(); //"FOUND KEY FOR " + nodeName;
 
     }
 }

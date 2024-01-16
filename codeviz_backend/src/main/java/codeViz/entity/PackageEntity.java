@@ -61,4 +61,18 @@ public class PackageEntity extends Entity {
 
         return false;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder classesString = new StringBuilder();
+        classesString.append("{");
+        for (ClassEntity classEntity : classes){
+            classesString.append(classEntity.getName()).append(", ");
+        }
+        classesString.append("}");
+        return "PackageEntity{" + "\n" +
+                "name=" + getName() + "\n" +
+                ", classes=" + classesString + "\n" +
+                '}';
+    }
 }
