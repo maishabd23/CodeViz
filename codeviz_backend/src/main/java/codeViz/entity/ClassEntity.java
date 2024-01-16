@@ -22,6 +22,7 @@ public class ClassEntity extends Entity {
         super(name, EntityType.CLASS);
         this.packageEntity = packageEntity;
         this.methods = new HashSet<>();
+        this.superClass = null;
 
         if (packageEntity != null){
             packageEntity.addClass(this);
@@ -126,4 +127,24 @@ public class ClassEntity extends Entity {
         // add to method?
     }
 
+
+    @Override
+    public String toString() {
+        StringBuilder methodsString = new StringBuilder();
+        methodsString.append("{");
+        for (MethodEntity methodEntity : methods){
+            methodsString.append(methodEntity.getName()).append(", "); // FIXME extra comma in Entity's toString methods (3)
+        }
+        methodsString.append("}");
+
+        String superClassName = "null";
+        if (superClass != null) superClassName = superClass.getName();
+
+        return "ClassEntity{" + "\n" +
+                "name=" + getName() + "\n" +
+                ", packageEntity=" + packageEntity.getName() + "\n" +
+                ", methods=" + methodsString + "\n" +
+                ", superClass=" + superClassName + "\n" +
+                '}';
+    }
 }

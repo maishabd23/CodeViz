@@ -138,6 +138,8 @@ public abstract class Entity {
      */
     public abstract Color getParentColour();
 
+    public abstract String toString();
+
     /**
      * Add a connected entity with weight
      * This method is protected: A package should only be able to add other packages, etc
