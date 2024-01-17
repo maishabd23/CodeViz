@@ -10,7 +10,7 @@ To clone the repo (note that if the default folder name "CodeViz" is used, Intel
 To start up the backend, run the main method in the `App` class in the `codeViz` package.\
 This should run the app on [http://localhost:8080](http://localhost:8080).
 
-Navigate to the frontend directory on the terminal, and run the following:
+Navigate to the frontend directory (should be similar to `CodeViz\codeviz_frontend`) on the terminal, and run the following:
 
 ### `npm start`
 
