@@ -41,13 +41,20 @@ function GraphViz() {
         const labelsThresholdRange = document.getElementById("labels-threshold");
         const updateThresholdSettings = document.getElementById("update-threshold-settings");
 
-        // Instantiate sigma:
+        // Remove old sigma:
+        const rendererOld = new Sigma(graph, container, {
+          minCameraRatio: 0.1,
+          maxCameraRatio: 10,
+        });
+        rendererOld.kill();
+
+        // Instantiate new sigma:
         const renderer = new Sigma(graph, container, {
           minCameraRatio: 0.1,
           maxCameraRatio: 10,
         });
         const camera = renderer.getCamera();
-        renderer.clear();
+        renderer.refresh(); // to make sure graph appears right away
 
         let selectedNode= null;
 
