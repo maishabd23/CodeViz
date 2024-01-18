@@ -23,10 +23,6 @@ public class CommitInfo {
     private final String newFilename;
     private final CommitType commitType;
 
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_RED = "\u001B[31m";
-
     /**
      *
      * @param id                commit id
@@ -114,18 +110,18 @@ public class CommitInfo {
             }
 
             if (line.startsWith("+")){
-                line = ANSI_GREEN + line + "\n";
+                line = TextColours.GREEN.getAnsiColour() + line + "\n";
             } else if (line.startsWith("-")){
-                line = ANSI_RED + line + "\n";
+                line = TextColours.RED.getAnsiColour() + line + "\n";
             } else {
-                line = ANSI_RESET + line + "\n";
+                line = TextColours.RESET.getAnsiColour() + line + "\n";
             }
 
             newDiff.append(line);
 
         }
 
-        newDiff.append(ANSI_RESET);
+        newDiff.append(TextColours.RESET.getAnsiColour());
 
         return newDiff.toString();
     }
