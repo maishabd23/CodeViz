@@ -14,8 +14,12 @@
 			</node>
 		</nodes>
 		<edges>
-			<edge source="2_codeViz.entity" target="1_codeViz" weight="1.0" />
-			<edge source="2_codeViz.entity" target="2_codeViz.entity" weight="13.0" />
+			<edge source="2_codeViz.entity" target="1_codeViz" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="2_codeViz.entity" target="2_codeViz.entity" weight="13.0" >
+				<size value="13.0"></size>
+			</edge>
 		</edges>
 	</graph>
 </gexf>
