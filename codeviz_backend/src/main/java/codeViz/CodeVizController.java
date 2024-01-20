@@ -1,6 +1,5 @@
 package codeViz;
 import codeViz.entity.EntityType;
-import codeViz.gitHistory.TextAnnotate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;

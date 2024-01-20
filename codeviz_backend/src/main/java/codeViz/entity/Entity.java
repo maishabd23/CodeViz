@@ -1,7 +1,7 @@
 package codeViz.entity;
 
 import codeViz.gitHistory.CommitInfo;
-import codeViz.gitHistory.TextAnnotate;
+import codeViz.TextAnnotate;
 import org.gephi.graph.api.Node;
 import java.util.*;
 import java.awt.Color;

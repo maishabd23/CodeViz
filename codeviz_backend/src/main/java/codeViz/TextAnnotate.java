@@ -1,4 +1,4 @@
-package codeViz.gitHistory;
+package codeViz;
 
 public enum TextAnnotate {
     NEW_LINE("\n", "<br>"),
