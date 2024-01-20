@@ -1,6 +1,7 @@
 package codeViz.entity;
 
 import codeViz.gitHistory.CommitInfo;
+import codeViz.gitHistory.TextAnnotate;
 import org.gephi.graph.api.Node;
 import java.util.*;
 import java.awt.Color;
@@ -24,7 +25,7 @@ public abstract class Entity {
 
     private float x_pos, y_pos;
 
-    private ArrayList<CommitInfo> commitInfos; //could store as LinkedHashMap - a file can only be changed once per commit
+    private final ArrayList<CommitInfo> commitInfos; //could store as LinkedHashMap - a file can only be changed once per commit
 
     /**
      * Set up an Entity
