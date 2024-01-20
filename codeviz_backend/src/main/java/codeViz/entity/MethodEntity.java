@@ -2,6 +2,7 @@ package codeViz.entity;
 
 import java.awt.Color;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Method entity
@@ -13,7 +14,7 @@ public class MethodEntity extends Entity {
     private final ClassEntity classEntity;
 
     // cannot easily represent with the class connections alone
-    private final HashSet<ClassEntity> arguments;
+    private final Set<ClassEntity> arguments;
     private ClassEntity returnType;
 
     public MethodEntity(String name, ClassEntity classEntity){
@@ -86,21 +87,14 @@ public class MethodEntity extends Entity {
 
     @Override
     public String toString() {
-        StringBuilder argumentsString = new StringBuilder();
-        argumentsString.append("{");
-        for (ClassEntity classEntity : arguments){
-            argumentsString.append(classEntity.getName()).append(", ");
-        }
-        argumentsString.append("}");
+        String classString = Entity.entityToString(classEntity, "Class");
+        String argumentsString = classEntitySetToString(arguments, "Arguments");
+        String returnTypeName = Entity.entityToString(returnType, "Return Type");
 
-        String returnTypeName = "null";
-        if (returnType != null) returnTypeName = returnType.getName();
-
-        return "MethodEntity{" + "\n" +
-                "name=" + getName() + "\n" +
-                ", classEntity=" + classEntity.getName() + "\n" +
-                ", arguments=" + argumentsString + "\n" +
-                ", returnType=" + returnTypeName + "\n" +
-                '}';
+        return titleToString() +
+                classString +
+                argumentsString +
+                returnTypeName
+                ;
     }
 }

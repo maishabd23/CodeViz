@@ -1,5 +1,6 @@
 package codeViz.gitHistory;
 
+import codeViz.TextAnnotate;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -22,10 +23,6 @@ public class CommitInfo {
     private final String previousFilename; // TODO - handle file renames // TODO handle deletes
     private final String newFilename;
     private final CommitType commitType;
-
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_RED = "\u001B[31m";
 
     /**
      *
@@ -114,18 +111,18 @@ public class CommitInfo {
             }
 
             if (line.startsWith("+")){
-                line = ANSI_GREEN + line + "\n";
+                line = TextAnnotate.GREEN.getJavaText() + line + "\n";
             } else if (line.startsWith("-")){
-                line = ANSI_RED + line + "\n";
+                line = TextAnnotate.RED.getJavaText() + line + "\n";
             } else {
-                line = ANSI_RESET + line + "\n";
+                line = TextAnnotate.RESET.getJavaText() + line + "\n";
             }
 
             newDiff.append(line);
 
         }
 
-        newDiff.append(ANSI_RESET);
+        newDiff.append(TextAnnotate.RESET.getJavaText());
 
         return newDiff.toString();
     }

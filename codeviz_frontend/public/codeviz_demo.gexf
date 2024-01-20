@@ -7,15 +7,19 @@
 				 <position x="8.195293" y="10.4110985" z="0.0"></position>
 				<color r="199" g="167" b="215"></color>
 			</node>
-			<node id="2_codeViz.entity" label="codeViz.entity" >
+			<node id="2_codeViz.entity" label="entity" >
 				<size value="20.0"></size>
 				 <position x="4.068742" y="20.989538" z="0.0"></position>
 				<color r="248" g="179" b="169"></color>
 			</node>
 		</nodes>
 		<edges>
-			<edge source="2_codeViz.entity" target="1_codeViz" weight="1.0" />
-			<edge source="2_codeViz.entity" target="2_codeViz.entity" weight="13.0" />
+			<edge source="2_codeViz.entity" target="1_codeViz" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="2_codeViz.entity" target="2_codeViz.entity" weight="13.0" >
+				<size value="13.0"></size>
+			</edge>
 		</edges>
 	</graph>
 </gexf>

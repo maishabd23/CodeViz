@@ -79,7 +79,7 @@ public class CodeVizController {
         Map<String, String> response = new HashMap<>();
 
         String results = codeVizInterface.getNodeDetails(nodeName, currentLevel);
-        results = results.replace("\n", "<br>"); // for html format
+        results = TextAnnotate.javaToHtml(results);
 
         response.put("string", results);
         return response; //each API call returns a JSON object that the React app parses

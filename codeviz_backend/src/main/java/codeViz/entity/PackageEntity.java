@@ -11,7 +11,7 @@ import java.awt.Color;
  */
 public class PackageEntity extends Entity {
 
-    private Set<ClassEntity> classes;
+    private final Set<ClassEntity> classes;
 
     public PackageEntity(String name){
         super(name, EntityType.PACKAGE);
@@ -64,15 +64,10 @@ public class PackageEntity extends Entity {
 
     @Override
     public String toString() {
-        StringBuilder classesString = new StringBuilder();
-        classesString.append("{");
-        for (ClassEntity classEntity : classes){
-            classesString.append(classEntity.getName()).append(", ");
-        }
-        classesString.append("}");
-        return "PackageEntity{" + "\n" +
-                "name=" + getName() + "\n" +
-                ", classes=" + classesString + "\n" +
-                '}';
+        String classesString = classEntitySetToString(classes, "Classes");
+
+        return titleToString() +
+                classesString
+                ;
     }
 }

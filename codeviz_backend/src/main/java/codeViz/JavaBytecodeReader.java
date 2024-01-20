@@ -124,7 +124,7 @@ public class JavaBytecodeReader {
                 innerFullPackageName += name;
                 // System.out.println(innerFullPackageName);
 
-                innerPackageEntity = new PackageEntity(innerFullPackageName);
+                innerPackageEntity = new PackageEntity(name);
                 boolean success = graphGenerator.addEntity(innerFullPackageName, innerPackageEntity);
 
                 // sometimes the outerPackageEntity might be a placeholder
@@ -311,24 +311,41 @@ public class JavaBytecodeReader {
 
                     ClassEntity argumentClassEntity = (ClassEntity) graphGenerator.getClassEntities().get(stringArgumentType);
 
-                    if (argumentClassEntity != null){
-                        if (classEntity.equals(argumentClassEntity)){ // FIXME - figure out how to handle this (ex. a method using it's own class)
-                            System.out.println("NOTE, circular reference with class " + classEntity.getName() + " argument " + stringArgumentType);
-                        }
+                    boolean validArgument = true;
+                    if (argumentClassEntity ==null){
+                        String[] argumentClassNames = stringArgumentType.split("\\.");
+                        stringArgumentType = argumentClassNames[argumentClassNames.length - 1];
+                        argumentClassEntity = new ClassEntity(stringArgumentType);
+                        validArgument = false;
+                    }
+
+                    if (classEntity.equals(argumentClassEntity)){ // FIXME - figure out how to handle this (ex. a method using it's own class)
+                        System.out.println("NOTE, circular reference with class " + classEntity.getName() + " argument " + stringArgumentType);
+                    }
+                    if (validArgument){ // only add connected entity if it's a valid class in the codebase
                         classEntity.addConnectedEntity(argumentClassEntity);
-                        methodEntity.addArgument(argumentClassEntity);
                     }
+                    methodEntity.addArgument(argumentClassEntity);
                 }
 
-                ClassEntity returnClassEntity = (ClassEntity) graphGenerator.getClassEntities().get(String.valueOf(method.getReturnType()));
+                String stringReturnType = String.valueOf(method.getReturnType());
+                ClassEntity returnClassEntity = (ClassEntity) graphGenerator.getClassEntities().get(stringReturnType);
 
-                if (returnClassEntity != null){
-                    if (classEntity.equals(returnClassEntity)){ // FIXME - investigate this further (occurs with enum)
-                        System.out.println("NOTE, circular reference with class " + classEntity.getName() + " return " + method.getReturnType());
-                    }
+                boolean validReturnType = true;
+                if (returnClassEntity ==null){
+                    String[] returnClassNames = stringReturnType.split("\\.");
+                    stringReturnType = returnClassNames[returnClassNames.length - 1];
+                    returnClassEntity = new ClassEntity(stringReturnType);
+                    validReturnType = false;
+                }
+
+                if (classEntity.equals(returnClassEntity)){ // FIXME - investigate this further (occurs with enum)
+                    System.out.println("NOTE, circular reference with class " + classEntity.getName() + " return " + method.getReturnType());
+                }
+                if (validReturnType) { // only add connected entity if it's a valid class in the codebase
                     classEntity.addConnectedEntity(returnClassEntity);
-                    methodEntity.setReturnType(returnClassEntity);
                 }
+                methodEntity.setReturnType(returnClassEntity);
 
             }
 

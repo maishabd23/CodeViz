@@ -203,8 +203,13 @@ public class GraphGenerator {
             writer.write("\t\t<edges>\n");
             for (Edge edge: edges){
                 // System.out.println(edge.getSource().getLabel() + "->" + edge.getTarget().getLabel());
-                writer.write("\t\t\t<edge source=\"" + edge.getSource().getId() + "\" target=\"" + edge.getTarget().getId() + "\" weight=\"" + edge.getWeight() +"\" />");
+                writer.write("\t\t\t<edge source=\"" + edge.getSource().getId() + "\" target=\"" + edge.getTarget().getId() + "\" weight=\"" + edge.getWeight() +"\" >");
                 writer.write("\n");
+
+                writer.write("\t\t\t\t<size value=\"" + edge.getWeight() + "\"></size>");
+                writer.write("\n");
+
+                writer.write("\t\t\t</edge>\n");
             }
             writer.write("\t\t</edges>\n");
 

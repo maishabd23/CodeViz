@@ -10,6 +10,7 @@ import Graph from "graphology";
 import { parse } from "graphology-gexf/browser";
 // import React from 'react';
 import React, { useState, useEffect} from 'react';
+import forceAtlas2 from "graphology-layout-forceatlas2";
 
 // Load external GEXF file:
 function GraphViz() {
@@ -40,6 +41,10 @@ function GraphViz() {
 
         const labelsThresholdRange = document.getElementById("labels-threshold");
         const updateThresholdSettings = document.getElementById("update-threshold-settings");
+
+
+        const settings = forceAtlas2.inferSettings(graph);
+        forceAtlas2.assign(graph, { settings, iterations: 600 });
 
         // Remove old sigma:
         const rendererOld = new Sigma(graph, container, {
