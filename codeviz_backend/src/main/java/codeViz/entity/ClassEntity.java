@@ -14,7 +14,7 @@ import java.util.Set;
 public class ClassEntity extends Entity {
 
     private final PackageEntity packageEntity;
-    private Set<MethodEntity> methods;
+    private final Set<MethodEntity> methods;
 
     private ClassEntity superClass; // may have methods not defined in this class alone
 
@@ -130,21 +130,15 @@ public class ClassEntity extends Entity {
 
     @Override
     public String toString() {
-        StringBuilder methodsString = new StringBuilder();
-        methodsString.append("{");
-        for (MethodEntity methodEntity : methods){
-            methodsString.append(methodEntity.getName()).append(", "); // FIXME extra comma in Entity's toString methods (3)
-        }
-        methodsString.append("}");
+        String methodsString = methodEntitySetToString(methods, "Methods");
 
-        String superClassName = "null";
-        if (superClass != null) superClassName = superClass.getName();
+        String packageName = Entity.entityToString(packageEntity, "Package");
+        String superClassName = Entity.entityToString(superClass, "Superclass");
 
-        return "ClassEntity{" + "\n" +
-                "name=" + getName() + "\n" +
-                ", packageEntity=" + packageEntity.getName() + "\n" +
-                ", methods=" + methodsString + "\n" +
-                ", superClass=" + superClassName + "\n" +
-                '}';
+        return titleToString() +
+                packageName +
+                superClassName +
+                methodsString
+                ;
     }
 }

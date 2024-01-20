@@ -13,7 +13,7 @@ import java.awt.Color;
 public abstract class Entity {
     private final String name;
     private final EntityType entityType;
-    private Map<Entity, Integer> connectedEntitiesAndWeights; //stores the weight of connections
+    private final Map<Entity, Integer> connectedEntitiesAndWeights; //stores the weight of connections
 
     private int size;
     private final Color colour;
@@ -139,6 +139,54 @@ public abstract class Entity {
     public abstract Color getParentColour();
 
     public abstract String toString();
+
+    /**
+     * Return the formatted title of the entity
+     * @return  formatted title
+     */
+    public String titleToString(){
+        String type = entityType.toString();
+        type = type.substring(0,1).toUpperCase() + type.substring(1).toLowerCase();
+        return TextAnnotate.BOLD.javaText + type + ": " + getName() + TextAnnotate.BOLD_OFF.javaText + "\n";
+    }
+
+    /**
+     * Static method - in case the entity is null
+     * @param entity        entity to make a string
+     * @param entityTitle          name of entity
+     * @return              string value
+     */
+    public static String entityToString(Entity entity, String entityTitle){
+        String entityName = "";
+        if (entity != null) entityName = entityTitle + ": " + entity.getName() + "\n";
+        return entityName;
+    }
+
+    private String entitySetToString(Set<Entity> set, String setTitle){
+        StringBuilder setString = new StringBuilder();
+
+        if (!set.isEmpty()) {
+            setString.append(setTitle).append(": ");
+
+            for (Entity entity : set) {
+                setString.append(entity.getName()).append(", ");
+            }
+
+            setString = new StringBuilder(setString.substring(0, setString.length() - 2));
+            setString.append("\n");
+        }
+
+        return String.valueOf(setString);
+    }
+
+    protected String classEntitySetToString(Set<ClassEntity> set, String setTitle){
+        return entitySetToString((Set<Entity>) (Set<? extends Entity>) set, setTitle);
+    }
+
+    protected String methodEntitySetToString(Set<MethodEntity> set, String setTitle){
+        return entitySetToString((Set<Entity>) (Set<? extends Entity>) set, setTitle);
+    }
+
 
     /**
      * Add a connected entity with weight

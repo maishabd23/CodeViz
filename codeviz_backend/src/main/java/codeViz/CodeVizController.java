@@ -1,6 +1,6 @@
 package codeViz;
 import codeViz.entity.EntityType;
-import codeViz.gitHistory.TextColours;
+import codeViz.gitHistory.TextAnnotate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -80,10 +80,7 @@ public class CodeVizController {
         Map<String, String> response = new HashMap<>();
 
         String results = codeVizInterface.getNodeDetails(nodeName, currentLevel);
-        results = results.replace("\n", "<br>"); // for html format
-        results = results.replace(TextColours.RED.getAnsiColour(), TextColours.RED.getFontColour());
-        results = results.replace(TextColours.GREEN.getAnsiColour(), TextColours.GREEN.getFontColour());
-        results = results.replace(TextColours.RESET.getAnsiColour(), TextColours.RESET.getFontColour());
+        results = TextAnnotate.javaToHtml(results);
 
         response.put("string", results);
         return response; //each API call returns a JSON object that the React app parses

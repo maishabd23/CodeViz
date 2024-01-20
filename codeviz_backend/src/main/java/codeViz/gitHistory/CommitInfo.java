@@ -110,18 +110,18 @@ public class CommitInfo {
             }
 
             if (line.startsWith("+")){
-                line = TextColours.GREEN.getAnsiColour() + line + "\n";
+                line = TextAnnotate.GREEN.getJavaText() + line + "\n";
             } else if (line.startsWith("-")){
-                line = TextColours.RED.getAnsiColour() + line + "\n";
+                line = TextAnnotate.RED.getJavaText() + line + "\n";
             } else {
-                line = TextColours.RESET.getAnsiColour() + line + "\n";
+                line = TextAnnotate.RESET.getJavaText() + line + "\n";
             }
 
             newDiff.append(line);
 
         }
 
-        newDiff.append(TextColours.RESET.getAnsiColour());
+        newDiff.append(TextAnnotate.RESET.getJavaText());
 
         return newDiff.toString();
     }
