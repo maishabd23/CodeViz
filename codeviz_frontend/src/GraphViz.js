@@ -132,7 +132,11 @@ function GraphViz() {
                 <label htmlFor="step">step </label><input id="step" type="number" min="0.01" step="0.01" defaultValue={"0.5"}/>
               </td></tr>
               <tr><td>
-                <button id="update-threshold-settings">Update Threshold Settings</button>
+                <div className="threshold-help">
+                  <button id="update-threshold-settings">Update Threshold Settings</button>
+                  <img src="/info-icon.png" alt='icon' className="info--icon" />
+                  <p className='tooltip'>Adjust the max, min and step values for the threshold slider</p> 
+                </div>
               </td></tr>
               </tbody>
             </table>
@@ -140,7 +144,11 @@ function GraphViz() {
           </div>
         </div>
         <div id="nodeDetailsDisplay">
-            <h2>Node Details:</h2>
+          <div className="node-help">
+            <h2 className="h2">Node Details:</h2>
+            <img src="/info-icon.png" alt='icon' className="info--icon" />
+            <p className='tooltip-node'>Information on the node such as class/package that it belongs to and methods within it (if applicable)</p> 
+          </div>
             <p id="nodeDetails">
             Select a node to view its details
             </p>

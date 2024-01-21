@@ -7,7 +7,6 @@ function MainSection() {
         <div className='main'>
             <Menu />
             <GraphViz />
-            {/* <Graph /> */}
         </div>
     );
 }
