@@ -20,4 +20,5 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 If you get an error, you may need to first [install node.js](https://nodejs.org/en/download) and run the following command on the terminal:
 
 #### `npm install`
-#### `npm install graphology-gexf graphology sigma`
+#### `npm install graphology-gexf graphology sigma graphology-layout-forceatlas2`
+
