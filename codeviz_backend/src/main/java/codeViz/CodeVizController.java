@@ -75,7 +75,7 @@ public class CodeVizController {
 
     @CrossOrigin
     @GetMapping("/api/getNodeDetails")
-    public Map<String, String> getNodeDetails(@RequestParam(name = "nodeName", required = true, defaultValue = "") String nodeName) {
+    public Map<String, String> getNodeDetails(@RequestParam(name = "nodeName", defaultValue = "") String nodeName) {
         Map<String, String> response = new HashMap<>();
 
         String results = codeVizInterface.getNodeDetails(nodeName, currentLevel);
@@ -83,6 +83,19 @@ public class CodeVizController {
 
         response.put("string", results);
         return response; //each API call returns a JSON object that the React app parses
+    }
+
+    @CrossOrigin
+    @GetMapping("/api/getCurrentLevel")
+    public Map<String, String> getCurrentLevel() {
+        Map<String, String> response = new HashMap<>();
+
+        String type = currentLevel.toString();
+        type = type.substring(0,1).toUpperCase() + type.substring(1).toLowerCase();
+
+        System.out.println(currentLevel);
+        response.put("string", type);
+        return response;
     }
 
 }

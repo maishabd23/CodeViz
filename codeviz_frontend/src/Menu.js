@@ -20,6 +20,12 @@ function Menu() {
                 fetch('/api/viewGraphLevel?level=METHOD');
             });
 
+            fetch('/api/getCurrentLevel')
+            .then((response) => response.json())
+            .then((responseData) => {
+                document.getElementById("currentLevel").innerHTML = responseData.string + " Level";
+            });
+
             const search = document.getElementById("searchInput");
             search.addEventListener("search", mySearchFunction);
             function mySearchFunction() {
