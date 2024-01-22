@@ -20,6 +20,12 @@ function Menu() {
                 fetch('/api/viewGraphLevel?level=METHOD');
             });
 
+            fetch('/api/getCurrentLevel')
+            .then((response) => response.json())
+            .then((responseData) => {
+                document.getElementById("currentLevel").innerHTML = "Current level: " + responseData.string;
+            });
+
             const search = document.getElementById("searchInput");
             search.addEventListener("search", mySearchFunction);
             function mySearchFunction() {
@@ -61,9 +67,16 @@ function Menu() {
                     <td>
                         <div className="input"><label htmlFor="method-view"></label><button id="method-view">Method</button></div>
                     </td>
+                    <td>
+                        <div>
+                            <img src="/info-icon.png" alt='icon' className="info--icon" />
+                            <p className='tooltip'>Level of granularity at which to display the graph</p>
+                        </div>
+                    </td>
                 </tr>
                 </tbody>
             </table>
+            <p id="currentLevel"></p>
         </div>
     );
 }
