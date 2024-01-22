@@ -111,7 +111,6 @@ function GraphViz() {
 
     return (
       <div className="graphDisplay">
-        <h2 id="currentLevel"></h2>
         <div className="graphDisplay--image"></div>
         <div id="controls">
           <h2>Controls</h2>

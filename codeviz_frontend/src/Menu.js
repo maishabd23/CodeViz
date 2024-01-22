@@ -23,7 +23,7 @@ function Menu() {
             fetch('/api/getCurrentLevel')
             .then((response) => response.json())
             .then((responseData) => {
-                document.getElementById("currentLevel").innerHTML = responseData.string + " Level";
+                document.getElementById("currentLevel").innerHTML = "Current level: " + responseData.string;
             });
 
             const search = document.getElementById("searchInput");
@@ -76,6 +76,7 @@ function Menu() {
                 </tr>
                 </tbody>
             </table>
+            <p id="currentLevel"></p>
         </div>
     );
 }
