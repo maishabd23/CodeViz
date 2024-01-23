@@ -68,4 +68,12 @@ public class CodeVizInterface {
     public String getNodeDetails(String nodeName, EntityType currentLevel) {
         return graphGenerator.getNodeDetails(nodeName, currentLevel);
     }
+
+    public String getSearchResult(EntityType entityType) {
+        return graphGenerator.getSearchResult(entityType);
+    }
+
+    public void clearSearch() {
+        graphGenerator.clearSearch();
+    }
 }

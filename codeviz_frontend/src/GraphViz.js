@@ -113,7 +113,9 @@ function GraphViz() {
       <div className="graphDisplay">
         <div className="graphDisplay--image"></div>
         <div id="controls">
-          <h2>Controls</h2>
+          <div className="center">
+            <h2>Controls</h2>
+          </div>
           <div className="input"><label htmlFor="zoom-in">Zoom in </label><button id="zoom-in">+</button></div>
           <div className="input"><label htmlFor="zoom-out">Zoom out </label><button id="zoom-out">-</button></div>
           <div className="input"><label htmlFor="zoom-reset">Reset zoom </label><button id="zoom-reset">⊙</button></div>
@@ -132,7 +134,7 @@ function GraphViz() {
                 <label htmlFor="step">step </label><input id="step" type="number" min="0.01" step="0.01" defaultValue={"0.5"}/>
               </td></tr>
               <tr><td>
-                <div className="threshold-help">
+                <div className="help-display">
                   <button id="update-threshold-settings">Update Threshold Settings</button>
                   <img src="/info-icon.png" alt='icon' className="info--icon" />
                   <p className='tooltip'>Adjust the max, min and step values for the threshold slider</p> 

@@ -45,7 +45,8 @@ public class CodeVizController {
     public Map<String, String> viewGraphLevel(@RequestParam(name = "level", required = false, defaultValue = "") String level,
                                               @RequestParam(name = "searchValue", required = false, defaultValue = "") String searchValue,
                                               @RequestParam(name = "targetFolder", required = false, defaultValue = "") String targetFolder,
-                                              @RequestParam(name = "detailed", required = false, defaultValue = "false") boolean detailed) {
+                                              @RequestParam(name = "detailed", required = false, defaultValue = "false") boolean detailed,
+                                              @RequestParam(name = "clearSearch", required = false, defaultValue = "false") boolean clearSearch) {
         Map<String, String> response = new HashMap<>();
 
         if (!level.isEmpty()) {
@@ -65,6 +66,8 @@ public class CodeVizController {
             if (!searchValue.isEmpty()) {
                 System.out.println("SEARCHING FOR " + searchValue);
                 codeVizInterface.performSearch(searchValue, detailed);
+            } else if (clearSearch){
+                codeVizInterface.clearSearch();
             }
             codeVizInterface.generateGraph(currentLevel, "./codeviz_frontend/public/codeviz_demo.gexf");
         }
@@ -97,5 +100,17 @@ public class CodeVizController {
         response.put("string", type);
         return response;
     }
+
+    @CrossOrigin
+    @GetMapping("/api/getSearchResult")
+    public Map<String, String> getSearchResult() {
+        Map<String, String> response = new HashMap<>();
+
+        String result = codeVizInterface.getSearchResult(currentLevel);
+        result = TextAnnotate.javaToHtml(result);
+        response.put("string", result);
+        return response;
+    }
+
 
 }

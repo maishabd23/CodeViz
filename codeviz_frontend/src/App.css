@@ -11,7 +11,7 @@ nav {
   display: flex;
   align-items: center;
   padding: 10px 10px;
-  background-color: #CBCFD5;
+  background-color: slategray;
   margin: 0;
 }
 
@@ -77,6 +77,13 @@ canvas {
   background-color: lightgrey;
 }
 
+#menu-controls {
+  background-color: lightgrey;
+  border-width: 5px;
+  border-color: #F4F7FC;
+  border-style: solid;
+}
+
 #nodeDetailsDisplay {
   resize: both;
   position: absolute;
@@ -86,7 +93,7 @@ canvas {
   padding: 20px; 
   background-color: white;
   width: calc(100% - 1em - 20px);
-  height: 275px; 
+  height: 200px;
   overflow: auto; 
   box-sizing: border-box;
 }
@@ -108,7 +115,7 @@ canvas {
   z-index: 1; 
 }
 
-.threshold-help {
+.help-display {
   display: flex;
 }
 
@@ -150,7 +157,8 @@ canvas {
   background-color: #F4F7FC;
   padding: 10px 10px;
   width: 25%;
-  heiGht: 100%;
+  min-width: 240px;
+  height: 100%;
 }
 
 .main {
@@ -161,4 +169,5 @@ canvas {
 .center {
   margin-left: auto;
   margin-right: auto;
+  text-align: center;
 }
