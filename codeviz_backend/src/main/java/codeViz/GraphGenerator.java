@@ -22,6 +22,7 @@ public class GraphGenerator {
     private final LinkedHashMap<String, Entity> packageEntities;
     private final LinkedHashMap<String, Entity> classEntities;
     private final LinkedHashMap<String, Entity> methodEntities;
+    private String searchValue;
 
     /**
      * Create an EntityGraphGenerator
@@ -31,6 +32,7 @@ public class GraphGenerator {
         packageEntities = new LinkedHashMap<>();
         classEntities = new LinkedHashMap<>();
         methodEntities = new LinkedHashMap<>();
+        this.searchValue = "";
     }
 
     /**
@@ -230,7 +232,7 @@ public class GraphGenerator {
      * Clear existing entities from the graph generator
      * @author Thanuja Sivaananthan
      */
-    public void clearEntites() {
+    public void clearEntities() {
         this.packageEntities.clear();
         this.classEntities.clear();
         this.methodEntities.clear();
@@ -271,6 +273,7 @@ public class GraphGenerator {
         // start a fresh search
         clearSearch();
 
+        this.searchValue = searchValue;
         performSearch(searchValue, packageEntities, isDetailedSearch);
         performSearch(searchValue, classEntities, isDetailedSearch);
         performSearch(searchValue, methodEntities, isDetailedSearch);
@@ -293,7 +296,8 @@ public class GraphGenerator {
      * Clear any previous searches
      * @author Thanuja Sivaananthan
      */
-    private void clearSearch() {
+    public void clearSearch() {
+        this.searchValue = "";
         clearSearch(packageEntities);
         clearSearch(classEntities);
         clearSearch(methodEntities);
@@ -338,7 +342,7 @@ public class GraphGenerator {
 
         String[] newNodeNames = nodeName.split("_", 2);
         if (newNodeNames.length != 2){
-            return "INVALID NAME," + nodeName + " LENGTH IS " + newNodeNames.length;
+            return "INVALID NAME, " + nodeName + " LENGTH IS " + newNodeNames.length;
         }
 
         nodeName = newNodeNames[1];
@@ -350,5 +354,37 @@ public class GraphGenerator {
 
         return entity.toString(); //"FOUND KEY FOR " + nodeName;
 
+    }
+
+    /**
+     * Check if search value found for certain level
+     * @param entityType        level
+     * @return                  string message
+     */
+    public String getSearchResult(EntityType entityType) {
+
+        if (searchValue.isEmpty()){
+            return "";
+        }
+
+        LinkedHashMap<String, Entity> entities = getEntities(entityType);
+
+        boolean isFound = false;
+
+        for (Entity entity : entities.values()){
+            if (entity.isHighlighed()){
+                isFound = true;
+            }
+        }
+
+        String result = TextAnnotate.BOLD.javaText;
+
+        if (isFound) {
+            result += TextAnnotate.GREEN.javaText + "Found results for: " + searchValue;
+        } else {
+            result += TextAnnotate.RED.javaText + "No results for: " + searchValue;
+        }
+        result += TextAnnotate.RESET.javaText + TextAnnotate.BOLD_OFF.javaText;
+        return result;
     }
 }
