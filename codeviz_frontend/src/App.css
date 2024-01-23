@@ -77,6 +77,14 @@ canvas {
   background-color: lightgrey;
 }
 
+#menu-controls {
+  padding: 5px 5px;
+  background-color: lightgrey;
+  border-width: 5px;
+  border-color: #F4F7FC;
+  border-style: solid;
+}
+
 #nodeDetailsDisplay {
   resize: both;
   position: absolute;
@@ -108,7 +116,7 @@ canvas {
   z-index: 1; 
 }
 
-.threshold-help {
+.help-display {
   display: flex;
 }
 
@@ -150,7 +158,8 @@ canvas {
   background-color: #F4F7FC;
   padding: 10px 10px;
   width: 25%;
-  heiGht: 100%;
+  min-width: 220px;
+  height: 100%;
 }
 
 .main {
