@@ -65,20 +65,30 @@ function Menu() {
             {/*TODO - remove duplicate search bars and use dropdown instead - either simple or detailed search*/}
             <div id="menu-controls">
                 <h3>Search</h3>
-                <div className="help-display">
-                    <input type="search" id="searchInput" placeholder="Simple Search..."/>
-                    <img src="/info-icon.png" alt='icon' className="info--icon" />
-                    <p className='tooltip'>Search for specific node names</p>
-                </div>
-                <div className="help-display">
-                    <input type="search" id="detailedSearchInput" placeholder="Detailed Search..."/>
-                    <img src="/info-icon.png" alt='icon' className="info--icon" />
-                    <p className='tooltip'>Search for node names, connections, arguments/return types, etc</p>
-                </div>
-                <div className="center">
-                    <div className="input"><label htmlFor="clear-search"></label><button id="clear-search">Clear Search</button></div>
-                </div>
-                <p id="printSearch"></p>
+                <table className="center">
+                    <tbody>
+                    <tr><td>
+                        <div className="help-display">
+                            <input type="search" id="searchInput" placeholder="Simple Search..."/>
+                            <img src="/info-icon.png" alt='icon' className="info--icon" />
+                            <p className='tooltip'>Search for specific node names</p>
+                        </div>
+                    </td></tr>
+                    <tr><td>
+                        <div className="help-display">
+                            <input type="search" id="detailedSearchInput" placeholder="Detailed Search..."/>
+                            <img src="/info-icon.png" alt='icon' className="info--icon" />
+                            <p className='tooltip'>Search for node names, connections, arguments/return types, etc</p>
+                        </div>
+                    </td></tr>
+                    <tr><td>
+                        <div className="center">
+                            <label htmlFor="clear-search"></label><button id="clear-search">Clear Search</button>
+                        </div>
+                    </td></tr>
+                    </tbody>
+                </table>
+                        <p id="printSearch"></p>
             </div>
 
             <div id="menu-controls">

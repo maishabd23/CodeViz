@@ -113,7 +113,9 @@ function GraphViz() {
       <div className="graphDisplay">
         <div className="graphDisplay--image"></div>
         <div id="controls">
-          <h2>Controls</h2>
+          <div className="center">
+            <h2>Controls</h2>
+          </div>
           <div className="input"><label htmlFor="zoom-in">Zoom in </label><button id="zoom-in">+</button></div>
           <div className="input"><label htmlFor="zoom-out">Zoom out </label><button id="zoom-out">-</button></div>
           <div className="input"><label htmlFor="zoom-reset">Reset zoom </label><button id="zoom-reset">⊙</button></div>
