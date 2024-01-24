@@ -241,6 +241,7 @@ public class GraphGenerator {
 
     /**
      * Perform a search on a given entity type
+     * Note: is case-sensitive
      *
      * @param searchValue      the search value
      * @param entities         the entities to search
@@ -248,16 +249,14 @@ public class GraphGenerator {
      * @author Thanuja Sivaananthan
      */
     private void performSearch(String searchValue, LinkedHashMap<String, Entity> entities, boolean isDetailedSearch){
-        // assume correct case
         for (String entityKey : entities.keySet()) {
             Entity entity = entities.get(entityKey);
-            // this should work if graphing a level, where the search is at a higher level
-            // will not highlight if graphing a level, where the search is at a lower level
-            // TODO - in depth searches - highlight class if it contains an attribute name, method if it contains a parameter name, etc?
-            if (entityKey.contains(searchValue) || entity.nameContains(searchValue)) {
+            if (entity.nameContains(searchValue)) { // simple search - only checks the node name, not full name
                 entity.setHighlighed(true);
-            } else if (isDetailedSearch && entity.containsSearchValue(searchValue)){
-                entity.setHighlighed(true);
+            } else if (isDetailedSearch) {
+                if (entityKey.contains(searchValue) || entity.containsSearchValue(searchValue)) {
+                    entity.setHighlighed(true);
+                }
             }
         }
     }

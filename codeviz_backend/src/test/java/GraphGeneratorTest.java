@@ -137,15 +137,15 @@ public class GraphGeneratorTest {
     public void testSimpleSearch(){
         boolean isDetailed = false;
 
-        // searching a class name will only highlight that class and it's methods
+        // searching a class name will only highlight that class - not it's methods
         graphGenerator.performSearch("Person", isDetailed);
         assertTrue(person.isHighlighed());
         assertFalse(student.isHighlighed());
         assertFalse(professor.isHighlighed());
         assertFalse(address.isHighlighed());
-        assertTrue(personInit.isHighlighed());
-        assertTrue(getName.isHighlighed());
-        assertTrue(getAge.isHighlighed());
+        assertFalse(personInit.isHighlighed());
+        assertFalse(getName.isHighlighed());
+        assertFalse(getAge.isHighlighed());
 
         // searching a method name will only highlight the methods - not the classes they are in
         graphGenerator.performSearch("getName", isDetailed);
@@ -202,6 +202,27 @@ public class GraphGeneratorTest {
         assertTrue(studentToString.isHighlighed());
         assertTrue(professorToString.isHighlighed());
         assertTrue(addressToString.isHighlighed());
+    }
+
+    @Test
+    public void testGetNodeDetails(){
+
+        // incorrect format
+        assertEquals("INVALID NAME, invalid LENGTH IS 1", graphGenerator.getNodeDetails("invalid", EntityType.PACKAGE));
+
+        // key doesn't exist
+        assertEquals("KEY DOESN'T EXIST FOR invalid", graphGenerator.getNodeDetails("1_invalid", EntityType.PACKAGE));
+        assertEquals("KEY DOESN'T EXIST FOR student", graphGenerator.getNodeDetails("1_student", EntityType.PACKAGE));
+
+        String personDetails = graphGenerator.getNodeDetails("1_person", EntityType.PACKAGE);
+        System.out.println(personDetails);
+        assertTrue(personDetails.contains("Package:"));
+        assertTrue(personDetails.contains("Person"));
+        assertTrue(personDetails.contains("Classes:"));
+        assertTrue(personDetails.contains("Student"));
+        assertTrue(personDetails.contains("Professor"));
+
+        // more tests for other levels...
     }
 
 }
