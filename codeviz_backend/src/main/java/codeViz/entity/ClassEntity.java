@@ -14,6 +14,7 @@ import java.util.Set;
 public class ClassEntity extends Entity {
 
     private final PackageEntity packageEntity;
+    private final Set<ClassEntity> fields;
     private final Set<MethodEntity> methods;
 
     private ClassEntity superClass; // may have methods not defined in this class alone
@@ -21,6 +22,7 @@ public class ClassEntity extends Entity {
     public ClassEntity(String name, PackageEntity packageEntity){
         super(name, EntityType.CLASS);
         this.packageEntity = packageEntity;
+        this.fields = new HashSet<>();
         this.methods = new HashSet<>();
         this.superClass = null;
 
@@ -127,6 +129,10 @@ public class ClassEntity extends Entity {
         // add to method?
     }
 
+    public void addField(ClassEntity field) {
+        this.fields.add(field);
+    }
+
 
     @Override
     public String toString() {
@@ -134,10 +140,12 @@ public class ClassEntity extends Entity {
 
         String packageName = Entity.entityToString(packageEntity, "Package");
         String superClassName = Entity.entityToString(superClass, "Superclass");
+        String fieldsString = classEntitySetToString(fields, "Fields");
 
         return titleToString() +
                 packageName +
                 superClassName +
+                fieldsString +
                 methodsString
                 ;
     }

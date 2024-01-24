@@ -371,12 +371,14 @@ public class JavaBytecodeReaderTest {
         assertNotEquals(Entity.getHighlighedColour(), packageEntities.get("codeViz.entity").getParentColour());
         assertNotEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.PackageEntity").getParentColour());
         assertEquals(Entity.getHighlighedColour(), classEntities.get("codeViz.entity.MethodEntity").getParentColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.init").getParentColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.getClassEntity").getParentColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.addConnectedEntity").getParentColour());
         assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.addMethod").getParentColour());
         assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.getMethods").getParentColour());
         assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.getMethod").getParentColour());
+
+        // methods in MethodEntity class don't contain "Method" in their name
+        assertNotEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.init").getParentColour());
+        assertNotEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.getClassEntity").getParentColour());
+        assertNotEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.addConnectedEntity").getParentColour());
 
         if (GENERATE_GEXF) {
             javaBytecodeReader.generateGraph(EntityType.PACKAGE, "./src/test/gexf/" + name + "/search_" + prefix + "_package.gexf");
@@ -442,5 +444,10 @@ public class JavaBytecodeReaderTest {
         assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.addMethod").getParentColour()); // MethodEntity argument
         assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.getMethod").getParentColour()); // MethodEntity return type
         //assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.ClassEntity.getMethods").getParentColour()); // TODO - MethodEntity list return type
+
+        // methods in MethodEntity class are highlighted for detailed search
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.init").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.getClassEntity").getParentColour());
+        assertEquals(Entity.getHighlighedColour(), methodEntities.get("codeViz.entity.MethodEntity.addConnectedEntity").getParentColour());
     }
 }
