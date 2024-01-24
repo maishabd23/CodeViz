@@ -283,19 +283,8 @@ public class JavaBytecodeReader {
             // check fields and connect classes
             for (Field field : jc.getFields()){
                 String fieldType = String.valueOf(field.getType());
-                // System.out.println("field: " + fieldType);
-
-                // TODO - handle List/Set types that hold another class type
-
-                ClassEntity fieldClassEntity = (ClassEntity) graphGenerator.getClassEntities().get(fieldType);
-
-                if (fieldClassEntity != null){
-                    if (classEntity.equals(fieldClassEntity)){ // FIXME - investigate this further (occurs with enum)
-                        System.out.println("ERROR, circular reference with class " + classEntity.getName() + " field " + fieldType);
-                    } else {
-                        classEntity.addConnectedEntity(fieldClassEntity);
-                    }
-                }
+                ClassEntity fieldClassEntity = getAndStoreConnectedClassEntity(classEntity, fieldType);
+                classEntity.addField(fieldClassEntity);
             }
 
             // check methods argument/return types and connect classes
@@ -305,46 +294,12 @@ public class JavaBytecodeReader {
 
                 for (Type argumentType : method.getArgumentTypes()){
                     String stringArgumentType = String.valueOf(argumentType);
-                    // System.out.println("argument: " + stringArgumentType);
-
-                    // TODO - handle List/Set types that hold another class type
-
-                    ClassEntity argumentClassEntity = (ClassEntity) graphGenerator.getClassEntities().get(stringArgumentType);
-
-                    boolean validArgument = true;
-                    if (argumentClassEntity ==null){
-                        String[] argumentClassNames = stringArgumentType.split("\\.");
-                        stringArgumentType = argumentClassNames[argumentClassNames.length - 1];
-                        argumentClassEntity = new ClassEntity(stringArgumentType);
-                        validArgument = false;
-                    }
-
-                    if (classEntity.equals(argumentClassEntity)){ // FIXME - figure out how to handle this (ex. a method using it's own class)
-                        System.out.println("NOTE, circular reference with class " + classEntity.getName() + " argument " + stringArgumentType);
-                    }
-                    if (validArgument){ // only add connected entity if it's a valid class in the codebase
-                        classEntity.addConnectedEntity(argumentClassEntity);
-                    }
+                    ClassEntity argumentClassEntity = getAndStoreConnectedClassEntity(classEntity, stringArgumentType);
                     methodEntity.addArgument(argumentClassEntity);
                 }
 
                 String stringReturnType = String.valueOf(method.getReturnType());
-                ClassEntity returnClassEntity = (ClassEntity) graphGenerator.getClassEntities().get(stringReturnType);
-
-                boolean validReturnType = true;
-                if (returnClassEntity ==null){
-                    String[] returnClassNames = stringReturnType.split("\\.");
-                    stringReturnType = returnClassNames[returnClassNames.length - 1];
-                    returnClassEntity = new ClassEntity(stringReturnType);
-                    validReturnType = false;
-                }
-
-                if (classEntity.equals(returnClassEntity)){ // FIXME - investigate this further (occurs with enum)
-                    System.out.println("NOTE, circular reference with class " + classEntity.getName() + " return " + method.getReturnType());
-                }
-                if (validReturnType) { // only add connected entity if it's a valid class in the codebase
-                    classEntity.addConnectedEntity(returnClassEntity);
-                }
+                ClassEntity returnClassEntity = getAndStoreConnectedClassEntity(classEntity, stringReturnType);
                 methodEntity.setReturnType(returnClassEntity);
 
             }
@@ -354,6 +309,31 @@ public class JavaBytecodeReader {
         } else {
             System.out.println("ERROR, class entity should exist for " + jc.getClassName());
         }
+    }
+
+    /**
+     * Get the connected class entity for a given name
+     * If a valid entity, will add a connection
+     * @param classEntity               class that has the connection destination
+     * @param connectedClassName        class name of the connection source
+     * @return                          the connected class (or dummy class if not valid)
+     */
+    private ClassEntity getAndStoreConnectedClassEntity(ClassEntity classEntity, String connectedClassName) {
+        // TODO - handle List/Set types that hold another class type
+        ClassEntity connectedClassEntity = (ClassEntity) graphGenerator.getClassEntities().get(connectedClassName);
+
+        if (connectedClassEntity == null){
+            String[] connectedClassNames = connectedClassName.split("\\.");
+            connectedClassName = connectedClassNames[connectedClassNames.length - 1];
+            connectedClassEntity = new ClassEntity(connectedClassName);
+        } else {
+            classEntity.addConnectedEntity(connectedClassEntity);
+        }
+
+        if (classEntity.equals(connectedClassEntity)){ // FIXME - investigate this further (occurs with enum)
+            System.out.println("ERROR, circular reference with class " + classEntity.getName() + " and connected class " + connectedClassName);
+        }
+        return connectedClassEntity;
     }
 
     /**
