@@ -113,6 +113,20 @@
             </exclusions>
         </dependency>
 
+        <!-- Apache HttpClient dependency -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.13</version> <!-- Check for the latest version on Maven Central -->
+        </dependency>
+
+        <!-- JavaParser dependency -->
+        <dependency>
+            <groupId>com.github.javaparser</groupId>
+            <artifactId>javaparser-core</artifactId>
+            <version>3.24.0</version> <!-- Check for the latest version on Maven Central -->
+        </dependency>
+
     </dependencies>
 
     <build>
