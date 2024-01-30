@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.github.javaparser.JavaParser;
@@ -37,6 +38,11 @@ import java.util.zip.ZipInputStream;
 @Controller
 public class GitHubRepoController {
 
+    private final GraphGenerator graphGenerator;
+
+    public GitHubRepoController(){
+        this.graphGenerator = new GraphGenerator();
+    }
     private byte[] retrieveGitHubCodebase(String repoUrl) {
         HttpClient httpClient = HttpClients.createDefault();
         HttpGet request = new HttpGet(repoUrl + "/archive/main.zip"); // Assuming main branch
@@ -60,89 +66,193 @@ public class GitHubRepoController {
         }
     }
 
-    private void analyzeCodebase(byte[] codebase) {
-        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(codebase)) {
-            JavaParser javaParser = new JavaParser();
+//    private void analyzeCodebase(byte[] codebase) {
+//        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(codebase)) {
+//            JavaParser javaParser = new JavaParser();
+//
+//            try (ZipInputStream zipInputStream = new ZipInputStream(byteArrayInputStream)) {
+//                ZipEntry entry;
+//                while ((entry = zipInputStream.getNextEntry()) != null) {
+//                    if (!entry.isDirectory() && entry.getName().endsWith(".java")) {
+//                        // Read the contents of the entry (Java source file)
+//                        byte[] entryContent = zipInputStream.readAllBytes();
+//
+//                        if (entryContent.length > 0) {
+//                            String code = new String(entryContent, StandardCharsets.UTF_8);
+//
+//                            ParseResult<CompilationUnit> parseResult = javaParser.parse(new StringReader(code));
+//
+//                            if (parseResult.isSuccessful()) {
+//                                CompilationUnit compilationUnit = parseResult.getResult().get();
+//                                ConnectionVisitor connectionVisitor = new ConnectionVisitor();
+//                                compilationUnit.accept(connectionVisitor, null);
+//
+//                                // Access the gathered connections from the visitor
+//                                Set<String> packagesConnections = connectionVisitor.getPackages();
+//                                Set<String> classes = connectionVisitor.getClasses();
+//                                Set<String> methods = connectionVisitor.getMethods();
+//                                Set<String> methodCalls = connectionVisitor.getMethodCalls();
+//
+//                                List<PackageEntity> packages = new ArrayList<>();
+//
+//                                // Iterate over all types (classes, interfaces, enums, etc.) in the compilation unit
+//                                compilationUnit.getTypes().forEach(type -> {
+//                                    if (type instanceof ClassOrInterfaceDeclaration classDeclaration) {
+//
+//                                        // Extract package information
+//                                        String packageName = compilationUnit.getPackageDeclaration()
+//                                                .map(pd -> pd.getName().toString())
+//                                                .orElse("");
+//
+//                                        // Find or create the package entity
+//                                        PackageEntity packageEntity = packages.stream()
+//                                                .filter(p -> p.getName().equals(packageName))
+//                                                .findFirst()
+//                                                .orElseGet(() -> {
+//                                                    PackageEntity newPackage = new PackageEntity(packageName);
+//                                                    packages.add(newPackage);
+//                                                    return newPackage;
+//                                                });
+//                                        boolean packageSuccess = graphGenerator.addEntity(packageName, packageEntity);
+//
+//                                        // Create class entity
+//                                        ClassEntity classEntity = new ClassEntity(classDeclaration.getNameAsString(), packageEntity);
+//                                        boolean classSuccess = graphGenerator.addEntity(classEntity.getName(), classEntity);
+//                                        //classEntity.addConnectedEntity(packageEntity);
+//
+//                                        // Iterate over methods in the class
+//                                        classDeclaration.getMethods().forEach(methodDeclaration -> {
+//                                            // Create method entity
+//                                            MethodEntity methodEntity = new MethodEntity(methodDeclaration.getNameAsString(), classEntity);
+//                                            boolean methodSuccess = graphGenerator.addEntity(methodEntity.getName(), methodEntity);
+//
+//                                            // TODO - Extract additional information (Arguments) and add it to the methodEntity
+//
+//                                            // Add the method entity to the class
+//                                            classEntity.addMethod(methodEntity);
+//                                        });
+//
+//                                        // Add the class entity to the package
+//                                        packageEntity.addClass(classEntity);
+//
+//                                        //TEST
+//                                        System.out.println(packages);
+//                                        for (ClassEntity classEntity1 : packageEntity.getClasses()) {
+//                                            System.out.println(classEntity1.getName());
+//                                            System.out.println(Arrays.toString(classEntity1.getMethods().toArray()));
+//                                        }
+//                                    }
+//                                });
+//
+//                                // Pass the created entities to the model
+//                                //model.addAttribute("packages", packages);
+//                            } else {
+//                                // Handle parsing errors
+//                                parseResult.getProblems().forEach(problem -> {
+//                                    System.err.println("Parsing error: " + problem.getMessage());
+//                                });
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
-            try (ZipInputStream zipInputStream = new ZipInputStream(byteArrayInputStream)) {
-                ZipEntry entry;
-                while ((entry = zipInputStream.getNextEntry()) != null) {
-                    if (!entry.isDirectory() && entry.getName().endsWith(".java")) {
-                        // Read the contents of the entry (Java source file)
-                        byte[] entryContent = zipInputStream.readAllBytes();
+    private List<PackageEntity> parseJavaFilesFromZip(InputStream byteArrayInputStream) throws IOException {
+        List<PackageEntity> packages = new ArrayList<>();
+        JavaParser javaParser = new JavaParser();
 
-                        if (entryContent.length > 0) {
-                            String code = new String(entryContent, StandardCharsets.UTF_8);
+        ZipInputStream zipInputStream = new ZipInputStream(byteArrayInputStream);
 
-                            ParseResult<CompilationUnit> parseResult = javaParser.parse(new StringReader(code));
+        ZipEntry entry;
+        while ((entry = zipInputStream.getNextEntry()) != null) {
+            if (!entry.isDirectory() && entry.getName().endsWith(".java")) {
+                byte[] entryContent = zipInputStream.readAllBytes();
 
-                            if (parseResult.isSuccessful()) {
-                                CompilationUnit compilationUnit = parseResult.getResult().get();
-                                List<PackageEntity> packages = new ArrayList<>();
+                if (entryContent.length > 0) {
+                    String code = new String(entryContent, StandardCharsets.UTF_8);
+                    ParseResult<CompilationUnit> parseResult = javaParser.parse(new StringReader(code));
 
-                                // Iterate over all types (classes, interfaces, enums, etc.) in the compilation unit
-                                compilationUnit.getTypes().forEach(type -> {
-                                    if (type instanceof ClassOrInterfaceDeclaration classDeclaration) {
+                    if (parseResult.isSuccessful()) {
+                        CompilationUnit compilationUnit = parseResult.getResult().get();
+                        ConnectionVisitor connectionVisitor = new ConnectionVisitor();
+                        compilationUnit.accept(connectionVisitor, null);
 
-                                        // Extract package information
-                                        String packageName = compilationUnit.getPackageDeclaration()
-                                                .map(pd -> pd.getName().toString())
-                                                .orElse("");
+                        Set<String> packagesConnections = connectionVisitor.getPackages();
+                        Set<String> classes = connectionVisitor.getClasses();
+                        Set<String> methods = connectionVisitor.getMethods();
+                        Set<String> methodCalls = connectionVisitor.getMethodCalls();
 
-                                        // Find or create the package entity
-                                        PackageEntity packageEntity = packages.stream()
-                                                .filter(p -> p.getName().equals(packageName))
-                                                .findFirst()
-                                                .orElseGet(() -> {
-                                                    PackageEntity newPackage = new PackageEntity(packageName);
-                                                    packages.add(newPackage);
-                                                    return newPackage;
-                                                });
-
-                                        // Create class entity
-                                        ClassEntity classEntity = new ClassEntity(classDeclaration.getNameAsString(), packageEntity);
-
-                                        // Iterate over methods in the class
-                                        classDeclaration.getMethods().forEach(methodDeclaration -> {
-                                            // Create method entity
-                                            MethodEntity methodEntity = new MethodEntity(methodDeclaration.getNameAsString(), classEntity);
-                                            // TODO - Extract additional information (Arguments) and add it to the methodEntity
-
-                                            // Add the method entity to the class
-                                            classEntity.addMethod(methodEntity);
-                                        });
-
-                                        // Add the class entity to the package
-                                        packageEntity.addClass(classEntity);
-
-                                        System.out.println(packages);
-                                        for (ClassEntity classEntity1 : packageEntity.getClasses()) {
-                                            System.out.println(classEntity1.getName());
-                                            System.out.println(Arrays.toString(classEntity1.getMethods().toArray()));
-                                        }
-                                    }
-                                });
-
-                                // Pass the created entities to the model
-                                //model.addAttribute("packages", packages);
-                            } else {
-                                // Handle parsing errors
-                                parseResult.getProblems().forEach(problem -> {
-                                    System.err.println("Parsing error: " + problem.getMessage());
-                                });
-                            }
-                        }
+                        packages.addAll(createEntities(compilationUnit));
+                    } else {
+                        // Handle parsing errors
+                        parseResult.getProblems().forEach(problem -> {
+                            System.err.println("Parsing error: " + problem.getMessage());
+                        });
                     }
                 }
             }
+        }
+        return packages;
+    }
 
+    private List<PackageEntity> createEntities(CompilationUnit compilationUnit) {
+        List<PackageEntity> packages = new ArrayList<>();
+
+        // Iterate over all types (classes, interfaces, enums, etc.) in the compilation unit
+        compilationUnit.getTypes().forEach(type -> {
+            if (type instanceof ClassOrInterfaceDeclaration classDeclaration) {
+                String packageName = compilationUnit.getPackageDeclaration()
+                        .map(pd -> pd.getName().toString())
+                        .orElse("");
+
+                PackageEntity packageEntity = packages.stream()
+                        .filter(p -> p.getName().equals(packageName))
+                        .findFirst()
+                        .orElseGet(() -> {
+                            PackageEntity newPackage = new PackageEntity(packageName);
+                            packages.add(newPackage);
+                            return newPackage;
+                        });
+
+                boolean packageSuccess = graphGenerator.addEntity(packageName, packageEntity);
+
+                ClassEntity classEntity = new ClassEntity(classDeclaration.getNameAsString(), packageEntity);
+                boolean classSuccess = graphGenerator.addEntity(classEntity.getName(), classEntity);
+                classEntity.addConnectedEntity(classEntity); //TODO - TEST
+
+                classDeclaration.getMethods().forEach(methodDeclaration -> {
+                    MethodEntity methodEntity = new MethodEntity(methodDeclaration.getNameAsString(), classEntity);
+                    boolean methodSuccess = graphGenerator.addEntity(methodEntity.getName(), methodEntity);
+                    methodEntity.addConnectedEntity(methodEntity); //TODO - TEST
+
+                    classEntity.addMethod(methodEntity);
+                });
+
+                packageEntity.addClass(classEntity);
+                packageEntity.addConnectedEntity(packageEntity); //TODO - TEST
+            }
+        });
+
+        return packages;
+    }
+
+    private void analyzeCodebase(byte[] codebase) {
+        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(codebase)) {
+            List<PackageEntity> packages = parseJavaFilesFromZip(byteArrayInputStream);
+
+            // Pass the created entities to the model or perform other actions
+            // model.addAttribute("packages", packages);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-
-        public static void main(String[] args) {
+    public static void main(String[] args) {
         GitHubRepoController gitHubRepoController = new GitHubRepoController();
 
         byte[] result = gitHubRepoController.retrieveGitHubCodebase("https://github.com/maishabd23/online-bookstore");
