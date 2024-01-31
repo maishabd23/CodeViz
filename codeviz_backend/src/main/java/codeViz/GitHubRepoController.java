@@ -4,6 +4,11 @@ import codeViz.entity.ClassEntity;
 import codeViz.entity.MethodEntity;
 import codeViz.entity.PackageEntity;
 import com.github.javaparser.ParseResult;
+import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.stmt.BlockStmt;
+import com.github.javaparser.ast.stmt.ExpressionStmt;
+import com.github.javaparser.ast.stmt.Statement;
+import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -102,10 +107,18 @@ public class GitHubRepoController {
         ConnectionVisitor connectionVisitor = new ConnectionVisitor();
         compilationUnit.accept(connectionVisitor, null);
 
-        Set<String> packagesConnections = connectionVisitor.getPackages();
-        Set<String> classes = connectionVisitor.getClasses();
-        Set<String> methods = connectionVisitor.getMethods();
-        Set<String> methodCalls = connectionVisitor.getMethodCalls(); //TODO - add this later
+//        Set<String> packagesConnections = connectionVisitor.getPackages();
+//        Set<String> classes = connectionVisitor.getClasses();
+//        Set<String> methods = connectionVisitor.getMethods();
+//        Set<String> methodCalls = connectionVisitor.getMethodCalls(); //TODO - add this later
+
+        // Visit the compilation unit
+        connectionVisitor.visit(compilationUnit, null);
+
+        // Get the collected information
+        Set<String> connectedClasses = connectionVisitor.getClasses();
+        Set<String> fieldTypes = connectionVisitor.getFieldTypes();
+        Set<String> methodInvocations = connectionVisitor.getMethodInvocations();
 
 
         // Iterate over all types (classes, interfaces, enums, etc.) in the compilation unit
@@ -138,6 +151,21 @@ public class GitHubRepoController {
                     classEntity.addMethod(methodEntity);
                 });
 
+
+                System.out.println("Class: " + classDeclaration.getNameAsString());
+                System.out.println("Connected Classes:");
+
+                classDeclaration.getFields().forEach(fieldDeclaration -> {
+                    // Check if the field type is a class or interface
+                    if (fieldDeclaration.getElementType().isClassOrInterfaceType()) {
+                        ClassOrInterfaceType fieldType = fieldDeclaration.getElementType().asClassOrInterfaceType();
+                        System.out.println("  Field: " + fieldDeclaration.getVariable(0).getNameAsString());
+                        System.out.println("  Type: " + fieldType.asClassOrInterfaceType());
+                    }
+                });
+
+                System.out.println("------");
+
                 packageEntity.addClass(classEntity);
                 //packageEntity.addConnectedEntity(packageEntity); //TODO - TEST
 
@@ -151,13 +179,21 @@ public class GitHubRepoController {
                 }
 
                 //TESTING THE CONNECTIONS
-                for (ClassEntity classEntity2 : packageEntity.getClasses()) {
-                    System.out.println("///////////////////////////////////////////////////////");
-                    System.out.println("TESTING CLASS" + classes);
-                    System.out.println("THIS CLASS IS CONNECTED TO THE FOLLOWING PACKAGES: " + packagesConnections);
-                    System.out.println("THIS CLASS IS CONNECTED TO THE FOLLOWING METHODS: " + methods);
-                    System.out.println("------------------------------------------------------");
-                }
+//                for (ClassEntity classEntity2 : packageEntity.getClasses()) {
+//                    System.out.println("///////////////////////////////////////////////////////");
+//                    System.out.println("TESTING CLASS" + classes);
+//                    System.out.println("THIS CLASS IS CONNECTED TO THE FOLLOWING PACKAGES: " + packagesConnections);
+//                    System.out.println("THIS CLASS IS CONNECTED TO THE FOLLOWING METHODS: " + methods);
+//                    System.out.println("------------------------------------------------------");
+//                }
+
+                // Print the connections
+                System.out.println("///////////////////////////////////////////////////////");
+                System.out.println("Connected Classes to " + classDeclaration.getNameAsString() + ": " + connectedClasses);
+                System.out.println("Field Types: " + fieldTypes);
+                System.out.println("Method Invocations: " + methodInvocations);
+                System.out.println("------------------------------------------------------");
+
             }
         });
 
