@@ -86,17 +86,29 @@ public class CodeVizController {
     }
 
     @CrossOrigin
+    @GetMapping("/api/generateInnerGraph")
+    public void generateInnerGraph(@RequestParam(name = "nodeName", defaultValue = "") String nodeName) {
+        if (currentLevel != EntityType.METHOD){
+            EntityType newLevel = currentLevel;
+            // go inside one level
+            if (currentLevel.equals(EntityType.PACKAGE)){
+                newLevel = EntityType.CLASS;
+            } else if (currentLevel.equals(EntityType.CLASS)){
+                newLevel = EntityType.METHOD;
+            }
+            System.out.println("Generate inner graph for " + nodeName + " at " + currentLevel);
+            codeVizInterface.generateInnerGraph(nodeName, currentLevel, newLevel, "./codeviz_frontend/public/codeviz_demo.gexf");
+            currentLevel = newLevel;
+        }
+    }
+
+    @CrossOrigin
     @GetMapping("/api/getCurrentLevel")
     public Map<String, String> getCurrentLevel() {
         Map<String, String> response = new HashMap<>();
 
         String currentLevelString = currentLevel.toString();
         currentLevelString = currentLevelString.substring(0,1).toUpperCase() + currentLevelString.substring(1).toLowerCase();
-
-        String selectedNodeName = codeVizInterface.getSelectedNodeToString();
-        if (!selectedNodeName.isEmpty()) {
-            currentLevelString += " filtered at " + selectedNodeName;
-        }
 
         System.out.println(currentLevelString);
         response.put("string", currentLevelString);

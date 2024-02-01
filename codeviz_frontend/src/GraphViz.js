@@ -68,16 +68,15 @@ function GraphViz() {
         //  - save in the dragged node in the state
         renderer.on("downNode", (e) => {
           selectedNode = e.node;
-          // graph.setNodeAttribute(draggedNode, "highlighted", true);
+          fetch('/api/generateInnerGraph?nodeName=' + selectedNode.toString());
+        });
+
+        renderer.on("enterNode", (e) => {
+          selectedNode = e.node;
           fetch('/api/getNodeDetails?nodeName=' + selectedNode.toString())
               .then((response) => response.json())
               .then((responseData) => {
                 document.getElementById("nodeDetails").innerHTML = responseData.string;
-              });
-          fetch('/api/getFilteredNode')
-              .then((response) => response.json())
-              .then((responseData) => {
-                document.getElementById("currentFilter").innerHTML = "Current filter: " + responseData.string;
               });
         });
   

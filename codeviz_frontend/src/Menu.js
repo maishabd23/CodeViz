@@ -37,7 +37,9 @@ function Menu() {
             fetch('/api/getFilteredNode')
                 .then((response) => response.json())
                 .then((responseData) => {
-                    document.getElementById("currentFilter").innerHTML = "Current filter: " + responseData.string;
+                    if (responseData.string !== ""){
+                        document.getElementById("currentFilter").innerHTML = "Current filter: " + responseData.string;
+                    }
                 });
 
             const search = document.getElementById("searchInput");

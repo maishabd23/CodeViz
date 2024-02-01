@@ -67,7 +67,7 @@ public class CodeVizInterface {
         if (success) {
             if (selectedNode != null){
                 System.out.println("Try generating inner graph");
-                canCreateInner = generateInnerGraph(entityType, filename);
+                canCreateInner = graphGenerator.directedGraphToGexf(selectedNode, entityType, filename);
                 if (!canCreateInner){
                     System.out.println("ERROR, GENERATING DEFAULT GRAPH");
                 }
@@ -80,11 +80,11 @@ public class CodeVizInterface {
         }
     }
 
-    private boolean generateInnerGraph(EntityType currentLevel, String filename){
+    public boolean generateInnerGraph(String nodeName, EntityType parentLevel, EntityType childLevel, String filename){
+        selectedNode = graphGenerator.getNode(nodeName, parentLevel);
         boolean canCreateInner = false;
         if (success) {
-            canCreateInner = graphGenerator.directedGraphToGexf(selectedNode, currentLevel, filename);
-
+            canCreateInner = graphGenerator.directedGraphToGexf(selectedNode, childLevel, filename);
         }
         return canCreateInner;
     }
@@ -98,7 +98,6 @@ public class CodeVizInterface {
     }
 
     public String getNodeDetails(String nodeName, EntityType currentLevel) {
-        selectedNode = graphGenerator.getNode(nodeName, currentLevel);
         return graphGenerator.getNodeDetails(nodeName, currentLevel);
     }
 
