@@ -212,8 +212,27 @@ public class GitHubRepoController {
                                     System.out.println("Connected Class: " + fieldClassEntity.getName());
                                     System.out.println("----------------------------------------------");
 
-                                    // You can store this connection information or perform other actions
                                 }
+                            }
+
+                            // Check if the field type is a parameterized type (List, Set, etc.)
+                            if (fieldDeclaration.getElementType().isClassOrInterfaceType() && fieldDeclaration.getElementType().asClassOrInterfaceType().getTypeArguments().isPresent()) {
+                                fieldDeclaration.getElementType().asClassOrInterfaceType().getTypeArguments().get().forEach(typeArg -> {
+                                    // Check if the type argument is a class or interface
+                                    if (typeArg.isClassOrInterfaceType()) {
+                                        ClassOrInterfaceType genericType = typeArg.asClassOrInterfaceType();
+
+                                        // Retrieve the corresponding ClassEntity from the GraphGenerator
+                                        ClassEntity genericClassEntity = (ClassEntity) graphGenerator.getClassEntities().get(genericType.getNameAsString());
+
+                                        if (genericClassEntity != null) {
+                                            System.out.println("Class: " + classDeclaration.getNameAsString());
+                                            System.out.println("Field: " + fieldDeclaration.getVariable(0).getNameAsString());
+                                            System.out.println("Connected Class in Generic Type: " + genericClassEntity.getName());
+                                            System.out.println("----------------------------------------------");
+                                        }
+                                    }
+                                });
                             }
                         });
                     }
