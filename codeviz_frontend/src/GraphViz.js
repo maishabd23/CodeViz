@@ -74,6 +74,11 @@ function GraphViz() {
               .then((responseData) => {
                 document.getElementById("nodeDetails").innerHTML = responseData.string;
               });
+          fetch('/api/getFilteredNode')
+              .then((response) => response.json())
+              .then((responseData) => {
+                document.getElementById("currentFilter").innerHTML = "Current filter: " + responseData.string;
+              });
         });
   
         // Bind zoom manipulation buttons

@@ -141,6 +141,8 @@ public abstract class Entity {
 
     public abstract String toString();
 
+    public abstract String getKey();
+
     /**
      * Return the formatted title of the entity
      * @return  formatted title

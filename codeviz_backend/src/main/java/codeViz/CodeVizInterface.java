@@ -15,6 +15,8 @@ public class CodeVizInterface {
     private JavaBytecodeReader javaBytecodeReader;
     private GraphGenerator graphGenerator;
     private GitCommitReader gitCommitReader;
+    private Entity selectedNode;
+
     private boolean success;
 
     public CodeVizInterface(){
@@ -22,6 +24,7 @@ public class CodeVizInterface {
         this.graphGenerator = javaBytecodeReader.getGraphGenerator();
         this.gitCommitReader = new GitCommitReader(graphGenerator);
         this.success = true; // FIXME - change back to false once stuff are working
+        this.selectedNode = null;
     }
 
     /**
@@ -60,12 +63,42 @@ public class CodeVizInterface {
     }
 
     public void generateGraph(EntityType entityType, String filename){
+        boolean canCreateInner = false;
         if (success) {
-            graphGenerator.directedGraphToGexf(graphGenerator.entitiesToNodes(entityType), filename);
+            if (selectedNode != null){
+                System.out.println("Try generating inner graph");
+                canCreateInner = generateInnerGraph(entityType, filename);
+                if (!canCreateInner){
+                    System.out.println("ERROR, GENERATING DEFAULT GRAPH");
+                }
+            }
+
+            if (selectedNode == null || !canCreateInner){
+                selectedNode = null; // couldn't create inner graph, so clear it proactively?
+                graphGenerator.directedGraphToGexf(entityType, filename);
+            }
+        }
+    }
+
+    private boolean generateInnerGraph(EntityType currentLevel, String filename){
+        boolean canCreateInner = false;
+        if (success) {
+            canCreateInner = graphGenerator.directedGraphToGexf(selectedNode, currentLevel, filename);
+
+        }
+        return canCreateInner;
+    }
+
+    public String getSelectedNodeToString() {
+        if (selectedNode != null) {
+            return selectedNode.getKey();
+        } else {
+            return "";
         }
     }
 
     public String getNodeDetails(String nodeName, EntityType currentLevel) {
+        selectedNode = graphGenerator.getNode(nodeName, currentLevel);
         return graphGenerator.getNodeDetails(nodeName, currentLevel);
     }
 
@@ -76,4 +109,9 @@ public class CodeVizInterface {
     public void clearSearch() {
         graphGenerator.clearSearch();
     }
+
+    public void clearSelectedNode() {
+        selectedNode = null;
+    }
+
 }

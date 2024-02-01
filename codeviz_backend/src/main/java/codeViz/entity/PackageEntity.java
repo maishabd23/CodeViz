@@ -12,12 +12,19 @@ import java.awt.Color;
 public class PackageEntity extends Entity {
 
     private final Set<ClassEntity> classes;
+    private final PackageEntity superpackage;
 
-    public PackageEntity(String name){
+    public PackageEntity(String name, PackageEntity superpackage){
         super(name, EntityType.PACKAGE);
 
         this.classes = new HashSet<>();
+        this.superpackage = superpackage;
     }
+
+    public PackageEntity(String name){
+        this(name, null);
+    }
+
 
     public void addConnectedEntity(PackageEntity packageEntity) {
         super.addConnectedEntity(packageEntity);
@@ -30,6 +37,10 @@ public class PackageEntity extends Entity {
 
     public Set<ClassEntity> getClasses() {
         return classes;
+    }
+
+    public PackageEntity getSuperpackage() {
+        return superpackage;
     }
 
     /**
@@ -64,10 +75,23 @@ public class PackageEntity extends Entity {
 
     @Override
     public String toString() {
+        String superpackageName = Entity.entityToString(superpackage, "Superpackage");
         String classesString = classEntitySetToString(classes, "Classes");
 
         return titleToString() +
+                superpackageName +
                 classesString
                 ;
+    }
+
+
+    @Override
+    public String getKey() {
+        String name = getName();
+        if (superpackage == null){
+            return getName();
+        } else {
+            return superpackage.getKey() + "." + name;
+        }
     }
 }
