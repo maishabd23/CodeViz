@@ -25,7 +25,6 @@ public class PackageEntity extends Entity {
         this(name, null);
     }
 
-
     public void addConnectedEntity(PackageEntity packageEntity) {
         super.addConnectedEntity(packageEntity);
     }
@@ -83,7 +82,6 @@ public class PackageEntity extends Entity {
                 classesString
                 ;
     }
-
 
     @Override
     public String getKey() {

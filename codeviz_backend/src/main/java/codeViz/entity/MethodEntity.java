@@ -98,7 +98,6 @@ public class MethodEntity extends Entity {
                 ;
     }
 
-
     @Override
     public String getKey() {
         String name = getName();

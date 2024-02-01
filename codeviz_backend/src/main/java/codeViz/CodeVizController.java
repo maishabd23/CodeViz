@@ -14,8 +14,9 @@ public class CodeVizController {
     private static final String currentSrc = "./"; // weird things happen in intelliJ's project/vcs if I try setting this as anything else like ./codeviz_backend, ./codeviz_backend/src, etc
     private String currentTarget = "./codeviz_backend/target/classes/codeViz/";
     private EntityType currentLevel = EntityType.CLASS;
+    private static final String GEXF_FILE = "./codeviz_frontend/public/codeviz_demo.gexf";
 
-    private CodeVizInterface codeVizInterface;
+    private final CodeVizInterface codeVizInterface;
     private boolean success;
     public CodeVizController(){
         this.codeVizInterface = new CodeVizInterface();
@@ -23,7 +24,7 @@ public class CodeVizController {
 
         // TODO - only call this method when a new target is chosen
         success = codeVizInterface.generateEntitiesAndConnections(currentTarget, currentSrc, 10);
-        codeVizInterface.generateGraph(currentLevel, "./codeviz_frontend/public/codeviz_demo.gexf"); // FIXME
+        codeVizInterface.generateGraph(currentLevel, GEXF_FILE); // FIXME
     }
 
     @GetMapping("/")
@@ -66,7 +67,7 @@ public class CodeVizController {
                 System.out.println("SEARCHING FOR " + searchValue);
                 codeVizInterface.performSearch(searchValue, detailed);
             }
-            codeVizInterface.generateGraph(currentLevel, "./codeviz_frontend/public/codeviz_demo.gexf");
+            codeVizInterface.generateGraph(currentLevel, GEXF_FILE);
         }
 
         response.put("file", "codeviz_demo.gexf");
@@ -97,7 +98,7 @@ public class CodeVizController {
                 newLevel = EntityType.METHOD;
             }
             System.out.println("Generate inner graph for " + nodeName + " at " + currentLevel);
-            codeVizInterface.generateInnerGraph(nodeName, currentLevel, newLevel, "./codeviz_frontend/public/codeviz_demo.gexf");
+            codeVizInterface.generateInnerGraph(nodeName, currentLevel, newLevel, GEXF_FILE);
             currentLevel = newLevel;
         }
     }
@@ -106,11 +107,8 @@ public class CodeVizController {
     @GetMapping("/api/getCurrentLevel")
     public Map<String, String> getCurrentLevel() {
         Map<String, String> response = new HashMap<>();
-
         String currentLevelString = currentLevel.toString();
         currentLevelString = currentLevelString.substring(0,1).toUpperCase() + currentLevelString.substring(1).toLowerCase();
-
-        System.out.println(currentLevelString);
         response.put("string", currentLevelString);
         return response;
     }
@@ -119,9 +117,7 @@ public class CodeVizController {
     @GetMapping("/api/getFilteredNode")
     public Map<String, String> getFilteredNode() {
         Map<String, String> response = new HashMap<>();
-
         String selectedNodeName = codeVizInterface.getSelectedNodeToString();
-
         System.out.println(selectedNodeName);
         response.put("string", selectedNodeName);
         return response;
@@ -144,7 +140,7 @@ public class CodeVizController {
         codeVizInterface.clearSearch();
 
         // update code graph without search value
-        codeVizInterface.generateGraph(currentLevel, "./codeviz_frontend/public/codeviz_demo.gexf");
+        codeVizInterface.generateGraph(currentLevel, GEXF_FILE);
     }
 
     @CrossOrigin
@@ -153,7 +149,7 @@ public class CodeVizController {
         codeVizInterface.clearSelectedNode();
 
         // update code graph without selected node
-        codeVizInterface.generateGraph(currentLevel, "./codeviz_frontend/public/codeviz_demo.gexf");
+        codeVizInterface.generateGraph(currentLevel, GEXF_FILE);
     }
 
 

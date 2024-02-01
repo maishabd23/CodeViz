@@ -103,34 +103,38 @@ public class GraphGenerator {
         return entitiesToNodes(entities);
     }
 
-    private DirectedGraph entitiesToNodes(Entity entity, EntityType entityType) {
+    /**
+     * Generate an inner graph for a specific parent node.
+     * The following level pairs are supported:
+     * parentEntity: PACKAGE, childLevel: CLASS
+     * parentEntity: PACKAGE, childLevel: METHOD
+     * parentEntity: CLASS, childLevel: METHOD
+     * @param parentEntity  the entity to generate the inner graph for
+     * @param childLevel    the level of the inner graph
+     * @return              resulting directed graph
+     */
+    private DirectedGraph entitiesToNodes(Entity parentEntity, EntityType childLevel) {
 
         // combinations that do not work
-        if (entity.getEntityType().equals(EntityType.METHOD) // 3
-                || entity.getEntityType().equals(EntityType.CLASS) && entityType.equals(EntityType.PACKAGE) // 1
-                || entity.getEntityType().equals(entityType)) // 2
+        if (parentEntity.getEntityType().equals(EntityType.METHOD) // 3 - method - any
+                || parentEntity.getEntityType().equals(EntityType.CLASS) && childLevel.equals(EntityType.PACKAGE) // 1 - class - package
+                || parentEntity.getEntityType().equals(childLevel)) // 2 - x - x
         {
             return null;
         }
 
-        // cases to support
-        // package - class
-        // package - method
-
-
-        System.out.println("get entities within " + entity.getKey());
+        System.out.println("get entities within " + parentEntity.getKey());
         LinkedHashMap<String, Entity> entities = new LinkedHashMap<>();
-        if (entity != null) {
-
-            if (entity.getEntityType().equals(EntityType.PACKAGE)) {
-                if (entityType.equals(EntityType.CLASS)) {
-                    PackageEntity packageEntity = (PackageEntity) entity;
+        if (parentEntity != null) { // keep this check just in case
+            if (parentEntity.getEntityType().equals(EntityType.PACKAGE)) {
+                if (childLevel.equals(EntityType.CLASS)) { // package - class
+                    PackageEntity packageEntity = (PackageEntity) parentEntity;
                     Set<ClassEntity> classEntities1 = packageEntity.getClasses();
                     for (Entity entityInner : classEntities1) {
                         entities.put(entityInner.getKey(), entityInner);
                     }
-                } else if (entityType.equals(EntityType.METHOD)) {
-                    PackageEntity packageEntity = (PackageEntity) entity;
+                } else if (childLevel.equals(EntityType.METHOD)) { // package - method
+                    PackageEntity packageEntity = (PackageEntity) parentEntity;
                     Set<ClassEntity> classEntities1 = packageEntity.getClasses();
                     for (ClassEntity classEntityInner : classEntities1) {
                         Set<MethodEntity> methodEntities1 = classEntityInner.getMethods();
@@ -138,18 +142,16 @@ public class GraphGenerator {
                             entities.put(entityInner.getKey(), entityInner);
                         }
                     }
-
                 }
-
-            } else if (entity.getEntityType().equals(EntityType.CLASS)) { // class - method
-                ClassEntity classEntity = (ClassEntity) entity;
+            } else if (parentEntity.getEntityType().equals(EntityType.CLASS)) { // class - method
+                ClassEntity classEntity = (ClassEntity) parentEntity;
                 Set<MethodEntity> methodEntities1 = classEntity.getMethods();
                 for (Entity entityInner : methodEntities1) {
                     entities.put(entityInner.getKey(), entityInner);
                 }
             }
         } else {
-            System.out.println("ERROR, entity null ");
+            System.out.println("ERROR, parentEntity null ");
         }
         if (entities.isEmpty()){
             System.out.println("EMPTY entities list");
@@ -410,6 +412,7 @@ public class GraphGenerator {
 
         String[] newNodeNames = nodeName.split("_", 2);
         if (newNodeNames.length != 2){
+            System.out.println("INVALID NAME, " + nodeName + " LENGTH IS " + newNodeNames.length);
             return null;
         }
 
@@ -417,6 +420,7 @@ public class GraphGenerator {
         Entity entity = entities.getOrDefault(nodeName, null);
 
         if (entity == null){
+            System.out.println("KEY DOESN'T EXIST FOR " + nodeName);
             return null;
         }
 
@@ -425,22 +429,12 @@ public class GraphGenerator {
 
     public String getNodeDetails(String nodeName, EntityType entityType) {
         // FIXME - duplicated code
-        LinkedHashMap<String, Entity> entities = getEntities(entityType);
-
-        String[] newNodeNames = nodeName.split("_", 2);
-        if (newNodeNames.length != 2){
-            return "INVALID NAME, " + nodeName + " LENGTH IS " + newNodeNames.length;
-        }
-
-        nodeName = newNodeNames[1];
-        Entity entity = entities.getOrDefault(nodeName, null);
-
+        Entity entity = getNode(nodeName, entityType);
         if (entity == null){
-            return "KEY DOESN'T EXIST FOR " + nodeName;
+            return "";
+        } else {
+            return entity.toString();
         }
-
-        return entity.toString(); //"FOUND KEY FOR " + nodeName;
-
     }
 
     /**
@@ -475,22 +469,31 @@ public class GraphGenerator {
         return result;
     }
 
-    public void directedGraphToGexf(EntityType entityType, String filename) {
-        DirectedGraph directedGraph = entitiesToNodes(entityType);
+    /**
+     * Generate a code graph at a specific level
+     * @param newLevel the level to generate the code graph at
+     * @param filename the filename to save the gexf file as
+     */
+    public void directedGraphToGexf(EntityType newLevel, String filename) {
+        DirectedGraph directedGraph = entitiesToNodes(newLevel);
         if (directedGraph != null) {
             directedGraphToGexf(directedGraph, filename);
         }
     }
 
-    public boolean directedGraphToGexf(Entity entity, EntityType currentLevel, String filename) {
-
-
-        DirectedGraph directedGraph = entitiesToNodes(entity, currentLevel);
+    /**
+     * Generate a filtered code graph at a specific level
+     * @param parentEntity the parent entity to filter the graph to
+     * @param childLevel the level to generate the code graph at
+     * @param filename the filename to save the gexf file as
+     * @return  boolean, whether the filtered graph was successfully generated
+     */
+    public boolean directedGraphToGexf(Entity parentEntity, EntityType childLevel, String filename) {
+        DirectedGraph directedGraph = entitiesToNodes(parentEntity, childLevel);
         if (directedGraph != null) {
             directedGraphToGexf(directedGraph, filename);
             return true;
         }
         return false;
-
     }
 }
