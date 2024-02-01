@@ -4,10 +4,7 @@ import codeViz.entity.ClassEntity;
 import codeViz.entity.MethodEntity;
 import codeViz.entity.PackageEntity;
 import com.github.javaparser.ParseResult;
-import com.github.javaparser.ast.NodeList;
-import com.github.javaparser.ast.stmt.BlockStmt;
-import com.github.javaparser.ast.stmt.ExpressionStmt;
-import com.github.javaparser.ast.stmt.Statement;
+
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -24,7 +21,6 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseException;
@@ -44,9 +40,19 @@ import java.util.zip.ZipInputStream;
 public class GitHubRepoController {
 
     private final GraphGenerator graphGenerator;
+    private CompilationUnit compilationUnit;
+
+    private  ZipEntry zipEntry;
+
+    private  ZipInputStream zipInputStream;
+
+    private List<byte[]> entryContentsList = new ArrayList<>();
 
     public GitHubRepoController(){
         this.graphGenerator = new GraphGenerator();
+        this.compilationUnit = new CompilationUnit();
+        this.entryContentsList = new ArrayList<>();
+        //this.zipEntry = new ZipEntry();
     }
     private byte[] retrieveGitHubCodebase(String repoUrl) {
         HttpClient httpClient = HttpClients.createDefault();
@@ -75,7 +81,7 @@ public class GitHubRepoController {
         List<PackageEntity> packages = new ArrayList<>();
         JavaParser javaParser = new JavaParser();
 
-        ZipInputStream zipInputStream = new ZipInputStream(byteArrayInputStream);
+        this.zipInputStream = new ZipInputStream(byteArrayInputStream);
 
         ZipEntry entry;
         while ((entry = zipInputStream.getNextEntry()) != null) {
@@ -83,12 +89,14 @@ public class GitHubRepoController {
                 byte[] entryContent = zipInputStream.readAllBytes();
 
                 if (entryContent.length > 0) {
+                    entryContentsList.add(entryContent);
+
                     String code = new String(entryContent, StandardCharsets.UTF_8);
                     ParseResult<CompilationUnit> parseResult = javaParser.parse(new StringReader(code));
 
                     if (parseResult.isSuccessful()) {
                         CompilationUnit compilationUnit = parseResult.getResult().get();
-
+                        this.compilationUnit = compilationUnit;
                         packages.addAll(createEntities(compilationUnit));
                     } else {
                         // Handle parsing errors
@@ -97,6 +105,7 @@ public class GitHubRepoController {
                         });
                     }
                 }
+                zipInputStream.closeEntry();
             }
         }
         return packages;
@@ -153,16 +162,6 @@ public class GitHubRepoController {
 
 
                 System.out.println("Class: " + classDeclaration.getNameAsString());
-                System.out.println("Connected Classes:");
-
-                classDeclaration.getFields().forEach(fieldDeclaration -> {
-                    // Check if the field type is a class or interface
-                    if (fieldDeclaration.getElementType().isClassOrInterfaceType()) {
-                        ClassOrInterfaceType fieldType = fieldDeclaration.getElementType().asClassOrInterfaceType();
-                        System.out.println("  Field: " + fieldDeclaration.getVariable(0).getNameAsString());
-                        System.out.println("  Type: " + fieldType.asClassOrInterfaceType());
-                    }
-                });
 
                 System.out.println("------");
 
@@ -177,33 +176,62 @@ public class GitHubRepoController {
                     System.out.println("METHODS IN THIS CLASS: " + Arrays.toString(classEntity1.getMethods().toArray()));
                     System.out.println("------------------------------------------------------");
                 }
-
-                //TESTING THE CONNECTIONS
-//                for (ClassEntity classEntity2 : packageEntity.getClasses()) {
-//                    System.out.println("///////////////////////////////////////////////////////");
-//                    System.out.println("TESTING CLASS" + classes);
-//                    System.out.println("THIS CLASS IS CONNECTED TO THE FOLLOWING PACKAGES: " + packagesConnections);
-//                    System.out.println("THIS CLASS IS CONNECTED TO THE FOLLOWING METHODS: " + methods);
-//                    System.out.println("------------------------------------------------------");
-//                }
-
-                // Print the connections
-                System.out.println("///////////////////////////////////////////////////////");
-                System.out.println("Connected Classes to " + classDeclaration.getNameAsString() + ": " + connectedClasses);
-                System.out.println("Field Types: " + fieldTypes);
-                System.out.println("Method Invocations: " + methodInvocations);
-                System.out.println("------------------------------------------------------");
-
             }
         });
 
         return packages;
     }
 
+    private void createClassConnections() throws IOException {
+        JavaParser javaParser = new JavaParser();
+
+        for (byte[] entryContent : entryContentsList) {
+            String code = new String(entryContent, StandardCharsets.UTF_8);
+            ParseResult<CompilationUnit> parseResult = javaParser.parse(new StringReader(code));
+
+            if (parseResult.isSuccessful()) {
+                CompilationUnit compilationUnit = parseResult.getResult().get();
+                ConnectionVisitor connectionVisitor = new ConnectionVisitor();
+                compilationUnit.accept(connectionVisitor, null);
+                connectionVisitor.visit(compilationUnit, null);
+
+
+                compilationUnit.getTypes().forEach(type -> {
+                    if (type instanceof ClassOrInterfaceDeclaration classDeclaration) {
+                        classDeclaration.getFields().forEach(fieldDeclaration -> {
+                            // Check if the field type is a class or interface
+                            if (fieldDeclaration.getElementType().isClassOrInterfaceType()) {
+                                ClassOrInterfaceType fieldType = fieldDeclaration.getElementType().asClassOrInterfaceType();
+
+                                // Retrieve the corresponding ClassEntity from the GraphGenerator
+                                ClassEntity fieldClassEntity = (ClassEntity) graphGenerator.getClassEntities().get(fieldType.getNameAsString());
+
+                                if (fieldClassEntity != null) {
+                                    System.out.println("Class: " + classDeclaration.getNameAsString());
+                                    System.out.println("Field: " + fieldDeclaration.getVariable(0).getNameAsString());
+                                    System.out.println("Connected Class: " + fieldClassEntity.getName());
+                                    System.out.println("----------------------------------------------");
+
+                                    // You can store this connection information or perform other actions
+                                }
+                            }
+                        });
+                    }
+                });
+
+            } else {
+                // Handle parsing errors
+                parseResult.getProblems().forEach(problem -> {
+                    System.err.println("Parsing error: " + problem.getMessage());
+                });
+            }
+        }
+    }
+
     private void analyzeCodebase(byte[] codebase) {
         try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(codebase)) {
             List<PackageEntity> packages = parseJavaFilesFromZip(byteArrayInputStream);
-
+            createClassConnections();
             // Pass the created entities to the model or perform other actions
             // model.addAttribute("packages", packages);
         } catch (IOException e) {
