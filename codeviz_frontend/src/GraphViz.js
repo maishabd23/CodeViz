@@ -15,6 +15,7 @@ import forceAtlas2 from "graphology-layout-forceatlas2";
 // Load external GEXF file:
 function GraphViz() {
   const [data, setData] = useState(null);
+  const initialNodeMessage = "Hover over a node to view its details. Select the node to view the filtered graph at the inner level."
 
   useEffect(() => {
     // Make the API request when the component loads
@@ -78,6 +79,10 @@ function GraphViz() {
               .then((responseData) => {
                 document.getElementById("nodeDetails").innerHTML = responseData.string;
               });
+        });
+
+        renderer.on("leaveNode", () => {
+          document.getElementById("nodeDetails").innerHTML = initialNodeMessage;
         });
   
         // Bind zoom manipulation buttons
@@ -156,7 +161,7 @@ function GraphViz() {
             <p className='tooltip-node'>Information on the node such as class/package that it belongs to and methods within it (if applicable)</p> 
           </div>
             <p id="nodeDetails">
-            Select a node to view its details
+              {initialNodeMessage}
             </p>
         </div>
         </div>
