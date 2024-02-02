@@ -107,19 +107,17 @@ public class CodeVizController {
     @GetMapping("/api/getCurrentLevel")
     public Map<String, String> getCurrentLevel() {
         Map<String, String> response = new HashMap<>();
+
         String currentLevelString = currentLevel.toString();
         currentLevelString = currentLevelString.substring(0,1).toUpperCase() + currentLevelString.substring(1).toLowerCase();
-        response.put("string", currentLevelString);
-        return response;
-    }
 
-    @CrossOrigin
-    @GetMapping("/api/getFilteredNode")
-    public Map<String, String> getFilteredNode() {
-        Map<String, String> response = new HashMap<>();
         String selectedNodeName = codeVizInterface.getSelectedNodeToString();
-        System.out.println(selectedNodeName);
-        response.put("string", selectedNodeName);
+        if (!selectedNodeName.isEmpty()) {
+            currentLevelString += " at " + selectedNodeName;
+        }
+
+        System.out.println(currentLevelString);
+        response.put("string", currentLevelString);
         return response;
     }
 

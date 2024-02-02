@@ -9,7 +9,6 @@ function Menu() {
             const classView = document.getElementById("class-view");
             const methodView = document.getElementById("method-view");
             const clearSearch = document.getElementById("clear-search");
-            const clearFilter = document.getElementById("clear-filter");
 
             // Bind view level buttons
             packageView.addEventListener("click", () => {
@@ -24,22 +23,11 @@ function Menu() {
             clearSearch.addEventListener("click", () => {
                 fetch('/api/clearSearch');
             });
-            clearFilter.addEventListener("click", () => {
-                fetch('/api/clearSelectedNode');
-            });
 
             fetch('/api/getCurrentLevel')
                 .then((response) => response.json())
                 .then((responseData) => {
                     document.getElementById("currentLevel").innerHTML = "Current level: " + responseData.string;
-                });
-
-            fetch('/api/getFilteredNode')
-                .then((response) => response.json())
-                .then((responseData) => {
-                    if (responseData.string !== ""){
-                        document.getElementById("currentFilter").innerHTML = "Current filter: " + responseData.string;
-                    }
                 });
 
             const search = document.getElementById("searchInput");
@@ -127,8 +115,6 @@ function Menu() {
                     </tr>
                     </tbody>
                 </table>
-                <p id="currentFilter"></p>
-                <div className="input"><label htmlFor="clear-filter"></label><button id="clear-filter">Clear Filter</button></div>
 
             </div>
         </div>

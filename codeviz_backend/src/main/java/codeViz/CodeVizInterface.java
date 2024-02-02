@@ -63,30 +63,18 @@ public class CodeVizInterface {
 
     /**
      * Generate graph
-     * Will try generating filtered graph, otherwise will generate whole graph
      * @param newLevel  the level to generate the graph at
      * @param filename  the filename to save the gexf file as
      */
     public void generateGraph(EntityType newLevel, String filename){
-        boolean canCreateInner = false;
         if (success) {
-            if (selectedNode != null){
-                System.out.println("Try generating inner graph");
-                canCreateInner = graphGenerator.directedGraphToGexf(selectedNode, newLevel, filename);
-                if (!canCreateInner){
-                    System.out.println("ERROR, GENERATING DEFAULT GRAPH");
-                }
-            }
-
-            if (selectedNode == null || !canCreateInner){
-                selectedNode = null; // couldn't create inner graph, so clear it proactively?
-                graphGenerator.directedGraphToGexf(newLevel, filename);
-            }
+            selectedNode = null; // didn't create inner graph, so clear it
+            graphGenerator.directedGraphToGexf(newLevel, filename);
         }
     }
 
     /**
-     * Geneate graph filtered to a specific node
+     * Generate graph filtered to a specific node
      * @param nodeName          the name of the node to filter the graph at
      * @param parentLevel       the level of the node
      * @param childLevel        the inner level to generate the graph for
