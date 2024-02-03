@@ -112,7 +112,52 @@ function GraphViz() {
           labelsThresholdRange.step = document.getElementById("step").value;
         });
 
+        setHoveredNeighbours(graph, renderer);
       };
+
+      function setHoveredNeighbours(graph, renderer){
+
+        // display hovered node's neighbours
+        let hoveredNode = undefined;
+        let hoveredNeighbors = undefined;
+
+        // Bind graph interactions:
+        renderer.on("enterNode", ({ node }) => {
+          setHoveredNode(node);
+        });
+        renderer.on("leaveNode", () => {
+          setHoveredNode(undefined);
+        });
+
+        function setHoveredNode(node) {
+          if (node) {
+            hoveredNode = node;
+            hoveredNeighbors = new Set(graph.neighbors(node));
+          } else {
+            hoveredNode = undefined;
+            hoveredNeighbors = undefined;
+          }
+          // Refresh rendering:
+          renderer.refresh();
+        }
+
+        renderer.setSetting("nodeReducer", (node, data) => {
+          const res = { ...data };
+          if (hoveredNeighbors && !hoveredNeighbors.has(node) && hoveredNode !== node) {
+            res.label = "";
+            res.color = "#C9CDD4"; // should be a little darker than the css colour #E6EAF1
+          }
+          return res;
+        });
+
+        renderer.setSetting("edgeReducer", (edge, data) => {
+          const res = { ...data };
+          if (hoveredNode && !graph.hasExtremity(edge, hoveredNode)) {
+            res.hidden = true; // could set as a colour instead
+          }
+          return res;
+        });
+      }
   
       fetchData();
     }, []);
