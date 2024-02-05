@@ -124,17 +124,19 @@ public class JavaBytecodeReader {
                 innerFullPackageName += name;
                 // System.out.println(innerFullPackageName);
 
-                innerPackageEntity = new PackageEntity(name);
-                boolean success = graphGenerator.addEntity(innerFullPackageName, innerPackageEntity);
 
                 // sometimes the outerPackageEntity might be a placeholder
                 // ex if packages A.B and A.C, package A's object was already added
                 // when adding the connection, want to reference the object that is already there
                 // TODO - add proper test for this
-                if (outerPackageEntity != null){
+                if (outerPackageEntity == null) {
+                    innerPackageEntity = new PackageEntity(name);
+                } else {
+                    innerPackageEntity = new PackageEntity(name, outerPackageEntity);
                     innerPackageEntity.addConnectedEntity((PackageEntity) graphGenerator.getPackageEntities().get(outerFullPackageName));
                 }
 
+                boolean success = graphGenerator.addEntity(innerFullPackageName, innerPackageEntity);
                 outerPackageEntity = innerPackageEntity;
                 outerFullPackageName = innerFullPackageName;
 
@@ -437,7 +439,7 @@ public class JavaBytecodeReader {
     }
 
     public void generateGraph(EntityType entityType, String filename){
-        graphGenerator.directedGraphToGexf(graphGenerator.entitiesToNodes(entityType), filename);
+        graphGenerator.directedGraphToGexf(entityType, filename);
     }
 
     public GraphGenerator getGraphGenerator() {

@@ -12,10 +12,11 @@ import java.util.Map;
 public class CodeVizController {
 
     private static final String currentSrc = "./"; // weird things happen in intelliJ's project/vcs if I try setting this as anything else like ./codeviz_backend, ./codeviz_backend/src, etc
-    private String currentTarget = "./codeviz_backend/target/classes/codeViz/entity";
+    private String currentTarget = "./codeviz_backend/target/classes/codeViz/";
     private EntityType currentLevel = EntityType.CLASS;
+    private static final String GEXF_FILE = "./codeviz_frontend/public/codeviz_demo.gexf";
 
-    private CodeVizInterface codeVizInterface;
+    private final CodeVizInterface codeVizInterface;
     private boolean success;
     public CodeVizController(){
         this.codeVizInterface = new CodeVizInterface();
@@ -23,7 +24,7 @@ public class CodeVizController {
 
         // TODO - only call this method when a new target is chosen
         success = codeVizInterface.generateEntitiesAndConnections(currentTarget, currentSrc, 10);
-        codeVizInterface.generateGraph(currentLevel, "./codeviz_frontend/public/codeviz_demo.gexf"); // FIXME
+        codeVizInterface.generateGraph(currentLevel, GEXF_FILE); // FIXME
     }
 
     @GetMapping("/")
@@ -45,8 +46,7 @@ public class CodeVizController {
     public Map<String, String> viewGraphLevel(@RequestParam(name = "level", required = false, defaultValue = "") String level,
                                               @RequestParam(name = "searchValue", required = false, defaultValue = "") String searchValue,
                                               @RequestParam(name = "targetFolder", required = false, defaultValue = "") String targetFolder,
-                                              @RequestParam(name = "detailed", required = false, defaultValue = "false") boolean detailed,
-                                              @RequestParam(name = "clearSearch", required = false, defaultValue = "false") boolean clearSearch) {
+                                              @RequestParam(name = "detailed", required = false, defaultValue = "false") boolean detailed) {
         Map<String, String> response = new HashMap<>();
 
         if (!level.isEmpty()) {
@@ -66,10 +66,8 @@ public class CodeVizController {
             if (!searchValue.isEmpty()) {
                 System.out.println("SEARCHING FOR " + searchValue);
                 codeVizInterface.performSearch(searchValue, detailed);
-            } else if (clearSearch){
-                codeVizInterface.clearSearch();
             }
-            codeVizInterface.generateGraph(currentLevel, "./codeviz_frontend/public/codeviz_demo.gexf");
+            codeVizInterface.generateGraph(currentLevel, GEXF_FILE);
         }
 
         response.put("file", "codeviz_demo.gexf");
@@ -89,15 +87,37 @@ public class CodeVizController {
     }
 
     @CrossOrigin
+    @GetMapping("/api/generateInnerGraph")
+    public void generateInnerGraph(@RequestParam(name = "nodeName", defaultValue = "") String nodeName) {
+        if (currentLevel != EntityType.METHOD){
+            EntityType newLevel = currentLevel;
+            // go inside one level
+            if (currentLevel.equals(EntityType.PACKAGE)){
+                newLevel = EntityType.CLASS;
+            } else if (currentLevel.equals(EntityType.CLASS)){
+                newLevel = EntityType.METHOD;
+            }
+            System.out.println("Generate inner graph for " + nodeName + " at " + currentLevel);
+            codeVizInterface.generateInnerGraph(nodeName, currentLevel, newLevel, GEXF_FILE);
+            currentLevel = newLevel;
+        }
+    }
+
+    @CrossOrigin
     @GetMapping("/api/getCurrentLevel")
     public Map<String, String> getCurrentLevel() {
         Map<String, String> response = new HashMap<>();
 
-        String type = currentLevel.toString();
-        type = type.substring(0,1).toUpperCase() + type.substring(1).toLowerCase();
+        String currentLevelString = currentLevel.toString();
+        currentLevelString = currentLevelString.substring(0,1).toUpperCase() + currentLevelString.substring(1).toLowerCase();
 
-        System.out.println(currentLevel);
-        response.put("string", type);
+        String selectedNodeName = codeVizInterface.getSelectedNodeToString();
+        if (!selectedNodeName.isEmpty()) {
+            currentLevelString += " at " + selectedNodeName;
+        }
+
+        System.out.println(currentLevelString);
+        response.put("string", currentLevelString);
         return response;
     }
 
@@ -110,6 +130,24 @@ public class CodeVizController {
         result = TextAnnotate.javaToHtml(result);
         response.put("string", result);
         return response;
+    }
+
+    @CrossOrigin
+    @GetMapping("/api/clearSearch")
+    public void clearSearch() {
+        codeVizInterface.clearSearch();
+
+        // update code graph without search value
+        codeVizInterface.generateGraph(currentLevel, GEXF_FILE);
+    }
+
+    @CrossOrigin
+    @GetMapping("/api/clearSelectedNode")
+    public void clearSelectedNode() {
+        codeVizInterface.clearSelectedNode();
+
+        // update code graph without selected node
+        codeVizInterface.generateGraph(currentLevel, GEXF_FILE);
     }
 
 

@@ -1,7 +1,6 @@
 package codeViz;
 
-import codeViz.entity.Entity;
-import codeViz.entity.EntityType;
+import codeViz.entity.*;
 import org.gephi.graph.api.*;
 import org.gephi.project.api.ProjectController;
 import org.openide.util.Lookup;
@@ -99,9 +98,75 @@ public class GraphGenerator {
      * @param entityType    entityType to create graph from
      * @return              directed graph
      */
-    public DirectedGraph entitiesToNodes(EntityType entityType){
-        // NOTE: assuming all entities are properly set up with connections already
+    public DirectedGraph entitiesToNodes(EntityType entityType) {
         LinkedHashMap<String, Entity> entities = getEntities(entityType);
+        return entitiesToNodes(entities);
+    }
+
+    /**
+     * Generate an inner graph for a specific parent node.
+     * The following level pairs are supported:
+     * parentEntity: PACKAGE, childLevel: CLASS
+     * parentEntity: PACKAGE, childLevel: METHOD
+     * parentEntity: CLASS, childLevel: METHOD
+     * @param parentEntity  the entity to generate the inner graph for
+     * @param childLevel    the level of the inner graph
+     * @return              resulting directed graph
+     */
+    private DirectedGraph entitiesToNodes(Entity parentEntity, EntityType childLevel) {
+
+        // combinations that do not work
+        if (parentEntity.getEntityType().equals(EntityType.METHOD) // 3 - method - any
+                || parentEntity.getEntityType().equals(EntityType.CLASS) && childLevel.equals(EntityType.PACKAGE) // 1 - class - package
+                || parentEntity.getEntityType().equals(childLevel)) // 2 - x - x
+        {
+            return null;
+        }
+
+        System.out.println("get entities within " + parentEntity.getKey());
+        LinkedHashMap<String, Entity> entities = new LinkedHashMap<>();
+        if (parentEntity != null) { // keep this check just in case
+            if (parentEntity.getEntityType().equals(EntityType.PACKAGE)) {
+                if (childLevel.equals(EntityType.CLASS)) { // package - class
+                    PackageEntity packageEntity = (PackageEntity) parentEntity;
+                    Set<ClassEntity> classEntities1 = packageEntity.getClasses();
+                    for (Entity entityInner : classEntities1) {
+                        entities.put(entityInner.getKey(), entityInner);
+                    }
+                } else if (childLevel.equals(EntityType.METHOD)) { // package - method
+                    PackageEntity packageEntity = (PackageEntity) parentEntity;
+                    Set<ClassEntity> classEntities1 = packageEntity.getClasses();
+                    for (ClassEntity classEntityInner : classEntities1) {
+                        Set<MethodEntity> methodEntities1 = classEntityInner.getMethods();
+                        for (Entity entityInner : methodEntities1) {
+                            entities.put(entityInner.getKey(), entityInner);
+                        }
+                    }
+                }
+            } else if (parentEntity.getEntityType().equals(EntityType.CLASS)) { // class - method
+                ClassEntity classEntity = (ClassEntity) parentEntity;
+                Set<MethodEntity> methodEntities1 = classEntity.getMethods();
+                for (Entity entityInner : methodEntities1) {
+                    entities.put(entityInner.getKey(), entityInner);
+                }
+            }
+        } else {
+            System.out.println("ERROR, parentEntity null ");
+        }
+        if (entities.isEmpty()){
+            System.out.println("EMPTY entities list");
+        }
+        return entitiesToNodes(entities);
+    }
+
+
+
+    private DirectedGraph entitiesToNodes(LinkedHashMap<String, Entity> entities){
+        // NOTE: assuming all entities are properly set up with connections already
+
+        if (entities.isEmpty()){
+            return null;
+        }
 
         List<Node> nodes = new ArrayList<>();
         List<Edge> edges = new ArrayList<>();
@@ -139,10 +204,16 @@ public class GraphGenerator {
             for (Map.Entry<Entity, Integer> entry : entity.getConnectedEntitiesAndWeights().entrySet()){
 
                 Entity connectedEntity = entry.getKey();
-                int weight = entry.getValue();
-                int type = (int) 1f; // not sure what the type field should be
-                Edge edge = graphModel.factory().newEdge(entity.getGephiNode(), connectedEntity.getGephiNode(), type, weight, true);
-                edges.add(edge);
+                // FIXME what if connected entities doesn't exist in inner graph?
+                //  could add immediate connections
+                //  could simply not include those nodes/edges that aren't in the inner graph
+
+                if (nodes.contains(connectedEntity.getGephiNode())) { // only add edge if the other node exists
+                    int weight = entry.getValue();
+                    int type = (int) 1f; // not sure what the type field should be
+                    Edge edge = graphModel.factory().newEdge(entity.getGephiNode(), connectedEntity.getGephiNode(), type, weight, true);
+                    edges.add(edge);
+                }
             }
         }
 
@@ -336,23 +407,34 @@ public class GraphGenerator {
         return entities;
     }
 
-    public String getNodeDetails(String nodeName, EntityType entityType) {
+    public Entity getNode(String nodeName, EntityType entityType) {
         LinkedHashMap<String, Entity> entities = getEntities(entityType);
 
         String[] newNodeNames = nodeName.split("_", 2);
         if (newNodeNames.length != 2){
-            return "INVALID NAME, " + nodeName + " LENGTH IS " + newNodeNames.length;
+            System.out.println("INVALID NAME, " + nodeName + " LENGTH IS " + newNodeNames.length);
+            return null;
         }
 
         nodeName = newNodeNames[1];
         Entity entity = entities.getOrDefault(nodeName, null);
 
         if (entity == null){
-            return "KEY DOESN'T EXIST FOR " + nodeName;
+            System.out.println("KEY DOESN'T EXIST FOR " + nodeName);
+            return null;
         }
 
-        return entity.toString(); //"FOUND KEY FOR " + nodeName;
+        return entity;
+    }
 
+    public String getNodeDetails(String nodeName, EntityType entityType) {
+        // FIXME - duplicated code
+        Entity entity = getNode(nodeName, entityType);
+        if (entity == null){
+            return "";
+        } else {
+            return entity.toString();
+        }
     }
 
     /**
@@ -385,5 +467,33 @@ public class GraphGenerator {
         }
         result += TextAnnotate.RESET.javaText + TextAnnotate.BOLD_OFF.javaText;
         return result;
+    }
+
+    /**
+     * Generate a code graph at a specific level
+     * @param newLevel the level to generate the code graph at
+     * @param filename the filename to save the gexf file as
+     */
+    public void directedGraphToGexf(EntityType newLevel, String filename) {
+        DirectedGraph directedGraph = entitiesToNodes(newLevel);
+        if (directedGraph != null) {
+            directedGraphToGexf(directedGraph, filename);
+        }
+    }
+
+    /**
+     * Generate a filtered code graph at a specific level
+     * @param parentEntity the parent entity to filter the graph to
+     * @param childLevel the level to generate the code graph at
+     * @param filename the filename to save the gexf file as
+     * @return  boolean, whether the filtered graph was successfully generated
+     */
+    public boolean directedGraphToGexf(Entity parentEntity, EntityType childLevel, String filename) {
+        DirectedGraph directedGraph = entitiesToNodes(parentEntity, childLevel);
+        if (directedGraph != null) {
+            directedGraphToGexf(directedGraph, filename);
+            return true;
+        }
+        return false;
     }
 }

@@ -21,14 +21,14 @@ function Menu() {
                 fetch('/api/viewGraphLevel?level=METHOD');
             });
             clearSearch.addEventListener("click", () => {
-                fetch('/api/viewGraphLevel?clearSearch=true');
+                fetch('/api/clearSearch');
             });
 
             fetch('/api/getCurrentLevel')
-            .then((response) => response.json())
-            .then((responseData) => {
-                document.getElementById("currentLevel").innerHTML = "Current level: " + responseData.string;
-            });
+                .then((response) => response.json())
+                .then((responseData) => {
+                    document.getElementById("currentLevel").innerHTML = "Current level: " + responseData.string;
+                });
 
             const search = document.getElementById("searchInput");
             search.addEventListener("search", mySearchFunction);
@@ -93,6 +93,7 @@ function Menu() {
 
             <div id="menu-controls">
                 <h3>Switch Level</h3>
+                <p id="currentLevel"></p>
                 <table className="center">
                     <tbody>
                     <tr>
@@ -114,7 +115,7 @@ function Menu() {
                     </tr>
                     </tbody>
                 </table>
-                <p id="currentLevel"></p>
+
             </div>
         </div>
     );

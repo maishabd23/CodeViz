@@ -97,4 +97,10 @@ public class MethodEntity extends Entity {
                 returnTypeName
                 ;
     }
+
+    @Override
+    public String getKey() {
+        String name = getName();
+        return classEntity.getKey() + "." + name;
+    }
 }

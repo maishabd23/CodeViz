@@ -15,6 +15,7 @@ public class CodeVizInterface {
     private JavaBytecodeReader javaBytecodeReader;
     private GraphGenerator graphGenerator;
     private GitCommitReader gitCommitReader;
+    private Entity selectedNode;
     private boolean success;
 
     public CodeVizInterface(){
@@ -22,6 +23,7 @@ public class CodeVizInterface {
         this.graphGenerator = javaBytecodeReader.getGraphGenerator();
         this.gitCommitReader = new GitCommitReader(graphGenerator);
         this.success = true; // FIXME - change back to false once stuff are working
+        this.selectedNode = null;
     }
 
     /**
@@ -59,9 +61,37 @@ public class CodeVizInterface {
         }
     }
 
-    public void generateGraph(EntityType entityType, String filename){
+    /**
+     * Generate graph
+     * @param newLevel  the level to generate the graph at
+     * @param filename  the filename to save the gexf file as
+     */
+    public void generateGraph(EntityType newLevel, String filename){
         if (success) {
-            graphGenerator.directedGraphToGexf(graphGenerator.entitiesToNodes(entityType), filename);
+            selectedNode = null; // didn't create inner graph, so clear it
+            graphGenerator.directedGraphToGexf(newLevel, filename);
+        }
+    }
+
+    /**
+     * Generate graph filtered to a specific node
+     * @param nodeName          the name of the node to filter the graph at
+     * @param parentLevel       the level of the node
+     * @param childLevel        the inner level to generate the graph for
+     * @param filename          the filename to save the gexf file as
+     */
+    public void generateInnerGraph(String nodeName, EntityType parentLevel, EntityType childLevel, String filename){
+        selectedNode = graphGenerator.getNode(nodeName, parentLevel);
+        if (success) {
+            graphGenerator.directedGraphToGexf(selectedNode, childLevel, filename);
+        }
+    }
+
+    public String getSelectedNodeToString() {
+        if (selectedNode != null) {
+            return selectedNode.getKey();
+        } else {
+            return "";
         }
     }
 
@@ -76,4 +106,9 @@ public class CodeVizInterface {
     public void clearSearch() {
         graphGenerator.clearSearch();
     }
+
+    public void clearSelectedNode() {
+        selectedNode = null;
+    }
+
 }

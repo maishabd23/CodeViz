@@ -149,4 +149,14 @@ public class ClassEntity extends Entity {
                 methodsString
                 ;
     }
+
+    @Override
+    public String getKey() {
+        String name = getName();
+        if (packageEntity == null){
+            return getName();
+        } else {
+            return packageEntity.getKey() + "." + name;
+        }
+    }
 }
