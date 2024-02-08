@@ -3,7 +3,7 @@ package codeViz.entity;
 import codeViz.gitHistory.CommitInfo;
 
 import java.awt.*;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -22,8 +22,8 @@ public class ClassEntity extends Entity {
     public ClassEntity(String name, PackageEntity packageEntity){
         super(name, EntityType.CLASS);
         this.packageEntity = packageEntity;
-        this.fields = new HashSet<>();
-        this.methods = new HashSet<>();
+        this.fields = new LinkedHashSet<>();
+        this.methods = new LinkedHashSet<>();
         this.superClass = null;
 
         if (packageEntity != null){

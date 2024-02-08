@@ -1,6 +1,6 @@
 package codeViz.entity;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.awt.Color;
 
@@ -17,7 +17,7 @@ public class PackageEntity extends Entity {
     public PackageEntity(String name, PackageEntity superpackage){
         super(name, EntityType.PACKAGE);
 
-        this.classes = new HashSet<>();
+        this.classes = new LinkedHashSet<>();
         this.superpackage = superpackage;
     }
 
