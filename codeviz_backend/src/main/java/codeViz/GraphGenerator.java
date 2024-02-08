@@ -178,10 +178,14 @@ public class GraphGenerator {
         //Get a graph model - it exists because we have a workspace
         GraphModel graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
 
+
+        EntityType entityType = null; // TODO - fix the way this EntityType variable is created
+
         // 1. create nodes for each entity
         int id = 1; // add id in case there are duplicate names
         for (String entityKey : entities.keySet()){
             Entity entity = entities.get(entityKey);
+            entityType = entity.getEntityType();
             String nodeName = entity.getName();
             Node node = graphModel.factory().newNode(id + "_" + entityKey); // want this as entityKey, is okay because only label is displayed
             node.setLabel(nodeName);
@@ -201,7 +205,13 @@ public class GraphGenerator {
         // 2. create edges for each pair
         for (String entityKey : entities.keySet()){
             Entity entity = entities.get(entityKey);
-            for (Map.Entry<Entity, Integer> entry : entity.getConnectedEntitiesAndWeights().entrySet()){
+
+            Set<Map.Entry<Entity, Integer>> connectedEntities = entity.getConnectedEntitiesAndWeights().entrySet();
+            if (entityType.equals(EntityType.CLASS)){
+                connectedEntities = entity.getGitConnectedEntitiesAndWeights().entrySet(); // TODO - move to diff location
+            }
+
+            for (Map.Entry<Entity, Integer> entry : connectedEntities){
 
                 Entity connectedEntity = entry.getKey();
                 // FIXME what if connected entities doesn't exist in inner graph?

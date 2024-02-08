@@ -20,10 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Class that reads git commit history
@@ -37,6 +34,7 @@ public class GitCommitReader {
     private Git git;
     private final GraphGenerator graphGenerator;
     private ArrayList<CommitInfo> commitInfos; // may not need to store here if using from entities directly? mainly used for previous commit
+    private ArrayList<CommitStorage> commitStorages; // may not need to store here if using from entities directly? mainly used for previous commit
     private LinkedHashMap<String, String> renamedClassEntityNames;
 
     /**
@@ -46,6 +44,7 @@ public class GitCommitReader {
     public GitCommitReader(GraphGenerator graphGenerator){
         this.graphGenerator = graphGenerator;
         this.commitInfos = new ArrayList<>();
+        this.commitStorages = new ArrayList<>();
         this.renamedClassEntityNames = new LinkedHashMap<>();
     }
 
@@ -131,6 +130,25 @@ public class GitCommitReader {
             nextCommit = commit;
 
         }
+
+        // after storing all the commits and classes, now store the connections between classes and git commits
+        // this will be used to annotate the code graph (how a change of entities is correlated)
+        addGitHistoryConnections();
+    }
+
+    /**
+     * Add connections between entities, based on git history
+     */
+    private void addGitHistoryConnections() {
+        for (CommitStorage commitStorage : commitStorages){
+            Set<ClassEntity> classEntitySet = commitStorage.getClassEntities();
+            // TODO - fix size complexity - currently O(n^2), seems excessive
+            for (ClassEntity outerClassEntity : classEntitySet){
+                for (ClassEntity innerClassEntity : classEntitySet){
+                    outerClassEntity.addGitConnectedEntity(innerClassEntity);
+                }
+            }
+        }
     }
 
     /**
@@ -158,6 +176,8 @@ public class GitCommitReader {
         renameDetector.addAll(diff);
         diff = renameDetector.compute();
 
+        CommitStorage commitStorage = new CommitStorage(currentCommit.getId().getName());
+        commitStorages.add(commitStorage);
 
         for (DiffEntry entry : diff) {
             //System.out.println("Entry: " + entry + ", from: " + entry.getOldId() + ", to: " + entry.getNewId());
@@ -182,6 +202,7 @@ public class GitCommitReader {
                     outputStream.toString()
             );
             commitInfos.add(commitInfo);
+            commitStorage.addCommitInfo(commitInfo);
 
 //            // FIXME connect commits like a linked list - might not be needed
 //            if (futureCommit != null && commitIdsAndInfos.containsKey(futureCommit.getId().getName())){
@@ -195,6 +216,7 @@ public class GitCommitReader {
                 ClassEntity classEntity = getClassEntity(entry.getNewPath());
                 if (classEntity != null) {
                     classEntity.addCommitInfo(commitInfo);
+                    commitStorage.addClassEntity(classEntity);
                 }
             }
 

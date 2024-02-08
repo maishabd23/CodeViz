@@ -26,6 +26,7 @@ public abstract class Entity {
     private float x_pos, y_pos;
 
     private final ArrayList<CommitInfo> commitInfos; //could store as LinkedHashMap - a file can only be changed once per commit
+    private final Map<Entity, Integer> gitConnectedEntitiesAndWeights; //stores the weight of connections
 
     /**
      * Set up an Entity
@@ -41,7 +42,9 @@ public abstract class Entity {
         this.size = 1;
         this.colour = getRandomColour();
         this.isHighlighed = false;
+        // NOTE: might want to move within ClassEntity
         this.commitInfos = new ArrayList<>();
+        this.gitConnectedEntitiesAndWeights = new LinkedHashMap<>();
         this.x_pos = 0;
         this.y_pos = 0;
     }
@@ -203,11 +206,22 @@ public abstract class Entity {
         incrementSize();
     }
 
+    protected void addGitConnectedEntity(Entity entity){
+        // only add to git history if they are connected in dependency graph
+        if (connectedEntitiesAndWeights.containsKey(entity)) {
+            gitConnectedEntitiesAndWeights.put(entity, 1);
+        }
+    }
+
     public Set<Entity> getConnectedEntities() {
         return connectedEntitiesAndWeights.keySet();
     }
     public Map <Entity, Integer> getConnectedEntitiesAndWeights(){
         return connectedEntitiesAndWeights;
+    }
+
+    public Map<Entity, Integer> getGitConnectedEntitiesAndWeights() {
+        return gitConnectedEntitiesAndWeights;
     }
 
     public boolean nameContains(String searchValue){

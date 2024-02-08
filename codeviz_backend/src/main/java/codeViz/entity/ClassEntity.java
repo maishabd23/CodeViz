@@ -39,6 +39,10 @@ public class ClassEntity extends Entity {
         super.addConnectedEntity(classEntity);
     }
 
+    public void addGitConnectedEntity(ClassEntity classEntity) {
+        super.addGitConnectedEntity(classEntity);
+    }
+
     public PackageEntity getPackageEntity() {
         return packageEntity;
     }
@@ -122,6 +126,10 @@ public class ClassEntity extends Entity {
         return false;
     }
 
+    /**
+     * Only class entities can add commit info
+     * @param commitInfo    commit info to add
+     */
     @Override
     public void addCommitInfo(CommitInfo commitInfo){
         super.addCommitInfo(commitInfo);
