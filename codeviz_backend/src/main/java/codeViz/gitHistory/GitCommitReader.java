@@ -3,6 +3,8 @@ package codeViz.gitHistory;
 import codeViz.GraphGenerator;
 import codeViz.entity.ClassEntity;
 import codeViz.entity.Entity;
+import org.apache.commons.collections4.keyvalue.MultiKey;
+import org.apache.commons.collections4.map.MultiKeyMap;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -140,14 +142,51 @@ public class GitCommitReader {
      * Add connections between entities, based on git history
      */
     private void addGitHistoryConnections() {
+
+        // for each pair of entities, want to store the diffs of each in a list
+        // that can be used for correlation analysis after?
+        MultiKeyMap classesAndDiffPairs = new MultiKeyMap(); // NOTE: has some limitations, try to only use locally
+
         for (CommitStorage commitStorage : commitStorages){
-            Set<ClassEntity> classEntitySet = commitStorage.getClassEntities();
+            Set<ClassEntity> classEntitySet = commitStorage.getClassesAndCommits().keySet();
             // TODO - fix size complexity - currently O(n^2), seems excessive
             for (ClassEntity outerClassEntity : classEntitySet){
                 for (ClassEntity innerClassEntity : classEntitySet){
-                    outerClassEntity.addGitConnectedEntity(innerClassEntity);
+                    outerClassEntity.addGitConnectedEntity(innerClassEntity); // TODO remove
+                    int amountX = commitStorage.getClassesAndCommits().get(outerClassEntity).getNetLinesChanged();
+                    int amountY = commitStorage.getClassesAndCommits().get(innerClassEntity).getNetLinesChanged();
+
+                    GitDiffCorrelationAnalysis gitDiffCorrelationAnalysis;
+                    if (classesAndDiffPairs.containsKey(outerClassEntity, innerClassEntity)){
+                        gitDiffCorrelationAnalysis = (GitDiffCorrelationAnalysis) classesAndDiffPairs.get(outerClassEntity, innerClassEntity);
+                        gitDiffCorrelationAnalysis.addPair(amountX, amountY);
+                    } else if (classesAndDiffPairs.containsKey(innerClassEntity, outerClassEntity)){
+                        // FIXME - this might be a duplicated diff
+                        gitDiffCorrelationAnalysis = (GitDiffCorrelationAnalysis) classesAndDiffPairs.get(innerClassEntity, outerClassEntity);
+                        gitDiffCorrelationAnalysis.addPair(amountY, amountX); // NOTE: diff order because created with classes reversed
+                    } else {
+                        gitDiffCorrelationAnalysis = new GitDiffCorrelationAnalysis();
+                        classesAndDiffPairs.put(outerClassEntity, innerClassEntity, gitDiffCorrelationAnalysis);
+                        gitDiffCorrelationAnalysis.addPair(amountX, amountY);
+                    }
                 }
             }
+        }
+
+        System.out.println("Done getting git diff pairs!");
+
+        for (Object object : classesAndDiffPairs.keySet()){
+            MultiKey multiKey = (MultiKey) object;
+            ClassEntity classEntity1 = (ClassEntity) multiKey.getKey(0);
+            ClassEntity classEntity2 = (ClassEntity) multiKey.getKey(1);
+            GitDiffCorrelationAnalysis gitDiffCorrelationAnalysis = (GitDiffCorrelationAnalysis) classesAndDiffPairs.get(classEntity1, classEntity2);
+
+
+            float weight = gitDiffCorrelationAnalysis.getCorrelationCoefficient();
+            int adjustedWeight = (int) (weight * 10);
+            System.out.println("Between " + classEntity1.getName() + " and " + classEntity2.getName() + ", weight = " + weight);
+            classEntity1.addGitConnectedEntity(classEntity2, adjustedWeight);
+            classEntity2.addGitConnectedEntity(classEntity1, adjustedWeight);
         }
     }
 
@@ -202,7 +241,6 @@ public class GitCommitReader {
                     outputStream.toString()
             );
             commitInfos.add(commitInfo);
-            commitStorage.addCommitInfo(commitInfo);
 
 //            // FIXME connect commits like a linked list - might not be needed
 //            if (futureCommit != null && commitIdsAndInfos.containsKey(futureCommit.getId().getName())){
@@ -216,7 +254,7 @@ public class GitCommitReader {
                 ClassEntity classEntity = getClassEntity(entry.getNewPath());
                 if (classEntity != null) {
                     classEntity.addCommitInfo(commitInfo);
-                    commitStorage.addClassEntity(classEntity);
+                    commitStorage.addClassCommitPair(classEntity, commitInfo);
                 }
             }
 

@@ -209,7 +209,15 @@ public abstract class Entity {
     protected void addGitConnectedEntity(Entity entity){
         // only add to git history if they are connected in dependency graph
         if (connectedEntitiesAndWeights.containsKey(entity)) {
-            gitConnectedEntitiesAndWeights.put(entity, 1);
+            int initialWeight = connectedEntitiesAndWeights.getOrDefault(entity, 0);
+            gitConnectedEntitiesAndWeights.put(entity, initialWeight + 1);
+        }
+    }
+
+    protected void addGitConnectedEntity(Entity entity, int weight){
+        // only add to git history if they are connected in dependency graph
+        if (connectedEntitiesAndWeights.containsKey(entity)) {
+            gitConnectedEntitiesAndWeights.put(entity, weight);
         }
     }
 

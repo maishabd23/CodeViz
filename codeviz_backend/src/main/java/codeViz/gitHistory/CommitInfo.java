@@ -19,10 +19,11 @@ public class CommitInfo {
     private final LocalDateTime date;
     private final String message;
     private CommitInfo previousCommit;
-    private final String diff;
+    private String diff;
     private final String previousFilename; // TODO - handle file renames // TODO handle deletes
     private final String newFilename;
     private final CommitType commitType;
+    private int netLinesChanged;
 
     /**
      *
@@ -55,7 +56,7 @@ public class CommitInfo {
         this.previousFilename = previousFilename;
         this.newFilename = newFilename;
 
-        this.diff = setDiffColours(diff);
+        setDiffColours(diff); // sets the diff and netLinesChanged
     }
 
     /**
@@ -96,10 +97,15 @@ public class CommitInfo {
         return commitType;
     }
 
-    private String setDiffColours(String diff){
+    public int getNetLinesChanged() {
+        return netLinesChanged;
+    }
 
+    private void setDiffColours(String originalDiff){
+
+        this.netLinesChanged = 0;
         StringBuilder newDiff = new StringBuilder();
-        BufferedReader bufReader = new BufferedReader(new StringReader(diff));
+        BufferedReader bufReader = new BufferedReader(new StringReader(originalDiff));
 
         String line;
         while(true)
@@ -112,8 +118,10 @@ public class CommitInfo {
 
             if (line.startsWith("+")){
                 line = TextAnnotate.GREEN.getJavaText() + line + "\n";
+                netLinesChanged += 1;
             } else if (line.startsWith("-")){
                 line = TextAnnotate.RED.getJavaText() + line + "\n";
+                netLinesChanged -= 1;
             } else {
                 line = TextAnnotate.RESET.getJavaText() + line + "\n";
             }
@@ -124,7 +132,7 @@ public class CommitInfo {
 
         newDiff.append(TextAnnotate.RESET.getJavaText());
 
-        return newDiff.toString();
+        this.diff = newDiff.toString();
     }
 
     /**

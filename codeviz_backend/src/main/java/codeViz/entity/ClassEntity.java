@@ -43,6 +43,10 @@ public class ClassEntity extends Entity {
         super.addGitConnectedEntity(classEntity);
     }
 
+    public void addGitConnectedEntity(ClassEntity classEntity, int weight) {
+        super.addGitConnectedEntity(classEntity, weight);
+    }
+
     public PackageEntity getPackageEntity() {
         return packageEntity;
     }

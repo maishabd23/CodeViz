@@ -2,38 +2,29 @@ package codeViz.gitHistory;
 
 import codeViz.entity.ClassEntity;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class CommitStorage {
 
     private final String id;
-    private final Set<CommitInfo> commitInfos;
-    private final Set<ClassEntity> classEntities;
+    private final Map<ClassEntity, CommitInfo> classesAndCommits; //stores the weight of connections
+
 
     public CommitStorage(String id){
         this.id = id;
-        this.commitInfos = new LinkedHashSet<>();
-        this.classEntities = new LinkedHashSet<>();
+        this.classesAndCommits = new LinkedHashMap<>();
     }
 
-    public void addCommitInfo(CommitInfo commitInfo){
-        commitInfos.add(commitInfo);
-    }
-
-    public void addClassEntity(ClassEntity classEntity){
-        this.classEntities.add(classEntity);
+    public void addClassCommitPair(ClassEntity classEntity, CommitInfo commitInfo){
+        classesAndCommits.put(classEntity, commitInfo);
     }
 
     public String getId() {
         return id;
     }
 
-    public Set<ClassEntity> getClassEntities() {
-        return classEntities;
-    }
-
-    public Set<CommitInfo> getCommitInfos() {
-        return commitInfos;
+    public Map<ClassEntity, CommitInfo> getClassesAndCommits() {
+        return classesAndCommits;
     }
 }
