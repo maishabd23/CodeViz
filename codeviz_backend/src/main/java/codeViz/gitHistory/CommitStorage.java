@@ -4,6 +4,7 @@ import codeViz.entity.ClassEntity;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class CommitStorage {
 
@@ -26,5 +27,9 @@ public class CommitStorage {
 
     public Map<ClassEntity, CommitInfo> getClassesAndCommits() {
         return classesAndCommits;
+    }
+
+    public boolean containsClass(ClassEntity classEntity){
+        return classesAndCommits.containsKey(classEntity);
     }
 }

@@ -36,8 +36,9 @@ public class GitCommitReader {
     private Git git;
     private final GraphGenerator graphGenerator;
     private ArrayList<CommitInfo> commitInfos; // may not need to store here if using from entities directly? mainly used for previous commit
-    private ArrayList<CommitStorage> commitStorages; // may not need to store here if using from entities directly? mainly used for previous commit
     private LinkedHashMap<String, String> renamedClassEntityNames;
+    private GitDiffAssociationRules gitDiffAssociationRules;
+    private static final int WEIGHT_ADJUSTER = 2;
 
     /**
      * Create GitCommitReader
@@ -46,8 +47,8 @@ public class GitCommitReader {
     public GitCommitReader(GraphGenerator graphGenerator){
         this.graphGenerator = graphGenerator;
         this.commitInfos = new ArrayList<>();
-        this.commitStorages = new ArrayList<>();
         this.renamedClassEntityNames = new LinkedHashMap<>();
+        this.gitDiffAssociationRules = new GitDiffAssociationRules();
     }
 
     /**
@@ -98,6 +99,7 @@ public class GitCommitReader {
         //TODO - make sure graphGenerator has commits cleared before adding a new set? or only add commits that are new
         commitInfos.clear(); // FIXME - what if appending commits?
         renamedClassEntityNames.clear(); // FIXME - what if appending commits?
+        gitDiffAssociationRules = new GitDiffAssociationRules();
         Iterable<RevCommit> log;
         try {
             log = git.log().call();
@@ -147,27 +149,16 @@ public class GitCommitReader {
         // that can be used for correlation analysis after?
         MultiKeyMap classesAndDiffPairs = new MultiKeyMap(); // NOTE: has some limitations, try to only use locally
 
-        for (CommitStorage commitStorage : commitStorages){
+        for (CommitStorage commitStorage : gitDiffAssociationRules.getCommitStorages()){
             Set<ClassEntity> classEntitySet = commitStorage.getClassesAndCommits().keySet();
             // TODO - fix size complexity - currently O(n^2), seems excessive
             for (ClassEntity outerClassEntity : classEntitySet){
                 for (ClassEntity innerClassEntity : classEntitySet){
                     outerClassEntity.addGitConnectedEntity(innerClassEntity); // TODO remove
-                    int amountX = commitStorage.getClassesAndCommits().get(outerClassEntity).getNetLinesChanged();
-                    int amountY = commitStorage.getClassesAndCommits().get(innerClassEntity).getNetLinesChanged();
 
-                    GitDiffCorrelationAnalysis gitDiffCorrelationAnalysis;
-                    if (classesAndDiffPairs.containsKey(outerClassEntity, innerClassEntity)){
-                        gitDiffCorrelationAnalysis = (GitDiffCorrelationAnalysis) classesAndDiffPairs.get(outerClassEntity, innerClassEntity);
-                        gitDiffCorrelationAnalysis.addPair(amountX, amountY);
-                    } else if (classesAndDiffPairs.containsKey(innerClassEntity, outerClassEntity)){
-                        // FIXME - this might be a duplicated diff
-                        gitDiffCorrelationAnalysis = (GitDiffCorrelationAnalysis) classesAndDiffPairs.get(innerClassEntity, outerClassEntity);
-                        gitDiffCorrelationAnalysis.addPair(amountY, amountX); // NOTE: diff order because created with classes reversed
-                    } else {
-                        gitDiffCorrelationAnalysis = new GitDiffCorrelationAnalysis();
-                        classesAndDiffPairs.put(outerClassEntity, innerClassEntity, gitDiffCorrelationAnalysis);
-                        gitDiffCorrelationAnalysis.addPair(amountX, amountY);
+                    if (!(classesAndDiffPairs.containsKey(outerClassEntity, innerClassEntity)
+                        || classesAndDiffPairs.containsKey(innerClassEntity, outerClassEntity))){
+                        classesAndDiffPairs.put(outerClassEntity, innerClassEntity, 0);
                     }
                 }
             }
@@ -179,11 +170,13 @@ public class GitCommitReader {
             MultiKey multiKey = (MultiKey) object;
             ClassEntity classEntity1 = (ClassEntity) multiKey.getKey(0);
             ClassEntity classEntity2 = (ClassEntity) multiKey.getKey(1);
-            GitDiffCorrelationAnalysis gitDiffCorrelationAnalysis = (GitDiffCorrelationAnalysis) classesAndDiffPairs.get(classEntity1, classEntity2);
 
+            float confidenceA = gitDiffAssociationRules.calculateConfidence(classEntity1, classEntity2);
+            float confidenceB = gitDiffAssociationRules.calculateConfidence(classEntity2, classEntity1);
 
-            float weight = gitDiffCorrelationAnalysis.getCorrelationCoefficient();
-            int adjustedWeight = (int) (weight * 10);
+            float weight = (confidenceA + confidenceB) / 2; // average?
+
+            int adjustedWeight = (int) (weight * WEIGHT_ADJUSTER);
             System.out.println("Between " + classEntity1.getName() + " and " + classEntity2.getName() + ", weight = " + weight);
             classEntity1.addGitConnectedEntity(classEntity2, adjustedWeight);
             classEntity2.addGitConnectedEntity(classEntity1, adjustedWeight);
@@ -216,7 +209,7 @@ public class GitCommitReader {
         diff = renameDetector.compute();
 
         CommitStorage commitStorage = new CommitStorage(currentCommit.getId().getName());
-        commitStorages.add(commitStorage);
+        gitDiffAssociationRules.addCommitStorage(commitStorage);
 
         for (DiffEntry entry : diff) {
             //System.out.println("Entry: " + entry + ", from: " + entry.getOldId() + ", to: " + entry.getNewId());
@@ -255,6 +248,7 @@ public class GitCommitReader {
                 if (classEntity != null) {
                     classEntity.addCommitInfo(commitInfo);
                     commitStorage.addClassCommitPair(classEntity, commitInfo);
+                    gitDiffAssociationRules.addClassEntity(classEntity);
                 }
             }
 

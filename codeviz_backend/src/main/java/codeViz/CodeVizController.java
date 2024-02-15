@@ -23,7 +23,7 @@ public class CodeVizController {
         this.success = true; // TODO - change to false after target can be chosen
 
         // TODO - only call this method when a new target is chosen
-        success = codeVizInterface.generateEntitiesAndConnections(currentTarget, currentSrc, 10);
+        success = codeVizInterface.generateEntitiesAndConnections(currentTarget, currentSrc, 50);
         codeVizInterface.generateGraph(currentLevel, GEXF_FILE); // FIXME
     }
 
@@ -55,7 +55,7 @@ public class CodeVizController {
 
         if (!targetFolder.isEmpty() && !targetFolder.equals(currentTarget)){
             System.out.println("GENERATING FOR "  + targetFolder); // TODO - allow user to enter own path / github url
-            success = codeVizInterface.generateEntitiesAndConnections(targetFolder, currentSrc, 10);
+            success = codeVizInterface.generateEntitiesAndConnections(targetFolder, currentSrc, 20);
         }
 
         if (success) {
