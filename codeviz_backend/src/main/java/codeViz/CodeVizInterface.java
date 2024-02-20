@@ -2,10 +2,7 @@ package codeViz;
 
 import codeViz.entity.Entity;
 import codeViz.entity.EntityType;
-import codeViz.gitHistory.CommitInfo;
 import codeViz.gitHistory.GitCommitReader;
-
-import java.util.ArrayList;
 
 /**
  * CodeViz Interface that connects the CodeViz classes to the CodeVizController
@@ -63,13 +60,15 @@ public class CodeVizInterface {
 
     /**
      * Generate graph
-     * @param newLevel  the level to generate the graph at
-     * @param filename  the filename to save the gexf file as
+     *
+     * @param newLevel   the level to generate the graph at
+     * @param filename   the filename to save the gexf file as
+     * @param gitHistory whether viewing git history graph or not
      */
-    public void generateGraph(EntityType newLevel, String filename){
+    public void generateGraph(EntityType newLevel, String filename, boolean gitHistory){
         if (success) {
             selectedNode = null; // didn't create inner graph, so clear it
-            graphGenerator.directedGraphToGexf(newLevel, filename);
+            graphGenerator.directedGraphToGexf(newLevel, filename, gitHistory);
         }
     }
 
@@ -80,10 +79,10 @@ public class CodeVizInterface {
      * @param childLevel        the inner level to generate the graph for
      * @param filename          the filename to save the gexf file as
      */
-    public void generateInnerGraph(String nodeName, EntityType parentLevel, EntityType childLevel, String filename){
+    public void generateInnerGraph(String nodeName, EntityType parentLevel, EntityType childLevel, String filename, boolean gitHistory){
         selectedNode = graphGenerator.getNode(nodeName, parentLevel);
         if (success) {
-            graphGenerator.directedGraphToGexf(selectedNode, childLevel, filename);
+            graphGenerator.directedGraphToGexf(selectedNode, childLevel, filename, false);
         }
     }
 

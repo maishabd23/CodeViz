@@ -18,13 +18,15 @@ public class CodeVizController {
 
     private final CodeVizInterface codeVizInterface;
     private boolean success;
+    private boolean gitHistory;
     public CodeVizController(){
         this.codeVizInterface = new CodeVizInterface();
         this.success = true; // TODO - change to false after target can be chosen
+        this.gitHistory = false;
 
         // TODO - only call this method when a new target is chosen
         success = codeVizInterface.generateEntitiesAndConnections(currentTarget, currentSrc, 50);
-        codeVizInterface.generateGraph(currentLevel, GEXF_FILE); // FIXME
+        codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory); // FIXME
     }
 
     @GetMapping("/")
@@ -44,9 +46,9 @@ public class CodeVizController {
     @CrossOrigin
     @GetMapping("/api/viewGraphLevel")
     public Map<String, String> viewGraphLevel(@RequestParam(name = "level", required = false, defaultValue = "") String level,
-                                              @RequestParam(name = "searchValue", required = false, defaultValue = "") String searchValue,
                                               @RequestParam(name = "targetFolder", required = false, defaultValue = "") String targetFolder,
-                                              @RequestParam(name = "detailed", required = false, defaultValue = "false") boolean detailed) {
+                                              @RequestParam(name = "gitHistory", required = false, defaultValue = "false") boolean gitHistory) // make gitHistory a string, so we only check when it's true or false
+    {
         Map<String, String> response = new HashMap<>();
 
         if (!level.isEmpty()) {
@@ -63,15 +65,40 @@ public class CodeVizController {
                 currentTarget = targetFolder; // only if it's a valid non-empty path, update target
             }
 
-            if (!searchValue.isEmpty()) {
-                System.out.println("SEARCHING FOR " + searchValue);
-                codeVizInterface.performSearch(searchValue, detailed);
-            }
-            codeVizInterface.generateGraph(currentLevel, GEXF_FILE);
+            this.gitHistory = gitHistory;
+            System.out.println("git history: " + gitHistory);
+            codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory);
         }
 
         response.put("file", "codeviz_demo.gexf");
         return response; //each API call returns a JSON object that the React app parses
+    }
+
+
+    @CrossOrigin
+    @GetMapping("/api/searchGraph")
+    public Map<String, String> searchGraph(@RequestParam(name = "searchValue", required = false, defaultValue = "") String searchValue,
+                                              @RequestParam(name = "targetFolder", required = false, defaultValue = "") String targetFolder,
+                                              @RequestParam(name = "detailed", required = false, defaultValue = "false") boolean detailed)
+    {
+        Map<String, String> response = new HashMap<>();
+
+        if (success) {
+            if (!targetFolder.isEmpty()) {
+                currentTarget = targetFolder; // only if it's a valid non-empty path, update target
+            }
+
+            if (!searchValue.isEmpty()) {
+                System.out.println("SEARCHING FOR " + searchValue);
+                codeVizInterface.performSearch(searchValue, detailed);
+            }
+            codeVizInterface.generateGraph(currentLevel, GEXF_FILE, this.gitHistory);
+        }
+
+        String result = codeVizInterface.getSearchResult(currentLevel);
+        result = TextAnnotate.javaToHtml(result);
+        response.put("string", result);
+        return response;
     }
 
     @CrossOrigin
@@ -98,7 +125,8 @@ public class CodeVizController {
                 newLevel = EntityType.METHOD;
             }
             System.out.println("Generate inner graph for " + nodeName + " at " + currentLevel);
-            codeVizInterface.generateInnerGraph(nodeName, currentLevel, newLevel, GEXF_FILE);
+            // TODO - support inner graph with git history?
+            codeVizInterface.generateInnerGraph(nodeName, currentLevel, newLevel, GEXF_FILE, gitHistory);
             currentLevel = newLevel;
         }
     }
@@ -122,13 +150,17 @@ public class CodeVizController {
     }
 
     @CrossOrigin
-    @GetMapping("/api/getSearchResult")
-    public Map<String, String> getSearchResult() {
+    @GetMapping("/api/getCurrentMilestone")
+    public Map<String, String> getCurrentMilestone() {
         Map<String, String> response = new HashMap<>();
+        String milestone;
+        if (!gitHistory){
+            milestone = "m1";
+        } else {
+            milestone = "m2";
+        }
+        response.put("string", milestone);
 
-        String result = codeVizInterface.getSearchResult(currentLevel);
-        result = TextAnnotate.javaToHtml(result);
-        response.put("string", result);
         return response;
     }
 
@@ -138,7 +170,7 @@ public class CodeVizController {
         codeVizInterface.clearSearch();
 
         // update code graph without search value
-        codeVizInterface.generateGraph(currentLevel, GEXF_FILE);
+        codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory);
     }
 
     @CrossOrigin
@@ -147,7 +179,7 @@ public class CodeVizController {
         codeVizInterface.clearSelectedNode();
 
         // update code graph without selected node
-        codeVizInterface.generateGraph(currentLevel, GEXF_FILE);
+        codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory);
     }
 
 

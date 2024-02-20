@@ -439,7 +439,7 @@ public class JavaBytecodeReader {
     }
 
     public void generateGraph(EntityType entityType, String filename){
-        graphGenerator.directedGraphToGexf(entityType, filename);
+        graphGenerator.directedGraphToGexf(entityType, filename, false);
     }
 
     public GraphGenerator getGraphGenerator() {

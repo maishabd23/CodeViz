@@ -94,13 +94,14 @@ public class GraphGenerator {
     /**
      * Convert entities to directedGraph format
      *
+     * @param entityType entityType to create graph from
+     * @param gitHistory whether viewing git history graph or not
+     * @return directed graph
      * @author Thanuja Sivaananthan
-     * @param entityType    entityType to create graph from
-     * @return              directed graph
      */
-    public DirectedGraph entitiesToNodes(EntityType entityType) {
+    public DirectedGraph entitiesToNodes(EntityType entityType, boolean gitHistory) {
         LinkedHashMap<String, Entity> entities = getEntities(entityType);
-        return entitiesToNodes(entities);
+        return entitiesToNodes(entities, gitHistory);
     }
 
     /**
@@ -111,9 +112,10 @@ public class GraphGenerator {
      * parentEntity: CLASS, childLevel: METHOD
      * @param parentEntity  the entity to generate the inner graph for
      * @param childLevel    the level of the inner graph
+     * @param gitHistory whether viewing git history graph or not
      * @return              resulting directed graph
      */
-    private DirectedGraph entitiesToNodes(Entity parentEntity, EntityType childLevel) {
+    private DirectedGraph entitiesToNodes(Entity parentEntity, EntityType childLevel, boolean gitHistory) {
 
         // combinations that do not work
         if (parentEntity.getEntityType().equals(EntityType.METHOD) // 3 - method - any
@@ -156,12 +158,12 @@ public class GraphGenerator {
         if (entities.isEmpty()){
             System.out.println("EMPTY entities list");
         }
-        return entitiesToNodes(entities);
+        return entitiesToNodes(entities, gitHistory);
     }
 
 
 
-    private DirectedGraph entitiesToNodes(LinkedHashMap<String, Entity> entities){
+    private DirectedGraph entitiesToNodes(LinkedHashMap<String, Entity> entities, boolean gitHistory){
         // NOTE: assuming all entities are properly set up with connections already
 
         if (entities.isEmpty()){
@@ -178,14 +180,10 @@ public class GraphGenerator {
         //Get a graph model - it exists because we have a workspace
         GraphModel graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
 
-
-        EntityType entityType = null; // TODO - fix the way this EntityType variable is created
-
         // 1. create nodes for each entity
         int id = 1; // add id in case there are duplicate names
         for (String entityKey : entities.keySet()){
             Entity entity = entities.get(entityKey);
-            entityType = entity.getEntityType();
             String nodeName = entity.getName();
             Node node = graphModel.factory().newNode(id + "_" + entityKey); // want this as entityKey, is okay because only label is displayed
             node.setLabel(nodeName);
@@ -207,7 +205,7 @@ public class GraphGenerator {
             Entity entity = entities.get(entityKey);
 
             Set<Map.Entry<Entity, Integer>> connectedEntities = entity.getConnectedEntitiesAndWeights().entrySet();
-            if (entityType.equals(EntityType.CLASS)){
+            if (gitHistory && entity.getEntityType().equals(EntityType.CLASS)){
                 connectedEntities = entity.getGitConnectedEntitiesAndWeights().entrySet(); // TODO - move to diff location
             }
 
@@ -481,11 +479,13 @@ public class GraphGenerator {
 
     /**
      * Generate a code graph at a specific level
-     * @param newLevel the level to generate the code graph at
-     * @param filename the filename to save the gexf file as
+     *
+     * @param newLevel   the level to generate the code graph at
+     * @param filename   the filename to save the gexf file as
+     * @param gitHistory whether viewing git history graph or not
      */
-    public void directedGraphToGexf(EntityType newLevel, String filename) {
-        DirectedGraph directedGraph = entitiesToNodes(newLevel);
+    public void directedGraphToGexf(EntityType newLevel, String filename, boolean gitHistory) {
+        DirectedGraph directedGraph = entitiesToNodes(newLevel, gitHistory);
         if (directedGraph != null) {
             directedGraphToGexf(directedGraph, filename);
         }
@@ -496,10 +496,11 @@ public class GraphGenerator {
      * @param parentEntity the parent entity to filter the graph to
      * @param childLevel the level to generate the code graph at
      * @param filename the filename to save the gexf file as
+     * @param gitHistory whether viewing git history graph or not
      * @return  boolean, whether the filtered graph was successfully generated
      */
-    public boolean directedGraphToGexf(Entity parentEntity, EntityType childLevel, String filename) {
-        DirectedGraph directedGraph = entitiesToNodes(parentEntity, childLevel);
+    public boolean directedGraphToGexf(Entity parentEntity, EntityType childLevel, String filename, boolean gitHistory) {
+        DirectedGraph directedGraph = entitiesToNodes(parentEntity, childLevel, gitHistory);
         if (directedGraph != null) {
             directedGraphToGexf(directedGraph, filename);
             return true;
