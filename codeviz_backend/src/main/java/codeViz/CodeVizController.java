@@ -43,11 +43,17 @@ public class CodeVizController {
     }
 
 
+    /**
+     * Select the level of the graph to view at
+     * Returns the default code graph at the given level (no annotations, inner graphs, etc.)
+     * @param level             either the PACKAGE, CLASS, or METHOD level
+     * @param targetFolder      the folder to generate the graph from
+     * @return                  file response, name of gexf file
+     */
     @CrossOrigin
     @GetMapping("/api/viewGraphLevel")
     public Map<String, String> viewGraphLevel(@RequestParam(name = "level", required = false, defaultValue = "") String level,
-                                              @RequestParam(name = "targetFolder", required = false, defaultValue = "") String targetFolder,
-                                              @RequestParam(name = "gitHistory", required = false, defaultValue = "false") boolean gitHistory) // make gitHistory a string, so we only check when it's true or false
+                                              @RequestParam(name = "targetFolder", required = false, defaultValue = "") String targetFolder)
     {
         Map<String, String> response = new HashMap<>();
 
@@ -65,6 +71,22 @@ public class CodeVizController {
                 currentTarget = targetFolder; // only if it's a valid non-empty path, update target
             }
 
+            codeVizInterface.clearSelectedNode(); // clicking the level buttons will clear any filters
+            // TODO - also clear searches? (could be useful to keep search results when viewing other levels)
+            codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory);
+        }
+
+        response.put("file", "codeviz_demo.gexf");
+        return response; //each API call returns a JSON object that the React app parses
+    }
+
+    @CrossOrigin
+    @GetMapping("/api/annotateGraph")
+    public Map<String, String> annotateGraph(@RequestParam(name = "gitHistory", required = false, defaultValue = "false") boolean gitHistory)
+    {
+        Map<String, String> response = new HashMap<>();
+
+        if (success) {
             this.gitHistory = gitHistory;
             System.out.println("git history: " + gitHistory);
             codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory);
@@ -75,19 +97,21 @@ public class CodeVizController {
     }
 
 
+    /**
+     * Search at the current level of the graph
+     * Updates the displayed code graph
+     * @param searchValue       the search value
+     * @param detailed          whether the search is detailed or not
+     * @return                  string response, message of the search result
+     */
     @CrossOrigin
     @GetMapping("/api/searchGraph")
     public Map<String, String> searchGraph(@RequestParam(name = "searchValue", required = false, defaultValue = "") String searchValue,
-                                              @RequestParam(name = "targetFolder", required = false, defaultValue = "") String targetFolder,
                                               @RequestParam(name = "detailed", required = false, defaultValue = "false") boolean detailed)
     {
         Map<String, String> response = new HashMap<>();
 
         if (success) {
-            if (!targetFolder.isEmpty()) {
-                currentTarget = targetFolder; // only if it's a valid non-empty path, update target
-            }
-
             if (!searchValue.isEmpty()) {
                 System.out.println("SEARCHING FOR " + searchValue);
                 codeVizInterface.performSearch(searchValue, detailed);
@@ -101,6 +125,11 @@ public class CodeVizController {
         return response;
     }
 
+    /**
+     * Get details of a highlighted node
+     * @param nodeName      name of the highlighted node
+     * @return              string response of the node details
+     */
     @CrossOrigin
     @GetMapping("/api/getNodeDetails")
     public Map<String, String> getNodeDetails(@RequestParam(name = "nodeName", defaultValue = "") String nodeName) {
@@ -113,31 +142,48 @@ public class CodeVizController {
         return response; //each API call returns a JSON object that the React app parses
     }
 
+    /**
+     * Generate an inner graph for the selected node
+     * Note: Only works when the selected node is at the PACKAGE or CLASS level
+     * @param nodeName   the selected node
+     */
     @CrossOrigin
     @GetMapping("/api/generateInnerGraph")
     public void generateInnerGraph(@RequestParam(name = "nodeName", defaultValue = "") String nodeName) {
-        if (currentLevel != EntityType.METHOD){
-            EntityType newLevel = currentLevel;
-            // go inside one level
-            if (currentLevel.equals(EntityType.PACKAGE)){
-                newLevel = EntityType.CLASS;
-            } else if (currentLevel.equals(EntityType.CLASS)){
-                newLevel = EntityType.METHOD;
-            }
+        // go inside one level (if possible)
+        if (currentLevel.getChild() != null){
+            EntityType newLevel = currentLevel.getChild();
             System.out.println("Generate inner graph for " + nodeName + " at " + currentLevel);
-            // TODO - support inner graph with git history?
             codeVizInterface.generateInnerGraph(nodeName, currentLevel, newLevel, GEXF_FILE, gitHistory);
             currentLevel = newLevel;
         }
     }
 
+    /**
+     * Get the current level of the code graph
+     * @return  string response, current level
+     */
     @CrossOrigin
     @GetMapping("/api/getCurrentLevel")
     public Map<String, String> getCurrentLevel() {
         Map<String, String> response = new HashMap<>();
 
-        String currentLevelString = currentLevel.toString();
-        currentLevelString = currentLevelString.substring(0,1).toUpperCase() + currentLevelString.substring(1).toLowerCase();
+        String currentLevelString = currentLevel.getName();
+        System.out.println(currentLevelString);
+        response.put("string", currentLevelString);
+        return response;
+    }
+
+    /**
+     * Get the current level of the code graph + any other annotation details
+     * @return  string response, current level + any other annotation details
+     */
+    @CrossOrigin
+    @GetMapping("/api/getCurrentGraphName")
+    public Map<String, String> getCurrentGraphName() {
+        Map<String, String> response = new HashMap<>();
+
+        String currentLevelString = currentLevel.getName();
 
         String selectedNodeName = codeVizInterface.getSelectedNodeToString();
         if (!selectedNodeName.isEmpty()) {
@@ -149,15 +195,19 @@ public class CodeVizController {
         return response;
     }
 
+    /**
+     * Get the current annotation details of the code graph
+     * @return  string response, annotation details
+     */
     @CrossOrigin
     @GetMapping("/api/getCurrentMilestone")
     public Map<String, String> getCurrentMilestone() {
         Map<String, String> response = new HashMap<>();
         String milestone;
         if (!gitHistory){
-            milestone = "m1";
+            milestone = "m1"; // code dependency graph
         } else {
-            milestone = "m2";
+            milestone = "m2"; // git history annotations at class level
         }
         response.put("string", milestone);
 
@@ -172,15 +222,4 @@ public class CodeVizController {
         // update code graph without search value
         codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory);
     }
-
-    @CrossOrigin
-    @GetMapping("/api/clearSelectedNode")
-    public void clearSelectedNode() {
-        codeVizInterface.clearSelectedNode();
-
-        // update code graph without selected node
-        codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory);
-    }
-
-
 }

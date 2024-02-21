@@ -151,8 +151,7 @@ public abstract class Entity {
      * @return  formatted title
      */
     public String titleToString(){
-        String type = entityType.toString();
-        type = type.substring(0,1).toUpperCase() + type.substring(1).toLowerCase();
+        String type = entityType.getName();
         return TextAnnotate.BOLD.javaText + type + ": " + getName() + TextAnnotate.BOLD_OFF.javaText + "\n";
     }
 

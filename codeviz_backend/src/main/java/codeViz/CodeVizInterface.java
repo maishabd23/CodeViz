@@ -67,8 +67,13 @@ public class CodeVizInterface {
      */
     public void generateGraph(EntityType newLevel, String filename, boolean gitHistory){
         if (success) {
-            selectedNode = null; // didn't create inner graph, so clear it
-            graphGenerator.directedGraphToGexf(newLevel, filename, gitHistory);
+            // if already looking at the inner level of a selected node, keep doing that
+            if (selectedNode != null && selectedNode.getEntityType().getChild().equals(newLevel)){
+                graphGenerator.directedGraphToGexf(selectedNode, newLevel, filename, gitHistory);
+            } else {
+                selectedNode = null;
+                graphGenerator.directedGraphToGexf(newLevel, filename, gitHistory);
+            }
         }
     }
 
@@ -82,7 +87,7 @@ public class CodeVizInterface {
     public void generateInnerGraph(String nodeName, EntityType parentLevel, EntityType childLevel, String filename, boolean gitHistory){
         selectedNode = graphGenerator.getNode(nodeName, parentLevel);
         if (success) {
-            graphGenerator.directedGraphToGexf(selectedNode, childLevel, filename, false);
+            graphGenerator.directedGraphToGexf(selectedNode, childLevel, filename, gitHistory);
         }
     }
 

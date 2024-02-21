@@ -5,11 +5,11 @@ function Menu() {
     const [level, setLevel] = React.useState('Class');
 
     const handleM1Change = () => {
-        fetch('/api/viewGraphLevel?gitHistory=false');
+        fetch('/api/annotateGraph?gitHistory=false');
     };
 
     const handleM2Change = () => {
-        fetch('/api/viewGraphLevel?gitHistory=true');
+        fetch('/api/annotateGraph?gitHistory=true');
     };
 
     useEffect(() => {
@@ -34,10 +34,15 @@ function Menu() {
                 fetch('/api/clearSearch');
             });
 
-            fetch('/api/getCurrentLevel')
+            fetch('/api/getCurrentGraphName')
                 .then((response) => response.json())
                 .then((responseData) => {
                     document.getElementById("currentLevel").innerHTML = "Current level: " + responseData.string;
+                });
+
+            fetch('/api/getCurrentLevel')
+                .then((response) => response.json())
+                .then((responseData) => {
                     setLevel(responseData.string);
                 });
 
