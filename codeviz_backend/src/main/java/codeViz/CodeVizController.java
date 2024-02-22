@@ -73,6 +73,7 @@ public class CodeVizController {
 
             codeVizInterface.clearSelectedNode(); // clicking the level buttons will clear any filters
             // TODO - also clear searches? (could be useful to keep search results when viewing other levels)
+            gitHistory = false; // default git history is false
             codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory);
         }
 
@@ -136,6 +137,29 @@ public class CodeVizController {
         Map<String, String> response = new HashMap<>();
 
         String results = codeVizInterface.getNodeDetails(nodeName, currentLevel);
+        results = TextAnnotate.javaToHtml(results);
+
+        response.put("string", results);
+        return response; //each API call returns a JSON object that the React app parses
+    }
+
+    /**
+     * Get the details of an edge
+     * Note: Only works for git history annotations
+     * @param edgeName  name of the edge
+     * @return          string response of the edge details
+     */
+    @CrossOrigin
+    @GetMapping("/api/getEdgeDetails")
+    public Map<String, String> getEdgeDetails(@RequestParam(name = "edgeName", defaultValue = "") String edgeName) {
+        Map<String, String> response = new HashMap<>();
+
+        if (!gitHistory){
+            response.put("string", "");
+            return response;
+        }
+
+        String results = codeVizInterface.getEdgeDetails(edgeName);
         results = TextAnnotate.javaToHtml(results);
 
         response.put("string", results);

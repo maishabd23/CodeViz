@@ -1,6 +1,8 @@
 package codeViz;
 
 import codeViz.entity.*;
+import codeViz.gitHistory.CommitInfo;
+import codeViz.gitHistory.GitCommitReader;
 import org.gephi.graph.api.*;
 import org.gephi.project.api.ProjectController;
 import org.openide.util.Lookup;
@@ -23,6 +25,11 @@ public class GraphGenerator {
     private final LinkedHashMap<String, Entity> methodEntities;
     private String searchValue;
 
+    // details on the most recently generated graph
+    // Note: can also store node details here if needed
+    private ArrayList<Entity> edgeSources;
+    private ArrayList<Entity> edgeDestinations;
+
     /**
      * Create an EntityGraphGenerator
      * @author Thanuja Sivaananthan
@@ -31,7 +38,10 @@ public class GraphGenerator {
         packageEntities = new LinkedHashMap<>();
         classEntities = new LinkedHashMap<>();
         methodEntities = new LinkedHashMap<>();
-        this.searchValue = "";
+        searchValue = "";
+
+        edgeSources = new ArrayList<>();
+        edgeDestinations = new ArrayList<>();
     }
 
     /**
@@ -173,6 +183,9 @@ public class GraphGenerator {
         List<Node> nodes = new ArrayList<>();
         List<Edge> edges = new ArrayList<>();
 
+        edgeSources = new ArrayList<>();
+        edgeDestinations = new ArrayList<>();
+
         ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
         pc.newProject();
         //Workspace workspace = pc.getCurrentWorkspace();
@@ -220,6 +233,9 @@ public class GraphGenerator {
                     float weight = entry.getValue();
                     int type = (int) 1f; // not sure what the type field should be
                     Edge edge = graphModel.factory().newEdge(entity.getGephiNode(), connectedEntity.getGephiNode(), type, weight, true);
+
+                    edgeSources.add(entity);
+                    edgeDestinations.add(connectedEntity);
                     edges.add(edge);
                 }
             }
@@ -445,6 +461,38 @@ public class GraphGenerator {
         }
     }
 
+    public String getEdgeDetails(String edgeName) {
+        String[] newNodeNames = edgeName.split("_");
+        if (newNodeNames.length != 3){
+            System.out.println("INVALID NAME, " + edgeName + " LENGTH IS " + newNodeNames.length);
+            return "";
+        }
+
+        edgeName = newNodeNames[2];
+
+        int edgeId = Integer.parseInt(edgeName);
+
+        if (edgeSources.size() < edgeId){
+            System.out.println("INVALID EDGE ID, " + edgeId + " IS GREATER THAN " + edgeSources.size());
+            return "";
+        }
+
+        Entity edgeSource = edgeSources.get(edgeId);
+        Entity edgeDestination = edgeDestinations.get(edgeId);
+
+        float weight = edgeSource.getGitConnectedEntitiesAndWeights().get(edgeDestination) / GitCommitReader.getWeightAdjuster();
+
+        String edgeDetails = "Association Rule Mining Score: " + weight + "\n";
+
+        for (CommitInfo sourceStorage : edgeSource.getCommitInfos()){
+            if (edgeDestination.getCommitInfos().contains(sourceStorage)){
+                return edgeDetails + sourceStorage.toString();
+            }
+        }
+
+        return "ERROR, this pair doesn't share a recent commit";
+    }
+
     /**
      * Check if search value found for certain level
      * @param entityType        level
@@ -461,8 +509,9 @@ public class GraphGenerator {
         boolean isFound = false;
 
         for (Entity entity : entities.values()){
-            if (entity.isHighlighed()){
+            if (entity.isHighlighed()) {
                 isFound = true;
+                break;
             }
         }
 

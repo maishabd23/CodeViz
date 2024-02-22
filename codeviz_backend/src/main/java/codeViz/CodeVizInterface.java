@@ -115,4 +115,7 @@ public class CodeVizInterface {
         selectedNode = null;
     }
 
+    public String getEdgeDetails(String edgeName) {
+        return graphGenerator.getEdgeDetails(edgeName);
+    }
 }
