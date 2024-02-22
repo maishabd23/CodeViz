@@ -5,16 +5,15 @@ import codeViz.entity.ClassEntity;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class GitDiffAssociationRules {
     private final Map<ClassEntity, Integer> classCounts;
-    private ArrayList<CommitStorage> commitStorages;
+    private final ArrayList<CommitInfo> commitInfos;
     private int totalFileChangeCount;
 
     public GitDiffAssociationRules(){
         this.classCounts = new LinkedHashMap<>();
-        this.commitStorages = new ArrayList<>();
+        this.commitInfos = new ArrayList<>();
         this.totalFileChangeCount = 0;
     }
 
@@ -25,16 +24,16 @@ public class GitDiffAssociationRules {
         totalFileChangeCount += 1;
     }
 
-    public void addCommitStorage(CommitStorage commitStorage){
-        commitStorages.add(commitStorage);
+    public void addCommitInfo(CommitInfo commitInfo){
+        commitInfos.add(commitInfo);
     }
 
     public float calculateConfidence(ClassEntity classEntityA, ClassEntity classEntityB){
         float pA = (float) classCounts.getOrDefault(classEntityA, 0) / totalFileChangeCount;
         float countAorB = 0;
 
-        for (CommitStorage commitStorage : commitStorages){
-            if (commitStorage.containsClass(classEntityA) || commitStorage.containsClass(classEntityB)){
+        for (CommitInfo commitInfo : commitInfos){
+            if (commitInfo.containsClass(classEntityA) || commitInfo.containsClass(classEntityB)){
                 countAorB += 1;
             }
         }
@@ -51,7 +50,7 @@ public class GitDiffAssociationRules {
         return confidence;
     }
 
-    public ArrayList<CommitStorage> getCommitStorages() {
-        return commitStorages;
+    public ArrayList<CommitInfo> getCommitInfos() {
+        return commitInfos;
     }
 }

@@ -1,6 +1,6 @@
 package codeViz;
 
-import codeViz.gitHistory.CommitInfo;
+import codeViz.gitHistory.CommitDiffInfo;
 import codeViz.gitHistory.GitCommitReader;
 
 // For backend testing
@@ -31,10 +31,10 @@ public class GitHistoryBackendTesting {
             gitCommitReader.extractCommitHistory(gitHubURI, tokenPassword, 10);
         }
 
-        System.out.println("Commit Info:");
-        for (CommitInfo commitInfo : gitCommitReader.getCommitInfos()){
-            System.out.println(commitInfo.toString() + "\n");
-        }
+//        System.out.println("Commit Diff Info:");
+//        for (CommitDiffInfo commitDiffInfo : gitCommitReader.getCommitDiffInfos()){
+//            System.out.println(commitDiffInfo.toString() + "\n");
+//        }
 
     }
 }
