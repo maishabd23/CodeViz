@@ -14,7 +14,7 @@ import java.awt.Color;
 public abstract class Entity {
     private final String name;
     private final EntityType entityType;
-    private final Map<Entity, Integer> connectedEntitiesAndWeights; //stores the weight of connections
+    private final Map<Entity, Float> connectedEntitiesAndWeights; //stores the weight of connections
 
     private int size;
     private final Color colour;
@@ -26,7 +26,7 @@ public abstract class Entity {
     private float x_pos, y_pos;
 
     private final ArrayList<CommitInfo> commitInfos; // stored in order of most recent to the least recent
-    private final Map<Entity, Integer> gitConnectedEntitiesAndWeights; //stores the weight of connections
+    private final Map<Entity, Float> gitConnectedEntitiesAndWeights; //stores the weight of connections
 
     /**
      * Set up an Entity
@@ -199,21 +199,13 @@ public abstract class Entity {
      * @param entity entity to add
      */
     protected void addConnectedEntity(Entity entity){
-        int initialWeight = connectedEntitiesAndWeights.getOrDefault(entity, 0);
+        float initialWeight = connectedEntitiesAndWeights.getOrDefault(entity, (float) 0);
         //System.out.println(initialWeight);
         connectedEntitiesAndWeights.put(entity, initialWeight + 1);
         incrementSize();
     }
 
-    protected void addGitConnectedEntity(Entity entity){
-        // only add to git history if they are connected in dependency graph
-        if (connectedEntitiesAndWeights.containsKey(entity)) {
-            int initialWeight = connectedEntitiesAndWeights.getOrDefault(entity, 0);
-            gitConnectedEntitiesAndWeights.put(entity, initialWeight + 1);
-        }
-    }
-
-    protected void addGitConnectedEntity(Entity entity, int weight){
+    protected void addGitConnectedEntity(Entity entity, float weight){
         // only add to git history if they are connected in dependency graph
         if (connectedEntitiesAndWeights.containsKey(entity)) {
             gitConnectedEntitiesAndWeights.put(entity, weight);
@@ -223,11 +215,11 @@ public abstract class Entity {
     public Set<Entity> getConnectedEntities() {
         return connectedEntitiesAndWeights.keySet();
     }
-    public Map <Entity, Integer> getConnectedEntitiesAndWeights(){
+    public Map <Entity, Float> getConnectedEntitiesAndWeights(){
         return connectedEntitiesAndWeights;
     }
 
-    public Map<Entity, Integer> getGitConnectedEntitiesAndWeights() {
+    public Map<Entity, Float> getGitConnectedEntitiesAndWeights() {
         return gitConnectedEntitiesAndWeights;
     }
 

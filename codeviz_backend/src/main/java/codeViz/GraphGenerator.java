@@ -204,12 +204,12 @@ public class GraphGenerator {
         for (String entityKey : entities.keySet()){
             Entity entity = entities.get(entityKey);
 
-            Set<Map.Entry<Entity, Integer>> connectedEntities = entity.getConnectedEntitiesAndWeights().entrySet();
+            Set<Map.Entry<Entity, Float>> connectedEntities = entity.getConnectedEntitiesAndWeights().entrySet();
             if (gitHistory && entity.getEntityType().equals(EntityType.CLASS)){
                 connectedEntities = entity.getGitConnectedEntitiesAndWeights().entrySet(); // TODO - move to diff location
             }
 
-            for (Map.Entry<Entity, Integer> entry : connectedEntities){
+            for (Map.Entry<Entity, Float> entry : connectedEntities){
 
                 Entity connectedEntity = entry.getKey();
                 // FIXME what if connected entities doesn't exist in inner graph?
@@ -217,7 +217,7 @@ public class GraphGenerator {
                 //  could simply not include those nodes/edges that aren't in the inner graph
 
                 if (nodes.contains(connectedEntity.getGephiNode())) { // only add edge if the other node exists
-                    int weight = entry.getValue();
+                    float weight = entry.getValue();
                     int type = (int) 1f; // not sure what the type field should be
                     Edge edge = graphModel.factory().newEdge(entity.getGephiNode(), connectedEntity.getGephiNode(), type, weight, true);
                     edges.add(edge);

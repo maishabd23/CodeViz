@@ -39,11 +39,7 @@ public class ClassEntity extends Entity {
         super.addConnectedEntity(classEntity);
     }
 
-    public void addGitConnectedEntity(ClassEntity classEntity) {
-        super.addGitConnectedEntity(classEntity);
-    }
-
-    public void addGitConnectedEntity(ClassEntity classEntity, int weight) {
+    public void addGitConnectedEntity(ClassEntity classEntity, float weight) {
         super.addGitConnectedEntity(classEntity, weight);
     }
 

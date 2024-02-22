@@ -169,7 +169,7 @@ public class GitCommitReader {
 
             float weight = (confidenceA + confidenceB) / 2; // average?
 
-            int adjustedWeight = (int) (weight * WEIGHT_ADJUSTER);
+            float adjustedWeight = weight * WEIGHT_ADJUSTER;
             System.out.println("Between " + classEntity1.getName() + " and " + classEntity2.getName() + ", weight = " + weight);
             classEntity1.addGitConnectedEntity(classEntity2, adjustedWeight);
             classEntity2.addGitConnectedEntity(classEntity1, adjustedWeight);
