@@ -14,7 +14,7 @@ import java.awt.Color;
 public abstract class Entity {
     private final String name;
     private final EntityType entityType;
-    private final Map<Entity, Integer> connectedEntitiesAndWeights; //stores the weight of connections
+    private final Map<Entity, Float> connectedEntitiesAndWeights; //stores the weight of connections
 
     private int size;
     private final Color colour;
@@ -25,7 +25,8 @@ public abstract class Entity {
 
     private float x_pos, y_pos;
 
-    private final ArrayList<CommitInfo> commitInfos; //could store as LinkedHashMap - a file can only be changed once per commit
+    private final ArrayList<CommitInfo> commitInfos; // stored in order of most recent to the least recent
+    private final Map<Entity, Float> gitConnectedEntitiesAndWeights; //stores the weight of connections
 
     /**
      * Set up an Entity
@@ -41,7 +42,9 @@ public abstract class Entity {
         this.size = 1;
         this.colour = getRandomColour();
         this.isHighlighed = false;
+        // NOTE: might want to move within ClassEntity
         this.commitInfos = new ArrayList<>();
+        this.gitConnectedEntitiesAndWeights = new LinkedHashMap<>();
         this.x_pos = 0;
         this.y_pos = 0;
     }
@@ -148,8 +151,7 @@ public abstract class Entity {
      * @return  formatted title
      */
     public String titleToString(){
-        String type = entityType.toString();
-        type = type.substring(0,1).toUpperCase() + type.substring(1).toLowerCase();
+        String type = entityType.getName();
         return TextAnnotate.BOLD.javaText + type + ": " + getName() + TextAnnotate.BOLD_OFF.javaText + "\n";
     }
 
@@ -197,17 +199,28 @@ public abstract class Entity {
      * @param entity entity to add
      */
     protected void addConnectedEntity(Entity entity){
-        int initialWeight = connectedEntitiesAndWeights.getOrDefault(entity, 0);
+        float initialWeight = connectedEntitiesAndWeights.getOrDefault(entity, (float) 0);
         //System.out.println(initialWeight);
         connectedEntitiesAndWeights.put(entity, initialWeight + 1);
         incrementSize();
     }
 
+    protected void addGitConnectedEntity(Entity entity, float weight){
+        // only add to git history if they are connected in dependency graph
+        if (connectedEntitiesAndWeights.containsKey(entity)) {
+            gitConnectedEntitiesAndWeights.put(entity, weight);
+        }
+    }
+
     public Set<Entity> getConnectedEntities() {
         return connectedEntitiesAndWeights.keySet();
     }
-    public Map <Entity, Integer> getConnectedEntitiesAndWeights(){
+    public Map <Entity, Float> getConnectedEntitiesAndWeights(){
         return connectedEntitiesAndWeights;
+    }
+
+    public Map<Entity, Float> getGitConnectedEntitiesAndWeights() {
+        return gitConnectedEntitiesAndWeights;
     }
 
     public boolean nameContains(String searchValue){

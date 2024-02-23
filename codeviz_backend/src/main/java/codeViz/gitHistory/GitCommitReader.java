@@ -3,6 +3,8 @@ package codeViz.gitHistory;
 import codeViz.GraphGenerator;
 import codeViz.entity.ClassEntity;
 import codeViz.entity.Entity;
+import org.apache.commons.collections4.keyvalue.MultiKey;
+import org.apache.commons.collections4.map.MultiKeyMap;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -20,10 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Class that reads git commit history
@@ -36,8 +35,9 @@ public class GitCommitReader {
 
     private Git git;
     private final GraphGenerator graphGenerator;
-    private ArrayList<CommitInfo> commitInfos; // may not need to store here if using from entities directly? mainly used for previous commit
     private LinkedHashMap<String, String> renamedClassEntityNames;
+    private GitDiffAssociationRules gitDiffAssociationRules;
+    private static final int WEIGHT_ADJUSTER = 2;
 
     /**
      * Create GitCommitReader
@@ -45,8 +45,8 @@ public class GitCommitReader {
      */
     public GitCommitReader(GraphGenerator graphGenerator){
         this.graphGenerator = graphGenerator;
-        this.commitInfos = new ArrayList<>();
         this.renamedClassEntityNames = new LinkedHashMap<>();
+        this.gitDiffAssociationRules = new GitDiffAssociationRules();
     }
 
     /**
@@ -84,10 +84,6 @@ public class GitCommitReader {
         storeCommitHistory(maxNumCommits);
     }
 
-    public Collection<CommitInfo> getCommitInfos() {
-        return commitInfos;
-    }
-
     /**
      * Store the commit history in order of most recent commit to the oldest commit
      * @param maxNumCommits the number of commits to get the history from, -1 if all commits
@@ -95,8 +91,8 @@ public class GitCommitReader {
     private void storeCommitHistory(int maxNumCommits) { // Note: public methods should probably not throw exceptions
         // is an annotation - do not clear graphGenerator
         //TODO - make sure graphGenerator has commits cleared before adding a new set? or only add commits that are new
-        commitInfos.clear(); // FIXME - what if appending commits?
         renamedClassEntityNames.clear(); // FIXME - what if appending commits?
+        gitDiffAssociationRules = new GitDiffAssociationRules();
         Iterable<RevCommit> log;
         try {
             log = git.log().call();
@@ -131,6 +127,68 @@ public class GitCommitReader {
             nextCommit = commit;
 
         }
+
+        // after storing all the commits and classes, now store the connections between classes and git commits
+        // this will be used to annotate the code graph (how a change of entities is correlated)
+        addGitHistoryConnections();
+    }
+
+    /**
+     * Add connections between entities, based on git history
+     */
+    private void addGitHistoryConnections() {
+
+        // for each pair of entities, want to store the diffs of each in a list
+        // that can be used for correlation analysis after?
+        MultiKeyMap classesAndDiffPairs = new MultiKeyMap(); // NOTE: has some limitations, try to only use locally
+//        LinkedHashMap<ClassEntity, ClassEntity> classesPairs = new LinkedHashMap<>(); // TODO - test and switch from MultiKeyMap to this
+//        ClassEntity dummyClassEntity = new ClassEntity("dummy");
+
+        for (CommitInfo commitInfo : gitDiffAssociationRules.getCommitInfos()){
+            Set<ClassEntity> classEntitySet = commitInfo.getClassesAndCommits().keySet();
+            // TODO - fix size complexity - currently O(n^2), seems excessive
+            for (ClassEntity outerClassEntity : classEntitySet){
+                for (ClassEntity innerClassEntity : classEntitySet){
+                    if (outerClassEntity.equals(innerClassEntity)){ // don't check against itself
+                        continue;
+                    }
+
+                    if (!(classesAndDiffPairs.containsKey(outerClassEntity, innerClassEntity)
+                        || classesAndDiffPairs.containsKey(innerClassEntity, outerClassEntity))){
+                        classesAndDiffPairs.put(outerClassEntity, innerClassEntity, 0);
+                    }
+
+//                    if (!classesPairs.getOrDefault(outerClassEntity, dummyClassEntity).equals(innerClassEntity) &&
+//                            !classesPairs.getOrDefault(innerClassEntity, dummyClassEntity).equals(outerClassEntity)){
+//                        classesPairs.put(outerClassEntity, innerClassEntity);
+//                    }
+                }
+            }
+        }
+
+        System.out.println("Done getting git diff pairs!");
+
+//        for (ClassEntity classEntity1 : classesPairs.keySet()){
+//            ClassEntity classEntity2 = classesPairs.get(classEntity1);
+        for (Object object : classesAndDiffPairs.keySet()){
+            MultiKey multiKey = (MultiKey) object;
+            ClassEntity classEntity1 = (ClassEntity) multiKey.getKey(0);
+            ClassEntity classEntity2 = (ClassEntity) multiKey.getKey(1);
+
+            float confidenceA = gitDiffAssociationRules.calculateConfidence(classEntity1, classEntity2);
+            float confidenceB = gitDiffAssociationRules.calculateConfidence(classEntity2, classEntity1);
+
+            float weight = (confidenceA + confidenceB) / 2; // average?
+
+            float adjustedWeight = weight * WEIGHT_ADJUSTER;
+            System.out.println("Between " + classEntity1.getName() + " and " + classEntity2.getName() + ", weight = " + weight);
+            classEntity1.addGitConnectedEntity(classEntity2, adjustedWeight);
+            classEntity2.addGitConnectedEntity(classEntity1, adjustedWeight);
+        }
+    }
+
+    public static int getWeightAdjuster() {
+        return WEIGHT_ADJUSTER;
     }
 
     /**
@@ -158,6 +216,13 @@ public class GitCommitReader {
         renameDetector.addAll(diff);
         diff = renameDetector.compute();
 
+        CommitInfo commitInfo = new CommitInfo(
+                currentCommit.getId().getName(),
+                currentCommit.getAuthorIdent().getName(),
+                currentCommit.getCommitTime(),
+                currentCommit.getShortMessage()
+        );
+        gitDiffAssociationRules.addCommitInfo(commitInfo);
 
         for (DiffEntry entry : diff) {
             //System.out.println("Entry: " + entry + ", from: " + entry.getOldId() + ", to: " + entry.getNewId());
@@ -173,7 +238,7 @@ public class GitCommitReader {
             formatter.format(entry);
 //            System.out.println(outputStream.toString());
 
-            CommitInfo commitInfo = new CommitInfo(
+            CommitDiffInfo commitDiffInfo = new CommitDiffInfo(
                     currentCommit.getId().getName(),
                     currentCommit.getAuthorIdent().getName(),
                     currentCommit.getCommitTime(),
@@ -181,20 +246,13 @@ public class GitCommitReader {
                     entry.getOldPath(), entry.getNewPath(),
                     outputStream.toString()
             );
-            commitInfos.add(commitInfo);
 
-//            // FIXME connect commits like a linked list - might not be needed
-//            if (futureCommit != null && commitIdsAndInfos.containsKey(futureCommit.getId().getName())){
-//                CommitInfo futureCommitInfo = commitIdsAndInfos.get(futureCommit.getId().getName());
-//                if (futureCommitInfo != null){
-//                    futureCommitInfo.setPreviousCommit(commitInfo);
-//                }
-//            }
-
-            if (commitInfo.getCommitType() != CommitType.DELETE && graphGenerator != null) { // Note: deletes will not have their code details stored
+            if (commitDiffInfo.getCommitType() != CommitType.DELETE && graphGenerator != null) { // Note: deletes will not have their code details stored
                 ClassEntity classEntity = getClassEntity(entry.getNewPath());
                 if (classEntity != null) {
                     classEntity.addCommitInfo(commitInfo);
+                    commitInfo.addClassCommitPair(classEntity, commitDiffInfo);
+                    gitDiffAssociationRules.addClassEntity(classEntity);
                 }
             }
 

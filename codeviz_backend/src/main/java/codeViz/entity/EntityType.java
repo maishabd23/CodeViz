@@ -6,7 +6,23 @@ package codeViz.entity;
  * @author Thanuja Sivaananthan
  */
 public enum EntityType {
-    PACKAGE,
-    CLASS,
-    METHOD
+    METHOD("Method", null),
+    CLASS("Class", METHOD),
+    PACKAGE("Package", CLASS);
+
+    private final String name;
+    private final EntityType child;
+
+    EntityType(String name, EntityType child) {
+        this.name = name;
+        this.child = child;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public EntityType getChild() {
+        return child;
+    }
 }

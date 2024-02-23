@@ -1,7 +1,7 @@
 package codeViz.entity;
 
 import java.awt.Color;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -24,7 +24,7 @@ public class MethodEntity extends Entity {
         // should classEntity store its methods (easier to reference), or is that too much coupling?
         classEntity.addMethod(this);
 
-        arguments = new HashSet<>();
+        arguments = new LinkedHashSet<>();
         returnType = null;
     }
 

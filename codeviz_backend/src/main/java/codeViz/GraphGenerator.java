@@ -1,6 +1,8 @@
 package codeViz;
 
 import codeViz.entity.*;
+import codeViz.gitHistory.CommitInfo;
+import codeViz.gitHistory.GitCommitReader;
 import org.gephi.graph.api.*;
 import org.gephi.project.api.ProjectController;
 import org.openide.util.Lookup;
@@ -23,6 +25,11 @@ public class GraphGenerator {
     private final LinkedHashMap<String, Entity> methodEntities;
     private String searchValue;
 
+    // details on the most recently generated graph
+    // Note: can also store node details here if needed
+    private ArrayList<Entity> edgeSources;
+    private ArrayList<Entity> edgeDestinations;
+
     /**
      * Create an EntityGraphGenerator
      * @author Thanuja Sivaananthan
@@ -31,7 +38,10 @@ public class GraphGenerator {
         packageEntities = new LinkedHashMap<>();
         classEntities = new LinkedHashMap<>();
         methodEntities = new LinkedHashMap<>();
-        this.searchValue = "";
+        searchValue = "";
+
+        edgeSources = new ArrayList<>();
+        edgeDestinations = new ArrayList<>();
     }
 
     /**
@@ -94,13 +104,14 @@ public class GraphGenerator {
     /**
      * Convert entities to directedGraph format
      *
+     * @param entityType entityType to create graph from
+     * @param gitHistory whether viewing git history graph or not
+     * @return directed graph
      * @author Thanuja Sivaananthan
-     * @param entityType    entityType to create graph from
-     * @return              directed graph
      */
-    public DirectedGraph entitiesToNodes(EntityType entityType) {
+    public DirectedGraph entitiesToNodes(EntityType entityType, boolean gitHistory) {
         LinkedHashMap<String, Entity> entities = getEntities(entityType);
-        return entitiesToNodes(entities);
+        return entitiesToNodes(entities, gitHistory);
     }
 
     /**
@@ -111,9 +122,10 @@ public class GraphGenerator {
      * parentEntity: CLASS, childLevel: METHOD
      * @param parentEntity  the entity to generate the inner graph for
      * @param childLevel    the level of the inner graph
+     * @param gitHistory whether viewing git history graph or not
      * @return              resulting directed graph
      */
-    private DirectedGraph entitiesToNodes(Entity parentEntity, EntityType childLevel) {
+    private DirectedGraph entitiesToNodes(Entity parentEntity, EntityType childLevel, boolean gitHistory) {
 
         // combinations that do not work
         if (parentEntity.getEntityType().equals(EntityType.METHOD) // 3 - method - any
@@ -156,12 +168,12 @@ public class GraphGenerator {
         if (entities.isEmpty()){
             System.out.println("EMPTY entities list");
         }
-        return entitiesToNodes(entities);
+        return entitiesToNodes(entities, gitHistory);
     }
 
 
 
-    private DirectedGraph entitiesToNodes(LinkedHashMap<String, Entity> entities){
+    private DirectedGraph entitiesToNodes(LinkedHashMap<String, Entity> entities, boolean gitHistory){
         // NOTE: assuming all entities are properly set up with connections already
 
         if (entities.isEmpty()){
@@ -170,6 +182,9 @@ public class GraphGenerator {
 
         List<Node> nodes = new ArrayList<>();
         List<Edge> edges = new ArrayList<>();
+
+        edgeSources = new ArrayList<>();
+        edgeDestinations = new ArrayList<>();
 
         ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
         pc.newProject();
@@ -201,7 +216,13 @@ public class GraphGenerator {
         // 2. create edges for each pair
         for (String entityKey : entities.keySet()){
             Entity entity = entities.get(entityKey);
-            for (Map.Entry<Entity, Integer> entry : entity.getConnectedEntitiesAndWeights().entrySet()){
+
+            Set<Map.Entry<Entity, Float>> connectedEntities = entity.getConnectedEntitiesAndWeights().entrySet();
+            if (gitHistory && entity.getEntityType().equals(EntityType.CLASS)){
+                connectedEntities = entity.getGitConnectedEntitiesAndWeights().entrySet(); // TODO - move to diff location
+            }
+
+            for (Map.Entry<Entity, Float> entry : connectedEntities){
 
                 Entity connectedEntity = entry.getKey();
                 // FIXME what if connected entities doesn't exist in inner graph?
@@ -209,9 +230,12 @@ public class GraphGenerator {
                 //  could simply not include those nodes/edges that aren't in the inner graph
 
                 if (nodes.contains(connectedEntity.getGephiNode())) { // only add edge if the other node exists
-                    int weight = entry.getValue();
+                    float weight = entry.getValue();
                     int type = (int) 1f; // not sure what the type field should be
                     Edge edge = graphModel.factory().newEdge(entity.getGephiNode(), connectedEntity.getGephiNode(), type, weight, true);
+
+                    edgeSources.add(entity);
+                    edgeDestinations.add(connectedEntity);
                     edges.add(edge);
                 }
             }
@@ -437,6 +461,38 @@ public class GraphGenerator {
         }
     }
 
+    public String getEdgeDetails(String edgeName) {
+        String[] newNodeNames = edgeName.split("_");
+        if (newNodeNames.length != 3){
+            System.out.println("INVALID NAME, " + edgeName + " LENGTH IS " + newNodeNames.length);
+            return "";
+        }
+
+        edgeName = newNodeNames[2];
+
+        int edgeId = Integer.parseInt(edgeName);
+
+        if (edgeSources.size() < edgeId){
+            System.out.println("INVALID EDGE ID, " + edgeId + " IS GREATER THAN " + edgeSources.size());
+            return "";
+        }
+
+        Entity edgeSource = edgeSources.get(edgeId);
+        Entity edgeDestination = edgeDestinations.get(edgeId);
+
+        float weight = edgeSource.getGitConnectedEntitiesAndWeights().get(edgeDestination) / GitCommitReader.getWeightAdjuster();
+
+        String edgeDetails = "Association Rule Mining Score: " + weight + "\n";
+
+        for (CommitInfo sourceStorage : edgeSource.getCommitInfos()){
+            if (edgeDestination.getCommitInfos().contains(sourceStorage)){
+                return edgeDetails + sourceStorage.toString();
+            }
+        }
+
+        return "ERROR, this pair doesn't share a recent commit";
+    }
+
     /**
      * Check if search value found for certain level
      * @param entityType        level
@@ -453,8 +509,9 @@ public class GraphGenerator {
         boolean isFound = false;
 
         for (Entity entity : entities.values()){
-            if (entity.isHighlighed()){
+            if (entity.isHighlighed()) {
                 isFound = true;
+                break;
             }
         }
 
@@ -471,11 +528,13 @@ public class GraphGenerator {
 
     /**
      * Generate a code graph at a specific level
-     * @param newLevel the level to generate the code graph at
-     * @param filename the filename to save the gexf file as
+     *
+     * @param newLevel   the level to generate the code graph at
+     * @param filename   the filename to save the gexf file as
+     * @param gitHistory whether viewing git history graph or not
      */
-    public void directedGraphToGexf(EntityType newLevel, String filename) {
-        DirectedGraph directedGraph = entitiesToNodes(newLevel);
+    public void directedGraphToGexf(EntityType newLevel, String filename, boolean gitHistory) {
+        DirectedGraph directedGraph = entitiesToNodes(newLevel, gitHistory);
         if (directedGraph != null) {
             directedGraphToGexf(directedGraph, filename);
         }
@@ -486,10 +545,11 @@ public class GraphGenerator {
      * @param parentEntity the parent entity to filter the graph to
      * @param childLevel the level to generate the code graph at
      * @param filename the filename to save the gexf file as
+     * @param gitHistory whether viewing git history graph or not
      * @return  boolean, whether the filtered graph was successfully generated
      */
-    public boolean directedGraphToGexf(Entity parentEntity, EntityType childLevel, String filename) {
-        DirectedGraph directedGraph = entitiesToNodes(parentEntity, childLevel);
+    public boolean directedGraphToGexf(Entity parentEntity, EntityType childLevel, String filename, boolean gitHistory) {
+        DirectedGraph directedGraph = entitiesToNodes(parentEntity, childLevel, gitHistory);
         if (directedGraph != null) {
             directedGraphToGexf(directedGraph, filename);
             return true;

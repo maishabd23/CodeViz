@@ -1,6 +1,16 @@
 import React, {useEffect} from 'react';
 
 function Menu() {
+    const [milestone, setMilestoneValue] = React.useState('m1');
+    const [level, setLevel] = React.useState('Class');
+
+    const handleM1Change = () => {
+        fetch('/api/annotateGraph?gitHistory=false');
+    };
+
+    const handleM2Change = () => {
+        fetch('/api/annotateGraph?gitHistory=true');
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -24,10 +34,22 @@ function Menu() {
                 fetch('/api/clearSearch');
             });
 
-            fetch('/api/getCurrentLevel')
+            fetch('/api/getCurrentGraphName')
                 .then((response) => response.json())
                 .then((responseData) => {
                     document.getElementById("currentLevel").innerHTML = "Current level: " + responseData.string;
+                });
+
+            fetch('/api/getCurrentLevel')
+                .then((response) => response.json())
+                .then((responseData) => {
+                    setLevel(responseData.string);
+                });
+
+            fetch('/api/getCurrentMilestone')
+                .then((response) => response.json())
+                .then((responseData) => {
+                    setMilestoneValue(responseData.string);
                 });
 
             const search = document.getElementById("searchInput");
@@ -35,7 +57,11 @@ function Menu() {
             function mySearchFunction() {
                 var x = document.getElementById("searchInput");
                 document.getElementById("printSearch").innerHTML = "Searching for: " + x.value;
-                fetch('/api/viewGraphLevel?searchValue=' + x.value);
+                fetch('/api/searchGraph?searchValue=' + x.value)
+                    .then((response) => response.json())
+                    .then((responseData) => {
+                        document.getElementById("printSearch").innerHTML = responseData.string;
+                    });
             }
 
             const detailedSearch = document.getElementById("detailedSearchInput");
@@ -43,15 +69,12 @@ function Menu() {
             function myDetailedSearchFunction() {
                 var x = document.getElementById("detailedSearchInput");
                 document.getElementById("printSearch").innerHTML = "Searching for: " + x.value;
-                fetch('/api/viewGraphLevel?detailed=true&searchValue=' + x.value);
+                fetch('/api/searchGraph?detailed=true&searchValue=' + x.value)
+                    .then((response) => response.json())
+                    .then((responseData) => {
+                        document.getElementById("printSearch").innerHTML = responseData.string;
+                    });
             }
-
-            fetch('/api/getSearchResult')
-                .then((response) => response.json())
-                .then((responseData) => {
-                    document.getElementById("printSearch").innerHTML = responseData.string;
-                });
-
 
         };
 
@@ -115,6 +138,17 @@ function Menu() {
                     </tr>
                     </tbody>
                 </table>
+
+                <div className="help-display">
+                <input type="radio" id="M1" name="graph_type" value={milestone === 'm1'} onChange={handleM1Change} checked={milestone === 'm1'}>
+                </input>
+                <label htmlFor="M1">Dependency</label>
+                <input type="radio" id="M2" name="graph_type" value={milestone === 'm2'} onChange={handleM2Change} checked={milestone === 'm2'} disabled={level !== 'Class'} >
+                </input>
+                <label htmlFor="M2">Git History</label>
+                    <img src="/info-icon.png" alt='icon' className="info--icon" />
+                    <p className='tooltip'>Graph type to view. Note: Git History graph is only available for class view</p>
+                </div>
 
             </div>
         </div>

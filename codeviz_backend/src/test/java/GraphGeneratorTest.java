@@ -100,7 +100,7 @@ public class GraphGeneratorTest {
     @Test
     public void testDirectedGraph(){
 
-        DirectedGraph directedGraph = graphGenerator.entitiesToNodes(EntityType.CLASS);
+        DirectedGraph directedGraph = graphGenerator.entitiesToNodes(EntityType.CLASS, false);
 
         assertEquals(4, directedGraph.getNodeCount());
         assertEquals(3, directedGraph.getEdgeCount());

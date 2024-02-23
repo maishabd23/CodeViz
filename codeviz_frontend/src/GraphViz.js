@@ -58,6 +58,7 @@ function GraphViz() {
         const renderer = new Sigma(graph, container, {
           minCameraRatio: 0.1,
           maxCameraRatio: 10,
+          enableEdgeEvents: true,
         });
         const camera = renderer.getCamera();
         renderer.refresh(); // to make sure graph appears right away
@@ -79,6 +80,21 @@ function GraphViz() {
               .then((responseData) => {
                 document.getElementById("nodeDetails").innerHTML = responseData.string;
               });
+        });
+
+
+        renderer.on("enterEdge", (e) => {
+          fetch('/api/getEdgeDetails?edgeName=' + e.edge.toString())
+              .then((response) => response.json())
+              .then((responseData) => {
+                if (responseData.string) {
+                  document.getElementById("nodeDetails").innerHTML = responseData.string;
+                }
+              });
+        });
+
+        renderer.on("leaveEdge", () => {
+          document.getElementById("nodeDetails").innerHTML = initialNodeMessage;
         });
 
         renderer.on("leaveNode", () => {
@@ -203,7 +219,9 @@ function GraphViz() {
           <div className="node-help">
             <h2 className="h2">Node Details:</h2>
             <img src="/info-icon.png" alt='icon' className="info--icon" />
-            <p className='tooltip-node'>Information on the node such as class/package that it belongs to and methods within it (if applicable)</p> 
+            <p className='tooltip-node'>Information on an node such as class/package that it belongs to and methods within it (if applicable)
+            <br/>If the 'Git History' graph is displayed, information on the most recent commit between two nodes.
+            </p>
           </div>
             <p id="nodeDetails">
               {initialNodeMessage}
