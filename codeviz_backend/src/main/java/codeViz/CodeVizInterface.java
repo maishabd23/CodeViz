@@ -17,11 +17,16 @@ public class CodeVizInterface {
     private GitCommitReader gitCommitReader;
     private boolean success;
 
+    private GitHubRepoController gitHubRepoController;
+
     public CodeVizInterface(){
         this.javaBytecodeReader = new JavaBytecodeReader();
-        this.graphGenerator = javaBytecodeReader.getGraphGenerator();
+        //this.graphGenerator = javaBytecodeReader.getGraphGenerator();
+        this.gitHubRepoController = new GitHubRepoController();
+        this.graphGenerator = gitHubRepoController.getGraphGenerator();
         this.gitCommitReader = new GitCommitReader(graphGenerator);
         this.success = true; // FIXME - change back to false once stuff are working
+
     }
 
     /**
@@ -30,12 +35,15 @@ public class CodeVizInterface {
      * @param folderName      folder name to get file paths from
      * @return boolean, whether the entity generation was successful
      */
-    public boolean generateEntitiesAndConnections(String folderName, String localDirectory, int maxNumCommits) {
-        boolean success = javaBytecodeReader.generateEntitiesAndConnections(folderName);
-        if (success){
-            gitCommitReader.extractCommitHistory(localDirectory, maxNumCommits);
-        }
-        return success;
+    public void generateEntitiesAndConnections(String folderName, String localDirectory, int maxNumCommits) {
+        String repoURl = "https://github.com/maishabd23/online-bookstore";
+        gitHubRepoController.analyzeCodebase(gitHubRepoController.retrieveGitHubCodebase(repoURl));
+        gitHubRepoController.generateEntitiesAndConnections();
+//        boolean success = javaBytecodeReader.generateEntitiesAndConnections(folderName);
+//        if (success){
+//            gitCommitReader.extractCommitHistory(localDirectory, maxNumCommits);
+//        }
+//        return success;
     }
 
     /**

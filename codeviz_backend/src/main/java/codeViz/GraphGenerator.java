@@ -1,7 +1,9 @@
 package codeViz;
 
+import codeViz.entity.ClassEntity;
 import codeViz.entity.Entity;
 import codeViz.entity.EntityType;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import org.gephi.graph.api.*;
 import org.gephi.project.api.ProjectController;
 import org.openide.util.Lookup;
@@ -100,6 +102,7 @@ public class GraphGenerator {
      * @return              directed graph
      */
     public DirectedGraph entitiesToNodes(EntityType entityType){
+        entityType = EntityType.PACKAGE;
         // NOTE: assuming all entities are properly set up with connections already
         LinkedHashMap<String, Entity> entities = getEntities(entityType);
 
@@ -385,5 +388,13 @@ public class GraphGenerator {
         }
         result += TextAnnotate.RESET.javaText + TextAnnotate.BOLD_OFF.javaText;
         return result;
+    }
+
+    public ClassEntity changeInterfaceToClassEntity(ClassOrInterfaceDeclaration classOrInterfaceDeclaration){
+        ClassEntity classEntity = null;
+        if (classEntities.containsKey(classOrInterfaceDeclaration.getNameAsString())){
+            classEntity = (ClassEntity) classEntities.get(classOrInterfaceDeclaration.getNameAsString());
+        }
+        return classEntity;
     }
 }

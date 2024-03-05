@@ -1,11 +1,10 @@
 package codeViz;
 
-import codeViz.entity.ClassEntity;
-import codeViz.entity.MethodEntity;
-import codeViz.entity.PackageEntity;
+import codeViz.entity.*;
 import com.github.javaparser.ParseResult;
 
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -19,8 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Set;
+import java.util.*;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseException;
@@ -30,8 +28,6 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -54,7 +50,7 @@ public class GitHubRepoController {
         this.entryContentsList = new ArrayList<>();
         //this.zipEntry = new ZipEntry();
     }
-    private byte[] retrieveGitHubCodebase(String repoUrl) {
+    public byte[] retrieveGitHubCodebase(String repoUrl) {
         HttpClient httpClient = HttpClients.createDefault();
         HttpGet request = new HttpGet(repoUrl + "/archive/main.zip"); // Assuming main branch
 
@@ -78,7 +74,7 @@ public class GitHubRepoController {
     }
 
     private List<PackageEntity> parseJavaFilesFromZip(InputStream byteArrayInputStream) throws IOException {
-        List<PackageEntity> packages = new ArrayList<>();
+        Set<PackageEntity> packages = new HashSet<>();
         JavaParser javaParser = new JavaParser();
 
         this.zipInputStream = new ZipInputStream(byteArrayInputStream);
@@ -108,18 +104,13 @@ public class GitHubRepoController {
                 zipInputStream.closeEntry();
             }
         }
-        return packages;
+        return new ArrayList<>(packages);
     }
 
-    private List<PackageEntity> createEntities(CompilationUnit compilationUnit) {
-        List<PackageEntity> packages = new ArrayList<>();
+    private Set<PackageEntity> createEntities(CompilationUnit compilationUnit) {
+        Set<PackageEntity> packages = new HashSet<>();
         ConnectionVisitor connectionVisitor = new ConnectionVisitor();
         compilationUnit.accept(connectionVisitor, null);
-
-//        Set<String> packagesConnections = connectionVisitor.getPackages();
-//        Set<String> classes = connectionVisitor.getClasses();
-//        Set<String> methods = connectionVisitor.getMethods();
-//        Set<String> methodCalls = connectionVisitor.getMethodCalls(); //TODO - add this later
 
         // Visit the compilation unit
         connectionVisitor.visit(compilationUnit, null);
@@ -129,61 +120,136 @@ public class GitHubRepoController {
         Set<String> fieldTypes = connectionVisitor.getFieldTypes();
         Set<String> methodInvocations = connectionVisitor.getMethodInvocations();
 
+        // Get the package name from the compilation unit
+        String basePackageName = compilationUnit.getPackageDeclaration()
+                .map(pd -> pd.getName().toString())
+                .orElse("");
 
         // Iterate over all types (classes, interfaces, enums, etc.) in the compilation unit
         compilationUnit.getTypes().forEach(type -> {
             if (type instanceof ClassOrInterfaceDeclaration classDeclaration) {
-                String packageName = compilationUnit.getPackageDeclaration()
-                        .map(pd -> pd.getName().toString())
-                        .orElse("");
 
-                PackageEntity packageEntity = packages.stream()
-                        .filter(p -> p.getName().equals(packageName))
-                        .findFirst()
-                        .orElseGet(() -> {
-                            PackageEntity newPackage = new PackageEntity(packageName);
-                            packages.add(newPackage);
-                            return newPackage;
-                        });
+                // Get or create the package entity
+                PackageEntity packageEntity = getOrCreatePackage(packages, basePackageName, connectedClasses);
 
-                boolean packageSuccess = graphGenerator.addEntity(packageName, packageEntity);
-
+                // Add class entity to the package
                 ClassEntity classEntity = new ClassEntity(classDeclaration.getNameAsString(), packageEntity);
                 boolean classSuccess = graphGenerator.addEntity(classEntity.getName(), classEntity);
-                //classEntity.addConnectedEntity(classEntity); //TODO - TEST
+                packageEntity.addClass(classEntity);
 
                 classDeclaration.getMethods().forEach(methodDeclaration -> {
                     MethodEntity methodEntity = new MethodEntity(methodDeclaration.getNameAsString(), classEntity);
                     boolean methodSuccess = graphGenerator.addEntity(methodEntity.getName(), methodEntity);
-                    //methodEntity.addConnectedEntity(methodEntity); //TODO - TEST
-
                     classEntity.addMethod(methodEntity);
                 });
 
-
                 System.out.println("Class: " + classDeclaration.getNameAsString());
-
-                System.out.println("------");
-
-                packageEntity.addClass(classEntity);
-                //packageEntity.addConnectedEntity(packageEntity); //TODO - TEST
-
-                //TESTING THE NODES
-                for (ClassEntity classEntity1 : packageEntity.getClasses()) {
-                    System.out.println("------------------------------------------------------");
-                    System.out.println("TESTING");
-                    System.out.println("CLASS: " + classEntity1.getName());
-                    System.out.println("METHODS IN THIS CLASS: " + Arrays.toString(classEntity1.getMethods().toArray()));
-                    System.out.println("------------------------------------------------------");
-                }
             }
+        });
+
+        // Print out classes within each package
+        packages.forEach(packageEntity -> {
+            System.out.println("Package: " + packageEntity.getName() + " Connected Packages: " + packageEntity.getConnectedEntities());
+            packageEntity.getClasses().forEach(classEntity -> {
+                System.out.println("\tClass: " + classEntity.getName());
+                classEntity.getMethods().forEach(methodEntity -> {
+                    System.out.println("\t\tMethod: " + methodEntity.getName());
+                });
+            });
         });
 
         return packages;
     }
 
+    // Method to create or retrieve package entities for nested packages
+    private PackageEntity getOrCreatePackage(Set<PackageEntity> packages, String packageName,  Set<String> connectedClasses) {
+        String[] packageNames = packageName.split("\\.");
+        PackageEntity parentPackage = null;
+
+        for (String name : packageNames) {
+            String fullPackageName = (parentPackage == null || parentPackage.getName().isEmpty()) ? name : parentPackage.getName() + "." + name;
+            PackageEntity finalParentPackage = parentPackage;
+            PackageEntity packageEntity = packages.stream()
+                    .filter(p -> p.getName().equals(fullPackageName))
+                    .findFirst()
+                    .orElseGet(() -> {
+                        PackageEntity newPackage = new PackageEntity(fullPackageName);
+                        packages.add(newPackage);
+
+                        boolean packageSuccess = graphGenerator.addEntity(fullPackageName, newPackage);
+                        if (finalParentPackage != null && !newPackage.equals(finalParentPackage) && graphGenerator.getPackageEntities().get(finalParentPackage.getName()) != null){
+                            String className = Arrays.toString(connectedClasses.toArray());
+                            newPackage.addConnectedEntity((PackageEntity) graphGenerator.getPackageEntities().get(finalParentPackage.getName()));
+                        }
+                        return newPackage;
+                    });
+            parentPackage = packageEntity; // Update parent package for next iteration
+        }
+
+        assert parentPackage != null;
+
+
+        return parentPackage;
+    }
+
+
+    private void createPackageConnections() throws IOException {
+        JavaParser javaParser = new JavaParser();
+
+        // HashMap to store package connections
+        HashMap<PackageEntity, Set<PackageEntity>> connectedPackages = new HashMap<>();
+
+        for (byte[] entryContent : entryContentsList) {
+            String code = new String(entryContent, StandardCharsets.UTF_8);
+            ParseResult<CompilationUnit> parseResult = javaParser.parse(new StringReader(code));
+
+            if (parseResult.isSuccessful()) {
+                CompilationUnit compilationUnit = parseResult.getResult().get();
+
+                // Extract package information from the compilation unit
+                String currentPackageName = compilationUnit.getPackageDeclaration()
+                        .map(pd -> pd.getName().toString())
+                        .orElse("");
+
+                // Iterate over imports to identify external package dependencies
+                compilationUnit.getImports().forEach(importDeclaration -> {
+                    String importedPackageName = importDeclaration.getNameAsString();
+                    // Extract the package name from the import statement
+                    String importedPackage = importedPackageName.substring(0, importedPackageName.lastIndexOf('.'));
+                    // Assuming that the package structure is the same as the folder structure
+                    // Create PackageEntity objects for both current and imported packages
+                    PackageEntity currentPackage = new PackageEntity(currentPackageName);
+                    PackageEntity imported = new PackageEntity(importedPackage);
+
+                    // Add the imported package to the connected packages of the current package
+                    connectedPackages.computeIfAbsent(currentPackage, k -> new HashSet<>()).add(imported);
+                });
+            } else {
+                // Handle parsing errors
+                parseResult.getProblems().forEach(problem -> {
+                    System.err.println("Parsing error: " + problem.getMessage());
+                });
+            }
+        }
+
+        // Print out package connections
+        for (Map.Entry<PackageEntity, Set<PackageEntity>> entry : connectedPackages.entrySet()) {
+            System.out.println("PACKAGE CONNECTIONS");
+            System.out.println("----------------------------------------------");
+            String key = entry.getKey().getName();
+            String value = entry.getValue().toString();
+            System.out.println("Package=" + key + ", Connected Packages=" + value);
+            System.out.println("----------------------------------------------");
+        }
+    }
+
+
+
     private void createClassConnections() throws IOException {
         JavaParser javaParser = new JavaParser();
+
+        HashMap<ClassEntity, Set<Entity>> connectedClasses = new HashMap<>();
+        Set<ClassEntity> classEntityList = new HashSet<>();
 
         for (byte[] entryContent : entryContentsList) {
             String code = new String(entryContent, StandardCharsets.UTF_8);
@@ -207,11 +273,8 @@ public class GitHubRepoController {
                                 ClassEntity fieldClassEntity = (ClassEntity) graphGenerator.getClassEntities().get(fieldType.getNameAsString());
 
                                 if (fieldClassEntity != null) {
-                                    System.out.println("Class: " + classDeclaration.getNameAsString());
-                                    System.out.println("Field: " + fieldDeclaration.getVariable(0).getNameAsString());
-                                    System.out.println("Connected Class: " + fieldClassEntity.getName());
-                                    System.out.println("----------------------------------------------");
-
+                                    graphGenerator.changeInterfaceToClassEntity(classDeclaration).addConnectedEntity(fieldClassEntity);
+                                    connectedClasses.put(graphGenerator.changeInterfaceToClassEntity(classDeclaration), graphGenerator.changeInterfaceToClassEntity(classDeclaration).getConnectedEntities());
                                 }
                             }
 
@@ -226,10 +289,8 @@ public class GitHubRepoController {
                                         ClassEntity genericClassEntity = (ClassEntity) graphGenerator.getClassEntities().get(genericType.getNameAsString());
 
                                         if (genericClassEntity != null) {
-                                            System.out.println("Class: " + classDeclaration.getNameAsString());
-                                            System.out.println("Field: " + fieldDeclaration.getVariable(0).getNameAsString());
-                                            System.out.println("Connected Class in Generic Type: " + genericClassEntity.getName());
-                                            System.out.println("----------------------------------------------");
+                                            graphGenerator.changeInterfaceToClassEntity(classDeclaration).addConnectedEntity(genericClassEntity);
+                                            connectedClasses.put(graphGenerator.changeInterfaceToClassEntity(classDeclaration), graphGenerator.changeInterfaceToClassEntity(classDeclaration).getConnectedEntities());
                                         }
                                     }
                                 });
@@ -237,7 +298,6 @@ public class GitHubRepoController {
                         });
                     }
                 });
-
             } else {
                 // Handle parsing errors
                 parseResult.getProblems().forEach(problem -> {
@@ -245,17 +305,131 @@ public class GitHubRepoController {
                 });
             }
         }
+        for (Map.Entry<ClassEntity, Set<Entity>> entry : connectedClasses.entrySet()) {
+            System.out.println("TESTING CONNECTED CLASSES");
+            System.out.println("----------------------------------------------");
+            String key = entry.getKey().getName();
+            String value = entry.getValue().toString();
+            System.out.println("Class=" + key + ", Connected Classes=" + value);
+            System.out.println("----------------------------------------------");
+
+        }
     }
 
-    private void analyzeCodebase(byte[] codebase) {
+    public void analyzeCodebase(byte[] codebase) {
         try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(codebase)) {
             List<PackageEntity> packages = parseJavaFilesFromZip(byteArrayInputStream);
             createClassConnections();
+            //createPackageConnections();
             // Pass the created entities to the model or perform other actions
             // model.addAttribute("packages", packages);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void getAllFilePaths(File[] files, List<String> filePaths){
+
+        for (File file : files) {
+            if (!file.isHidden()) {
+                //System.out.println(file.getPath());
+
+                String extension = FilenameUtils.getExtension(file.getName());
+
+                // only add .class files, and search any inner directories
+                if (extension.equals("class")){
+                    filePaths.add(file.getPath());
+                } else if (file.isDirectory()) {
+                    File[] innerFiles = file.listFiles();
+                    if (innerFiles != null) getAllFilePaths(innerFiles, filePaths);
+                }
+            }
+
+
+        }
+    }
+
+    public List<String> getAllFilePaths(String folderName){
+        File folder = new File(folderName);
+
+        // Check if folder exists
+        if (!folder.exists()) {
+            try {
+                throw new Exception("Folder does not exist");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        // Get list of files in folder
+        File[] files = folder.listFiles();
+
+        List<String> filePaths = new ArrayList<>();
+
+        if (files != null){
+            getAllFilePaths(files, filePaths);
+        }
+
+        // // System.out.println("print all paths");
+        // for (String path : filePaths){
+        //     System.out.println(path);
+        // }
+
+        return filePaths;
+    }
+
+    public void generateGraph(EntityType entityType, String filename){
+        graphGenerator.directedGraphToGexf(graphGenerator.entitiesToNodes(entityType), filename);
+    }
+
+    public void generateEntitiesAndConnections(){
+        //graphGenerator.clearEntities();
+        updatePackageConnections();
+        updateClassConnections();
+        //updatePackageConnections();
+
+        graphGenerator.setEntitiesCoordinates();
+        // TODO - test if updated connections are needed
+
+    }
+
+    private void updateClassConnections(){
+        Collection<Entity> classEntities = graphGenerator.getClassEntities().values();
+        for (Entity classEntity : classEntities){
+            // for each method in the class
+            for (MethodEntity methodEntity : ((ClassEntity) classEntity).getMethods()){
+                // get the connected method
+                for (Entity connectedMethod : methodEntity.getConnectedEntities()){
+                    // and connect the class to the connected method's class
+                    ClassEntity connectedClass = ((MethodEntity) connectedMethod).getClassEntity();
+                    ((ClassEntity) classEntity).addConnectedEntity(connectedClass);
+                }
+            }
+        }
+    }
+
+    private void updatePackageConnections(){
+        Collection<Entity> packageEntities = graphGenerator.getPackageEntities().values();
+        for (Entity packageEntity : packageEntities){
+
+            System.out.println(((PackageEntity) packageEntity).getClasses());
+
+            // for each class in the package
+            for (ClassEntity classEntity : ((PackageEntity) packageEntity).getClasses()){
+
+                // get the connected class
+                for (Entity connectedClass : classEntity.getConnectedEntities()){
+                    // and connect the package to the connected class's package (if it exists)
+                    PackageEntity connectedPackage = ((ClassEntity) connectedClass).getPackageEntity();
+                    if (connectedPackage != null && !connectedPackage.equals(packageEntity)){
+                        ((PackageEntity) packageEntity).addConnectedEntity(connectedPackage);
+                    }
+                }
+            }
+        }
+    }
+    public GraphGenerator getGraphGenerator() {
+        return graphGenerator;
     }
 
     public static void main(String[] args) {
