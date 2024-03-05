@@ -102,7 +102,6 @@ public class GraphGenerator {
      * @return              directed graph
      */
     public DirectedGraph entitiesToNodes(EntityType entityType){
-        entityType = EntityType.PACKAGE;
         // NOTE: assuming all entities are properly set up with connections already
         LinkedHashMap<String, Entity> entities = getEntities(entityType);
 

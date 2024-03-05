@@ -169,20 +169,19 @@ public class GitHubRepoController {
         for (String name : packageNames) {
             String fullPackageName = (parentPackage == null || parentPackage.getName().isEmpty()) ? name : parentPackage.getName() + "." + name;
             PackageEntity finalParentPackage = parentPackage;
-            PackageEntity packageEntity = packages.stream()
-                    .filter(p -> p.getName().equals(fullPackageName))
-                    .findFirst()
-                    .orElseGet(() -> {
-                        PackageEntity newPackage = new PackageEntity(fullPackageName);
-                        packages.add(newPackage);
+            PackageEntity packageEntity = (PackageEntity) graphGenerator.getPackageEntities().get(fullPackageName);
 
-                        boolean packageSuccess = graphGenerator.addEntity(fullPackageName, newPackage);
-                        if (finalParentPackage != null && !newPackage.equals(finalParentPackage) && graphGenerator.getPackageEntities().get(finalParentPackage.getName()) != null){
-                            String className = Arrays.toString(connectedClasses.toArray());
-                            newPackage.addConnectedEntity((PackageEntity) graphGenerator.getPackageEntities().get(finalParentPackage.getName()));
-                        }
-                        return newPackage;
-                    });
+            if (packageEntity == null){ // not in graph generator yet, need to create a new package
+                PackageEntity newPackage = new PackageEntity(fullPackageName);
+                packages.add(newPackage);
+
+                boolean packageSuccess = graphGenerator.addEntity(fullPackageName, newPackage);
+                if (finalParentPackage != null && !newPackage.equals(finalParentPackage) && graphGenerator.getPackageEntities().get(finalParentPackage.getName()) != null){
+                    String className = Arrays.toString(connectedClasses.toArray());
+                    newPackage.addConnectedEntity((PackageEntity) graphGenerator.getPackageEntities().get(finalParentPackage.getName()));
+                }
+                packageEntity = newPackage;
+            }
             parentPackage = packageEntity; // Update parent package for next iteration
         }
 

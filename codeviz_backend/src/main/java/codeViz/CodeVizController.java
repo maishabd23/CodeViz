@@ -13,7 +13,7 @@ public class CodeVizController {
 
     private static final String currentSrc = "./"; // weird things happen in intelliJ's project/vcs if I try setting this as anything else like ./codeviz_backend, ./codeviz_backend/src, etc
     private String currentTarget = "./codeviz_backend/target/classes/codeViz/entity";
-    private EntityType currentLevel = EntityType.CLASS;
+    private EntityType currentLevel = EntityType.PACKAGE; // TODO - change back to CLASS
 
     private CodeVizInterface codeVizInterface;
     private boolean success;
