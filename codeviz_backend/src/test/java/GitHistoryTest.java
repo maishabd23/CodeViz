@@ -1,6 +1,7 @@
 import codeViz.GraphGenerator;
 import codeViz.entity.ClassEntity;
 import codeViz.entity.PackageEntity;
+import codeViz.gitHistory.CommitInfo;
 import codeViz.gitHistory.GitCommitReader;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -69,7 +70,18 @@ public class GitHistoryTest {
         assertNotEquals(0, ui.getCommitInfos().size());
         assertNotEquals(0, calculatorTest.getCommitInfos().size());
 
+        System.out.println("bufferedImageCustom: " + bufferedImageCustom.getCommitInfos().size());
+        System.out.println("calculator: " + calculator.getCommitInfos().size());
+        System.out.println("simpleJavaCalculator: " + simpleJavaCalculator.getCommitInfos().size());
+        System.out.println("ui: " + ui.getCommitInfos().size());
+        System.out.println("calculatorTest: " + calculatorTest.getCommitInfos().size());
+
         // TODO - check the commit / class contains each other
+        assertTrue(4 <= bufferedImageCustom.getCommitInfos().size());
+        assertTrue(16 <= calculator.getCommitInfos().size());
+//        assertTrue((3+1) <= simpleJavaCalculator.getCommitInfos().size());
+        assertTrue((31+2) <= ui.getCommitInfos().size());
+        assertTrue(2 <= calculatorTest.getCommitInfos().size());
     }
 
     /**
