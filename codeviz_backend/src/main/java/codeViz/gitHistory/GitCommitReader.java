@@ -317,4 +317,8 @@ public class GitCommitReader {
 
         return treeParser;
     }
+
+    public LinkedHashMap<String, String> getRenamedClassEntityNames() {
+        return renamedClassEntityNames;
+    }
 }
