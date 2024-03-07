@@ -5,13 +5,13 @@ import codeViz.entity.ClassEntity;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 public class CommitInfo {
 
     private final String id;
-    private final Map<ClassEntity, CommitDiffInfo> classesAndCommits; //stores the weight of connections
+    private final Set<ClassEntity> classes; //stores the weight of connections
 
     private final String author;
     private final LocalDateTime date;
@@ -31,7 +31,7 @@ public class CommitInfo {
             String message
     ){
         this.id = id;
-        this.classesAndCommits = new LinkedHashMap<>();
+        this.classes = new HashSet<>();
 
         this.author = author;
 
@@ -42,8 +42,8 @@ public class CommitInfo {
         this.message = message;
     }
 
-    public void addClassCommitPair(ClassEntity classEntity, CommitDiffInfo commitDiffInfo){
-        classesAndCommits.put(classEntity, commitDiffInfo);
+    public void addClass(ClassEntity classEntity){
+        classes.add(classEntity);
     }
 
     public String getId() {
@@ -54,12 +54,12 @@ public class CommitInfo {
         return message;
     }
 
-    public Map<ClassEntity, CommitDiffInfo> getClassesAndCommits() {
-        return classesAndCommits;
+    public Set<ClassEntity> getClasses() {
+        return classes;
     }
 
     public boolean containsClass(ClassEntity classEntity){
-        return classesAndCommits.containsKey(classEntity);
+        return classes.contains(classEntity);
     }
 
 
@@ -83,5 +83,31 @@ public class CommitInfo {
                 "Date: " + dateToString() + "\n" +
                 message
                 ;
+    }
+
+    /**
+     * Determine commit type based on filenames
+     * @param previousFilename      previous filename
+     * @param newFilename           new filename
+     * @return  commit type
+     */
+    public static CommitType determineCommitType(String previousFilename, String newFilename) {
+        CommitType commitType;
+        if (previousFilename.equals(newFilename)) {
+            //System.out.println("Filename: " + entry.getNewPath());
+            commitType = CommitType.EDIT;
+        } else if (previousFilename.equals("/dev/null")){
+            //System.out.println("Newly created Filename: " + newFilename);
+            commitType = CommitType.CREATE;
+        } else if (newFilename.equals("/dev/null")){
+            //System.out.println("Deleted Filename: " + previousFilename);
+            commitType = CommitType.DELETE;
+        } else {
+            // renamed file
+            //System.out.println("Old Filename: " + previousFilename);
+            //System.out.println("New Filename: " + newFilename);
+            commitType = CommitType.RENAME;
+        }
+        return commitType;
     }
 }

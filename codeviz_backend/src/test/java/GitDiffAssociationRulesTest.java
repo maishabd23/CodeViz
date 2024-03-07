@@ -1,5 +1,4 @@
 import codeViz.entity.ClassEntity;
-import codeViz.gitHistory.CommitDiffInfo;
 import codeViz.gitHistory.CommitInfo;
 import codeViz.gitHistory.GitDiffAssociationRules;
 import org.junit.jupiter.api.Test;
@@ -34,27 +33,25 @@ public class GitDiffAssociationRulesTest {
         classEntityC = new ClassEntity("ClassC");
         classEntityD = new ClassEntity("ClassD");
 
-        CommitDiffInfo dummyCommitDiffInfo = new CommitDiffInfo("001", "testUser", 1515525693, "commit", "className", "className", "");
-
-        commitInfo1.addClassCommitPair(classEntityA, dummyCommitDiffInfo);
+        commitInfo1.addClass(classEntityA);
         gitDiffAssociationRules.addClassEntity(classEntityA);
-        commitInfo1.addClassCommitPair(classEntityD, dummyCommitDiffInfo);
+        commitInfo1.addClass(classEntityD);
         gitDiffAssociationRules.addClassEntity(classEntityD);
 
-        commitInfo2.addClassCommitPair(classEntityB, dummyCommitDiffInfo);
+        commitInfo2.addClass(classEntityB);
         gitDiffAssociationRules.addClassEntity(classEntityB);
 
-        commitInfo3.addClassCommitPair(classEntityC, dummyCommitDiffInfo);
+        commitInfo3.addClass(classEntityC);
         gitDiffAssociationRules.addClassEntity(classEntityC);
 
-        commitInfo4.addClassCommitPair(classEntityA, dummyCommitDiffInfo);
+        commitInfo4.addClass(classEntityA);
         gitDiffAssociationRules.addClassEntity(classEntityA);
-        commitInfo4.addClassCommitPair(classEntityB, dummyCommitDiffInfo);
+        commitInfo4.addClass(classEntityB);
         gitDiffAssociationRules.addClassEntity(classEntityB);
 
-        commitInfo5.addClassCommitPair(classEntityA, dummyCommitDiffInfo);
+        commitInfo5.addClass(classEntityA);
         gitDiffAssociationRules.addClassEntity(classEntityA);
-        commitInfo5.addClassCommitPair(classEntityC, dummyCommitDiffInfo);
+        commitInfo5.addClass(classEntityC);
         gitDiffAssociationRules.addClassEntity(classEntityC);
 
         // float filesChanged = 3 + 2*2; // not actually needed

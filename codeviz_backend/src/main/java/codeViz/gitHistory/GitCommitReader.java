@@ -101,7 +101,6 @@ public class GitCommitReader {
         }
         boolean firstCommit = true;
         RevCommit nextCommit = null;
-        RevCommit nextNextCommit = null;
 
         int numCommits = 0;
 
@@ -114,7 +113,7 @@ public class GitCommitReader {
 
             if (!firstCommit) { // means that nextCommit != null
                 try {
-                    this.getDiffs(commit, nextCommit, nextNextCommit);
+                    this.getDiffs(commit, nextCommit);
                 } catch (IOException | GitAPIException e) {
                     throw new RuntimeException(e);
                 }
@@ -123,7 +122,6 @@ public class GitCommitReader {
             }
 
             firstCommit = false;
-            nextNextCommit = nextCommit;
             nextCommit = commit;
 
         }
@@ -131,7 +129,7 @@ public class GitCommitReader {
         // handle first commit (where there's no previous commit)
         if (!(maxNumCommits > 0 && numCommits >= maxNumCommits)) {
             try {
-                this.getDiffs(null, nextCommit, nextNextCommit);
+                this.getDiffs(null, nextCommit);
             } catch (IOException | GitAPIException e) {
                 throw new RuntimeException(e);
             }
@@ -154,7 +152,7 @@ public class GitCommitReader {
 //        ClassEntity dummyClassEntity = new ClassEntity("dummy");
 
         for (CommitInfo commitInfo : gitDiffAssociationRules.getCommitInfos()){
-            Set<ClassEntity> classEntitySet = commitInfo.getClassesAndCommits().keySet();
+            Set<ClassEntity> classEntitySet = commitInfo.getClasses();
             // TODO - fix size complexity - currently O(n^2), seems excessive
             for (ClassEntity outerClassEntity : classEntitySet){
                 for (ClassEntity innerClassEntity : classEntitySet){
@@ -204,9 +202,8 @@ public class GitCommitReader {
      * Similar to the command: git diff <previous-commit> <new-commit>
      * @param previousCommit    previous commit (might be null)
      * @param currentCommit     current commit
-     * @param futureCommit      future commit
      */
-    private void getDiffs(RevCommit previousCommit, RevCommit currentCommit, RevCommit futureCommit) throws IOException, GitAPIException {
+    private void getDiffs(RevCommit previousCommit, RevCommit currentCommit) throws IOException, GitAPIException {
 
         Repository repository = git.getRepository();
 
@@ -247,20 +244,11 @@ public class GitCommitReader {
             formatter.format(entry);
 //            System.out.println(outputStream.toString());
 
-            CommitDiffInfo commitDiffInfo = new CommitDiffInfo(
-                    currentCommit.getId().getName(),
-                    currentCommit.getAuthorIdent().getName(),
-                    currentCommit.getCommitTime(),
-                    currentCommit.getShortMessage(),
-                    entry.getOldPath(), entry.getNewPath(),
-                    outputStream.toString()
-            );
-
-            if (commitDiffInfo.getCommitType() != CommitType.DELETE && graphGenerator != null) { // Note: deletes will not have their code details stored
+            if (CommitInfo.determineCommitType(entry.getOldPath(), entry.getNewPath()) != CommitType.DELETE && graphGenerator != null) { // Note: deletes will not have their code details stored
                 ClassEntity classEntity = getClassEntity(entry.getNewPath());
                 if (classEntity != null) {
                     classEntity.addCommitInfo(commitInfo);
-                    commitInfo.addClassCommitPair(classEntity, commitDiffInfo);
+                    commitInfo.addClass(classEntity);
                     gitDiffAssociationRules.addClassEntity(classEntity);
                 }
             }
