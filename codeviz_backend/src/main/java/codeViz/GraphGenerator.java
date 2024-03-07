@@ -4,6 +4,10 @@ import codeViz.entity.ClassEntity;
 import codeViz.entity.Entity;
 import codeViz.entity.EntityType;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import codeViz.entity.*;
+import codeViz.gitHistory.CommitInfo;
+//import codeViz.gitHistory.GitCommitReader;
+import codeViz.gitHistory.GitCommitReader;
 import org.gephi.graph.api.*;
 import org.gephi.project.api.ProjectController;
 import org.openide.util.Lookup;
@@ -26,6 +30,11 @@ public class GraphGenerator {
     private final LinkedHashMap<String, Entity> methodEntities;
     private String searchValue;
 
+    // details on the most recently generated graph
+    // Note: can also store node details here if needed
+    private ArrayList<Entity> edgeSources;
+    private ArrayList<Entity> edgeDestinations;
+
     /**
      * Create an EntityGraphGenerator
      * @author Thanuja Sivaananthan
@@ -34,7 +43,10 @@ public class GraphGenerator {
         packageEntities = new LinkedHashMap<>();
         classEntities = new LinkedHashMap<>();
         methodEntities = new LinkedHashMap<>();
-        this.searchValue = "";
+        searchValue = "";
+
+        edgeSources = new ArrayList<>();
+        edgeDestinations = new ArrayList<>();
     }
 
     /**
@@ -97,16 +109,87 @@ public class GraphGenerator {
     /**
      * Convert entities to directedGraph format
      *
+     * @param entityType entityType to create graph from
+     * @param gitHistory whether viewing git history graph or not
+     * @return directed graph
      * @author Thanuja Sivaananthan
-     * @param entityType    entityType to create graph from
-     * @return              directed graph
      */
-    public DirectedGraph entitiesToNodes(EntityType entityType){
-        // NOTE: assuming all entities are properly set up with connections already
+    public DirectedGraph entitiesToNodes(EntityType entityType, boolean gitHistory) {
         LinkedHashMap<String, Entity> entities = getEntities(entityType);
+        return entitiesToNodes(entities, gitHistory);
+    }
+
+    /**
+     * Generate an inner graph for a specific parent node.
+     * The following level pairs are supported:
+     * parentEntity: PACKAGE, childLevel: CLASS
+     * parentEntity: PACKAGE, childLevel: METHOD
+     * parentEntity: CLASS, childLevel: METHOD
+     * @param parentEntity  the entity to generate the inner graph for
+     * @param childLevel    the level of the inner graph
+     * @param gitHistory whether viewing git history graph or not
+     * @return              resulting directed graph
+     */
+    private DirectedGraph entitiesToNodes(Entity parentEntity, EntityType childLevel, boolean gitHistory) {
+
+        // combinations that do not work
+        if (parentEntity.getEntityType().equals(EntityType.METHOD) // 3 - method - any
+                || parentEntity.getEntityType().equals(EntityType.CLASS) && childLevel.equals(EntityType.PACKAGE) // 1 - class - package
+                || parentEntity.getEntityType().equals(childLevel)) // 2 - x - x
+        {
+            return null;
+        }
+
+        System.out.println("get entities within " + parentEntity.getKey());
+        LinkedHashMap<String, Entity> entities = new LinkedHashMap<>();
+        if (parentEntity != null) { // keep this check just in case
+            if (parentEntity.getEntityType().equals(EntityType.PACKAGE)) {
+                if (childLevel.equals(EntityType.CLASS)) { // package - class
+                    PackageEntity packageEntity = (PackageEntity) parentEntity;
+                    Set<ClassEntity> classEntities1 = packageEntity.getClasses();
+                    for (Entity entityInner : classEntities1) {
+                        entities.put(entityInner.getKey(), entityInner);
+                    }
+                } else if (childLevel.equals(EntityType.METHOD)) { // package - method
+                    PackageEntity packageEntity = (PackageEntity) parentEntity;
+                    Set<ClassEntity> classEntities1 = packageEntity.getClasses();
+                    for (ClassEntity classEntityInner : classEntities1) {
+                        Set<MethodEntity> methodEntities1 = classEntityInner.getMethods();
+                        for (Entity entityInner : methodEntities1) {
+                            entities.put(entityInner.getKey(), entityInner);
+                        }
+                    }
+                }
+            } else if (parentEntity.getEntityType().equals(EntityType.CLASS)) { // class - method
+                ClassEntity classEntity = (ClassEntity) parentEntity;
+                Set<MethodEntity> methodEntities1 = classEntity.getMethods();
+                for (Entity entityInner : methodEntities1) {
+                    entities.put(entityInner.getKey(), entityInner);
+                }
+            }
+        } else {
+            System.out.println("ERROR, parentEntity null ");
+        }
+        if (entities.isEmpty()){
+            System.out.println("EMPTY entities list");
+        }
+        return entitiesToNodes(entities, gitHistory);
+    }
+
+
+
+    private DirectedGraph entitiesToNodes(LinkedHashMap<String, Entity> entities, boolean gitHistory){
+        // NOTE: assuming all entities are properly set up with connections already
+
+        if (entities.isEmpty()){
+            return null;
+        }
 
         List<Node> nodes = new ArrayList<>();
         List<Edge> edges = new ArrayList<>();
+
+        edgeSources = new ArrayList<>();
+        edgeDestinations = new ArrayList<>();
 
         ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
         pc.newProject();
@@ -138,13 +221,28 @@ public class GraphGenerator {
         // 2. create edges for each pair
         for (String entityKey : entities.keySet()){
             Entity entity = entities.get(entityKey);
-            for (Map.Entry<Entity, Integer> entry : entity.getConnectedEntitiesAndWeights().entrySet()){
+
+            Set<Map.Entry<Entity, Float>> connectedEntities = entity.getConnectedEntitiesAndWeights().entrySet();
+            if (gitHistory && entity.getEntityType().equals(EntityType.CLASS)){
+                connectedEntities = entity.getGitConnectedEntitiesAndWeights().entrySet(); // TODO - move to diff location
+            }
+
+            for (Map.Entry<Entity, Float> entry : connectedEntities){
 
                 Entity connectedEntity = entry.getKey();
-                int weight = entry.getValue();
-                int type = (int) 1f; // not sure what the type field should be
-                Edge edge = graphModel.factory().newEdge(entity.getGephiNode(), connectedEntity.getGephiNode(), type, weight, true);
-                edges.add(edge);
+                // FIXME what if connected entities doesn't exist in inner graph?
+                //  could add immediate connections
+                //  could simply not include those nodes/edges that aren't in the inner graph
+
+                if (nodes.contains(connectedEntity.getGephiNode())) { // only add edge if the other node exists
+                    float weight = entry.getValue();
+                    int type = (int) 1f; // not sure what the type field should be
+                    Edge edge = graphModel.factory().newEdge(entity.getGephiNode(), connectedEntity.getGephiNode(), type, weight, true);
+
+                    edgeSources.add(entity);
+                    edgeDestinations.add(connectedEntity);
+                    edges.add(edge);
+                }
             }
         }
 
@@ -338,23 +436,66 @@ public class GraphGenerator {
         return entities;
     }
 
-    public String getNodeDetails(String nodeName, EntityType entityType) {
+    public Entity getNode(String nodeName, EntityType entityType) {
         LinkedHashMap<String, Entity> entities = getEntities(entityType);
 
         String[] newNodeNames = nodeName.split("_", 2);
         if (newNodeNames.length != 2){
-            return "INVALID NAME, " + nodeName + " LENGTH IS " + newNodeNames.length;
+            System.out.println("INVALID NAME, " + nodeName + " LENGTH IS " + newNodeNames.length);
+            return null;
         }
 
         nodeName = newNodeNames[1];
         Entity entity = entities.getOrDefault(nodeName, null);
 
         if (entity == null){
-            return "KEY DOESN'T EXIST FOR " + nodeName;
+            System.out.println("KEY DOESN'T EXIST FOR " + nodeName);
+            return null;
         }
 
-        return entity.toString(); //"FOUND KEY FOR " + nodeName;
+        return entity;
+    }
 
+    public String getNodeDetails(String nodeName, EntityType entityType) {
+        // FIXME - duplicated code
+        Entity entity = getNode(nodeName, entityType);
+        if (entity == null){
+            return "";
+        } else {
+            return entity.toString();
+        }
+    }
+
+    public String getEdgeDetails(String edgeName) {
+        String[] newNodeNames = edgeName.split("_");
+        if (newNodeNames.length != 3){
+            System.out.println("INVALID NAME, " + edgeName + " LENGTH IS " + newNodeNames.length);
+            return "";
+        }
+
+        edgeName = newNodeNames[2];
+
+        int edgeId = Integer.parseInt(edgeName);
+
+        if (edgeSources.size() < edgeId){
+            System.out.println("INVALID EDGE ID, " + edgeId + " IS GREATER THAN " + edgeSources.size());
+            return "";
+        }
+
+        Entity edgeSource = edgeSources.get(edgeId);
+        Entity edgeDestination = edgeDestinations.get(edgeId);
+
+        float weight = edgeSource.getGitConnectedEntitiesAndWeights().get(edgeDestination) / GitCommitReader.getWeightAdjuster();
+
+        String edgeDetails = "Association Rule Mining Score: " + weight + "\n";
+
+        for (CommitInfo sourceStorage : edgeSource.getCommitInfos()){
+            if (edgeDestination.getCommitInfos().contains(sourceStorage)){
+                return edgeDetails + sourceStorage.toString();
+            }
+        }
+
+        return "ERROR, this pair doesn't share a recent commit";
     }
 
     /**
@@ -373,8 +514,9 @@ public class GraphGenerator {
         boolean isFound = false;
 
         for (Entity entity : entities.values()){
-            if (entity.isHighlighed()){
+            if (entity.isHighlighed()) {
                 isFound = true;
+                break;
             }
         }
 
@@ -387,6 +529,37 @@ public class GraphGenerator {
         }
         result += TextAnnotate.RESET.javaText + TextAnnotate.BOLD_OFF.javaText;
         return result;
+    }
+
+    /**
+     * Generate a code graph at a specific level
+     *
+     * @param newLevel   the level to generate the code graph at
+     * @param filename   the filename to save the gexf file as
+     * @param gitHistory whether viewing git history graph or not
+     */
+    public void directedGraphToGexf(EntityType newLevel, String filename, boolean gitHistory) {
+        DirectedGraph directedGraph = entitiesToNodes(newLevel, gitHistory);
+        if (directedGraph != null) {
+            directedGraphToGexf(directedGraph, filename);
+        }
+    }
+
+    /**
+     * Generate a filtered code graph at a specific level
+     * @param parentEntity the parent entity to filter the graph to
+     * @param childLevel the level to generate the code graph at
+     * @param filename the filename to save the gexf file as
+     * @param gitHistory whether viewing git history graph or not
+     * @return  boolean, whether the filtered graph was successfully generated
+     */
+    public boolean directedGraphToGexf(Entity parentEntity, EntityType childLevel, String filename, boolean gitHistory) {
+        DirectedGraph directedGraph = entitiesToNodes(parentEntity, childLevel, gitHistory);
+        if (directedGraph != null) {
+            directedGraphToGexf(directedGraph, filename);
+            return true;
+        }
+        return false;
     }
 
     public ClassEntity changeInterfaceToClassEntity(ClassOrInterfaceDeclaration classOrInterfaceDeclaration){

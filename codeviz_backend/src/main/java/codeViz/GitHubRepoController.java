@@ -346,10 +346,6 @@ public class GitHubRepoController {
         return filePaths;
     }
 
-    public void generateGraph(EntityType entityType, String filename){
-        graphGenerator.directedGraphToGexf(graphGenerator.entitiesToNodes(entityType), filename);
-    }
-
     public void generateEntitiesAndConnections(){
         //graphGenerator.clearEntities();
         updatePackageConnections();

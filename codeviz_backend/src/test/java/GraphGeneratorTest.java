@@ -100,7 +100,7 @@ public class GraphGeneratorTest {
     @Test
     public void testDirectedGraph(){
 
-        DirectedGraph directedGraph = graphGenerator.entitiesToNodes(EntityType.CLASS);
+        DirectedGraph directedGraph = graphGenerator.entitiesToNodes(EntityType.CLASS, false);
 
         assertEquals(4, directedGraph.getNodeCount());
         assertEquals(3, directedGraph.getEdgeCount());
@@ -208,11 +208,11 @@ public class GraphGeneratorTest {
     public void testGetNodeDetails(){
 
         // incorrect format
-        assertEquals("INVALID NAME, invalid LENGTH IS 1", graphGenerator.getNodeDetails("invalid", EntityType.PACKAGE));
+        assertEquals("", graphGenerator.getNodeDetails("invalid", EntityType.PACKAGE));
 
         // key doesn't exist
-        assertEquals("KEY DOESN'T EXIST FOR invalid", graphGenerator.getNodeDetails("1_invalid", EntityType.PACKAGE));
-        assertEquals("KEY DOESN'T EXIST FOR student", graphGenerator.getNodeDetails("1_student", EntityType.PACKAGE));
+        assertEquals("", graphGenerator.getNodeDetails("1_invalid", EntityType.PACKAGE));
+        assertEquals("", graphGenerator.getNodeDetails("1_student", EntityType.PACKAGE));
 
         String personDetails = graphGenerator.getNodeDetails("1_person", EntityType.PACKAGE);
         System.out.println(personDetails);

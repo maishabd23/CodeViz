@@ -15,6 +15,7 @@ import forceAtlas2 from "graphology-layout-forceatlas2";
 // Load external GEXF file:
 function GraphViz() {
   const [data, setData] = useState(null);
+  const initialNodeMessage = "Hover over a node to view its details. Select the node to view the filtered graph at the inner level."
 
   useEffect(() => {
     // Make the API request when the component loads
@@ -57,6 +58,7 @@ function GraphViz() {
         const renderer = new Sigma(graph, container, {
           minCameraRatio: 0.1,
           maxCameraRatio: 10,
+          enableEdgeEvents: true,
         });
         const camera = renderer.getCamera();
         renderer.refresh(); // to make sure graph appears right away
@@ -68,12 +70,35 @@ function GraphViz() {
         //  - save in the dragged node in the state
         renderer.on("downNode", (e) => {
           selectedNode = e.node;
-          // graph.setNodeAttribute(draggedNode, "highlighted", true);
+          fetch('/api/generateInnerGraph?nodeName=' + selectedNode.toString());
+        });
+
+        renderer.on("enterNode", (e) => {
+          selectedNode = e.node;
           fetch('/api/getNodeDetails?nodeName=' + selectedNode.toString())
               .then((response) => response.json())
               .then((responseData) => {
                 document.getElementById("nodeDetails").innerHTML = responseData.string;
               });
+        });
+
+
+        renderer.on("enterEdge", (e) => {
+          fetch('/api/getEdgeDetails?edgeName=' + e.edge.toString())
+              .then((response) => response.json())
+              .then((responseData) => {
+                if (responseData.string) {
+                  document.getElementById("nodeDetails").innerHTML = responseData.string;
+                }
+              });
+        });
+
+        renderer.on("leaveEdge", () => {
+          document.getElementById("nodeDetails").innerHTML = initialNodeMessage;
+        });
+
+        renderer.on("leaveNode", () => {
+          document.getElementById("nodeDetails").innerHTML = initialNodeMessage;
         });
   
         // Bind zoom manipulation buttons
@@ -103,7 +128,52 @@ function GraphViz() {
           labelsThresholdRange.step = document.getElementById("step").value;
         });
 
+        setHoveredNeighbours(graph, renderer);
       };
+
+      function setHoveredNeighbours(graph, renderer){
+
+        // display hovered node's neighbours
+        let hoveredNode = undefined;
+        let hoveredNeighbors = undefined;
+
+        // Bind graph interactions:
+        renderer.on("enterNode", ({ node }) => {
+          setHoveredNode(node);
+        });
+        renderer.on("leaveNode", () => {
+          setHoveredNode(undefined);
+        });
+
+        function setHoveredNode(node) {
+          if (node) {
+            hoveredNode = node;
+            hoveredNeighbors = new Set(graph.neighbors(node));
+          } else {
+            hoveredNode = undefined;
+            hoveredNeighbors = undefined;
+          }
+          // Refresh rendering:
+          renderer.refresh();
+        }
+
+        renderer.setSetting("nodeReducer", (node, data) => {
+          const res = { ...data };
+          if (hoveredNeighbors && !hoveredNeighbors.has(node) && hoveredNode !== node) {
+            res.label = "";
+            res.color = "#C9CDD4"; // should be a little darker than the css colour #E6EAF1
+          }
+          return res;
+        });
+
+        renderer.setSetting("edgeReducer", (edge, data) => {
+          const res = { ...data };
+          if (hoveredNode && !graph.hasExtremity(edge, hoveredNode)) {
+            res.hidden = true; // could set as a colour instead
+          }
+          return res;
+        });
+      }
   
       fetchData();
     }, []);
@@ -149,10 +219,12 @@ function GraphViz() {
           <div className="node-help">
             <h2 className="h2">Node Details:</h2>
             <img src="/info-icon.png" alt='icon' className="info--icon" />
-            <p className='tooltip-node'>Information on the node such as class/package that it belongs to and methods within it (if applicable)</p> 
+            <p className='tooltip-node'>Information on an node such as class/package that it belongs to and methods within it (if applicable)
+            <br/>If the 'Git History' graph is displayed, information on the most recent commit between two nodes.
+            </p>
           </div>
             <p id="nodeDetails">
-            Select a node to view its details
+              {initialNodeMessage}
             </p>
         </div>
         </div>

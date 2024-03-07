@@ -3,7 +3,7 @@ package codeViz.entity;
 import codeViz.gitHistory.CommitInfo;
 
 import java.awt.*;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -22,8 +22,8 @@ public class ClassEntity extends Entity {
     public ClassEntity(String name, PackageEntity packageEntity){
         super(name, EntityType.CLASS);
         this.packageEntity = packageEntity;
-        this.fields = new HashSet<>();
-        this.methods = new HashSet<>();
+        this.fields = new LinkedHashSet<>();
+        this.methods = new LinkedHashSet<>();
         this.superClass = null;
 
         if (packageEntity != null){
@@ -37,6 +37,10 @@ public class ClassEntity extends Entity {
 
     public void addConnectedEntity(ClassEntity classEntity) {
         super.addConnectedEntity(classEntity);
+    }
+
+    public void addGitConnectedEntity(ClassEntity classEntity, float weight) {
+        super.addGitConnectedEntity(classEntity, weight);
     }
 
     public PackageEntity getPackageEntity() {
@@ -122,6 +126,10 @@ public class ClassEntity extends Entity {
         return false;
     }
 
+    /**
+     * Only class entities can add commit info
+     * @param commitInfo    commit info to add
+     */
     @Override
     public void addCommitInfo(CommitInfo commitInfo){
         super.addCommitInfo(commitInfo);
@@ -148,5 +156,15 @@ public class ClassEntity extends Entity {
                 fieldsString +
                 methodsString
                 ;
+    }
+
+    @Override
+    public String getKey() {
+        String name = getName();
+        if (packageEntity == null){
+            return getName();
+        } else {
+            return packageEntity.getKey() + "." + name;
+        }
     }
 }

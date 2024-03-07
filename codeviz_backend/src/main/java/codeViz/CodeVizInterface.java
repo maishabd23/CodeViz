@@ -2,10 +2,7 @@ package codeViz;
 
 import codeViz.entity.Entity;
 import codeViz.entity.EntityType;
-import codeViz.gitHistory.CommitInfo;
 import codeViz.gitHistory.GitCommitReader;
-
-import java.util.ArrayList;
 
 /**
  * CodeViz Interface that connects the CodeViz classes to the CodeVizController
@@ -15,6 +12,7 @@ public class CodeVizInterface {
     private JavaBytecodeReader javaBytecodeReader;
     private GraphGenerator graphGenerator;
     private GitCommitReader gitCommitReader;
+    private Entity selectedNode;
     private boolean success;
 
     private GitHubRepoController gitHubRepoController;
@@ -26,7 +24,7 @@ public class CodeVizInterface {
         this.graphGenerator = gitHubRepoController.getGraphGenerator();
         this.gitCommitReader = new GitCommitReader(graphGenerator);
         this.success = true; // FIXME - change back to false once stuff are working
-
+        this.selectedNode = null;
     }
 
     /**
@@ -67,9 +65,44 @@ public class CodeVizInterface {
         }
     }
 
-    public void generateGraph(EntityType entityType, String filename){
+    /**
+     * Generate graph
+     *
+     * @param newLevel   the level to generate the graph at
+     * @param filename   the filename to save the gexf file as
+     * @param gitHistory whether viewing git history graph or not
+     */
+    public void generateGraph(EntityType newLevel, String filename, boolean gitHistory){
         if (success) {
-            graphGenerator.directedGraphToGexf(graphGenerator.entitiesToNodes(entityType), filename);
+            // if already looking at the inner level of a selected node, keep doing that
+            if (selectedNode != null && selectedNode.getEntityType().getChild().equals(newLevel)){
+                graphGenerator.directedGraphToGexf(selectedNode, newLevel, filename, gitHistory);
+            } else {
+                selectedNode = null;
+                graphGenerator.directedGraphToGexf(newLevel, filename, gitHistory);
+            }
+        }
+    }
+
+    /**
+     * Generate graph filtered to a specific node
+     * @param nodeName          the name of the node to filter the graph at
+     * @param parentLevel       the level of the node
+     * @param childLevel        the inner level to generate the graph for
+     * @param filename          the filename to save the gexf file as
+     */
+    public void generateInnerGraph(String nodeName, EntityType parentLevel, EntityType childLevel, String filename, boolean gitHistory){
+        selectedNode = graphGenerator.getNode(nodeName, parentLevel);
+        if (success) {
+            graphGenerator.directedGraphToGexf(selectedNode, childLevel, filename, gitHistory);
+        }
+    }
+
+    public String getSelectedNodeToString() {
+        if (selectedNode != null) {
+            return selectedNode.getKey();
+        } else {
+            return "";
         }
     }
 
@@ -83,5 +116,13 @@ public class CodeVizInterface {
 
     public void clearSearch() {
         graphGenerator.clearSearch();
+    }
+
+    public void clearSelectedNode() {
+        selectedNode = null;
+    }
+
+    public String getEdgeDetails(String edgeName) {
+        return graphGenerator.getEdgeDetails(edgeName);
     }
 }
