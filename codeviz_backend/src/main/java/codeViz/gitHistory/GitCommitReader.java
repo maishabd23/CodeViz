@@ -128,6 +128,15 @@ public class GitCommitReader {
 
         }
 
+        // handle first commit (where there's no previous commit)
+        if (!(maxNumCommits > 0 && numCommits >= maxNumCommits)) {
+            try {
+                this.getDiffs(null, nextCommit, nextNextCommit);
+            } catch (IOException | GitAPIException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         // after storing all the commits and classes, now store the connections between classes and git commits
         // this will be used to annotate the code graph (how a change of entities is correlated)
         addGitHistoryConnections();
@@ -193,7 +202,7 @@ public class GitCommitReader {
 
     /**
      * Similar to the command: git diff <previous-commit> <new-commit>
-     * @param previousCommit    previous commit
+     * @param previousCommit    previous commit (might be null)
      * @param currentCommit     current commit
      * @param futureCommit      future commit
      */
@@ -307,11 +316,13 @@ public class GitCommitReader {
         // from the commit we can build the tree which allows us to construct the TreeParser
 
         RevWalk walk = new RevWalk(repository);
-        ObjectId treeId = commit.getTree().getId();
-
         CanonicalTreeParser treeParser = new CanonicalTreeParser();
         ObjectReader reader = repository.newObjectReader();
-        treeParser.reset(reader, treeId);
+
+        if (commit != null){ // not first commit
+            ObjectId treeId = commit.getTree().getId();
+            treeParser.reset(reader, treeId);
+        }
 
         walk.dispose();
 

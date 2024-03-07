@@ -79,9 +79,15 @@ public class GitHistoryTest {
         // TODO - check the commit / class contains each other
         assertTrue(4 <= bufferedImageCustom.getCommitInfos().size());
         assertTrue(16 <= calculator.getCommitInfos().size());
-//        assertTrue((3+1) <= simpleJavaCalculator.getCommitInfos().size());
+        assertTrue((3+1) <= simpleJavaCalculator.getCommitInfos().size());
         assertTrue((31+2) <= ui.getCommitInfos().size());
         assertTrue(2 <= calculatorTest.getCommitInfos().size());
+
+        // check first commit
+        CommitInfo initialCommit = simpleJavaCalculator.getCommitInfos().get(simpleJavaCalculator.getCommitInfos().size()-1);
+        assertEquals("d1396a2d26495ce900c516042607c1f3031dd4c4", initialCommit.getId());
+        assertEquals("Initial Commit", initialCommit.getMessage());
+
     }
 
     /**

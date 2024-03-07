@@ -50,6 +50,10 @@ public class CommitInfo {
         return id;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
     public Map<ClassEntity, CommitDiffInfo> getClassesAndCommits() {
         return classesAndCommits;
     }
