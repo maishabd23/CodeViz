@@ -35,7 +35,8 @@ public class GitCommitReader {
 
     private Git git;
     private final GraphGenerator graphGenerator;
-    private LinkedHashMap<String, String> renamedClassEntityNames;
+    private final LinkedHashMap<String, String> renamedClassEntityNames;
+    private final Set<String> deletedClasses;
     private GitDiffAssociationRules gitDiffAssociationRules;
     private static final int WEIGHT_ADJUSTER = 2;
 
@@ -46,6 +47,7 @@ public class GitCommitReader {
     public GitCommitReader(GraphGenerator graphGenerator){
         this.graphGenerator = graphGenerator;
         this.renamedClassEntityNames = new LinkedHashMap<>();
+        this.deletedClasses = new HashSet<>();
         this.gitDiffAssociationRules = new GitDiffAssociationRules();
     }
 
@@ -244,7 +246,10 @@ public class GitCommitReader {
             formatter.format(entry);
 //            System.out.println(outputStream.toString());
 
-            if (CommitInfo.determineCommitType(entry.getOldPath(), entry.getNewPath()) != CommitType.DELETE && graphGenerator != null) { // Note: deletes will not have their code details stored
+            if (CommitInfo.determineCommitType(entry.getOldPath(), entry.getNewPath()) == CommitType.DELETE){ // Note: deletes will not have their code details stored
+                System.out.println("DELETED CLASS " + entry.getOldPath());
+                deletedClasses.add(entry.getOldPath());
+            } else if (graphGenerator != null) {
                 ClassEntity classEntity = getClassEntity(entry.getNewPath());
                 if (classEntity != null) {
                     classEntity.addCommitInfo(commitInfo);
@@ -294,7 +299,9 @@ public class GitCommitReader {
         }
 
         // TODO - test renamed files
-        System.out.println("COULD NOT FIND " + fullFilename);
+        if (!deletedClasses.contains(fullFilename)) {
+            System.out.println("COULD NOT FIND " + fullFilename);
+        }
 
         return null;
     }
