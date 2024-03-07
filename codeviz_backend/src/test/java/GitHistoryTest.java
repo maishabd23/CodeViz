@@ -70,24 +70,42 @@ public class GitHistoryTest {
         assertNotEquals(0, ui.getCommitInfos().size());
         assertNotEquals(0, calculatorTest.getCommitInfos().size());
 
-        System.out.println("bufferedImageCustom: " + bufferedImageCustom.getCommitInfos().size());
-        System.out.println("calculator: " + calculator.getCommitInfos().size());
-        System.out.println("simpleJavaCalculator: " + simpleJavaCalculator.getCommitInfos().size());
-        System.out.println("ui: " + ui.getCommitInfos().size());
-        System.out.println("calculatorTest: " + calculatorTest.getCommitInfos().size());
-
-        // TODO - check the commit / class contains each other
+        // there may be more commmits (ex. merge commits)
         assertTrue(4 <= bufferedImageCustom.getCommitInfos().size());
         assertTrue(16 <= calculator.getCommitInfos().size());
         assertTrue((3+1) <= simpleJavaCalculator.getCommitInfos().size());
         assertTrue((31+2) <= ui.getCommitInfos().size());
         assertTrue(2 <= calculatorTest.getCommitInfos().size());
 
-        // check first commit
+        // check most recent commits in simpleJavaCalculator
+        CommitInfo simpleCalculatorCommit = simpleJavaCalculator.getCommitInfos().get(0);
+        assertEquals("24530f4376ce1f8b325cc501805ab3b28e586fb4", simpleCalculatorCommit.getId());
+        assertEquals("Update SimpleJavaCalculator.java", simpleCalculatorCommit.getMessage());
+        assertEquals(1, simpleCalculatorCommit.getClasses().size());
+        assertTrue(simpleCalculatorCommit.getClasses().contains(simpleJavaCalculator));
+
+        simpleCalculatorCommit = simpleJavaCalculator.getCommitInfos().get(1);
+        assertEquals("ed0fc7c381b4bffbfd474b0c0a34538ba62434e1", simpleCalculatorCommit.getId());
+        assertEquals("Fix indentation", simpleCalculatorCommit.getMessage());
+        assertEquals(3, simpleCalculatorCommit.getClasses().size());
+        assertTrue(simpleCalculatorCommit.getClasses().contains(calculator));
+        assertTrue(simpleCalculatorCommit.getClasses().contains(simpleJavaCalculator));
+        assertTrue(simpleCalculatorCommit.getClasses().contains(ui));
+
+        simpleCalculatorCommit = simpleJavaCalculator.getCommitInfos().get(2);
+        assertEquals("4803a27a370a32f50d4ea628b7bb7540778d8c77", simpleCalculatorCommit.getId());
+        assertEquals("Project was migrated to Netbeans", simpleCalculatorCommit.getMessage());
+        assertEquals(2, simpleCalculatorCommit.getClasses().size());
+        assertTrue(simpleCalculatorCommit.getClasses().contains(simpleJavaCalculator));
+        assertTrue(simpleCalculatorCommit.getClasses().contains(ui));
+
+        // check the initial commit (also checks that the package/class renames were stored with the correct classes)
         CommitInfo initialCommit = simpleJavaCalculator.getCommitInfos().get(simpleJavaCalculator.getCommitInfos().size()-1);
         assertEquals("d1396a2d26495ce900c516042607c1f3031dd4c4", initialCommit.getId());
         assertEquals("Initial Commit", initialCommit.getMessage());
-
+        assertEquals(2, initialCommit.getClasses().size());
+        assertTrue(initialCommit.getClasses().contains(simpleJavaCalculator));
+        assertTrue(initialCommit.getClasses().contains(ui));
     }
 
     /**
@@ -105,8 +123,6 @@ public class GitHistoryTest {
         // pairs: key = old name, value = new name
         assertEquals("src/simplejavacalculator/SimpleJavaCalculator.java", renamedClasses.get("Calculator/src/ph/calculator/Main.java"));
         assertEquals("src/simplejavacalculator/UI.java", renamedClasses.get("Calculator/src/ph/calculator/UI.java"));
-
-        // TODO test that the renames actually work
     }
 
     /**
@@ -127,7 +143,5 @@ public class GitHistoryTest {
 
         // no git connections (BufferedImageCustom has few connections)
         assertFalse(ui.getGitConnectedEntitiesAndWeights().containsKey(bufferedImageCustom));
-
-        // TODO - test association rule mining
     }
 }

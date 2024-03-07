@@ -149,10 +149,7 @@ public class GitCommitReader {
 
         // for each pair of entities, want to store the diffs of each in a list
         // that can be used for correlation analysis after?
-        MultiKeyMap classesAndDiffPairs = new MultiKeyMap(); // NOTE: has some limitations, try to only use locally
-//        LinkedHashMap<ClassEntity, ClassEntity> classesPairs = new LinkedHashMap<>(); // TODO - test and switch from MultiKeyMap to this
-//        ClassEntity dummyClassEntity = new ClassEntity("dummy");
-
+        var classesAndDiffPairs = new MultiKeyMap(); // NOTE: has some limitations, try to only use locally
         for (CommitInfo commitInfo : gitDiffAssociationRules.getCommitInfos()){
             Set<ClassEntity> classEntitySet = commitInfo.getClasses();
             // TODO - fix size complexity - currently O(n^2), seems excessive
@@ -166,21 +163,14 @@ public class GitCommitReader {
                         || classesAndDiffPairs.containsKey(innerClassEntity, outerClassEntity))){
                         classesAndDiffPairs.put(outerClassEntity, innerClassEntity, 0);
                     }
-
-//                    if (!classesPairs.getOrDefault(outerClassEntity, dummyClassEntity).equals(innerClassEntity) &&
-//                            !classesPairs.getOrDefault(innerClassEntity, dummyClassEntity).equals(outerClassEntity)){
-//                        classesPairs.put(outerClassEntity, innerClassEntity);
-//                    }
                 }
             }
         }
 
-        System.out.println("Done getting git diff pairs!");
+        System.out.println("Done getting git diff pairs! Size " + classesAndDiffPairs.size());
 
-//        for (ClassEntity classEntity1 : classesPairs.keySet()){
-//            ClassEntity classEntity2 = classesPairs.get(classEntity1);
         for (Object object : classesAndDiffPairs.keySet()){
-            MultiKey multiKey = (MultiKey) object;
+            var multiKey = (MultiKey) object;
             ClassEntity classEntity1 = (ClassEntity) multiKey.getKey(0);
             ClassEntity classEntity2 = (ClassEntity) multiKey.getKey(1);
 
@@ -220,7 +210,7 @@ public class GitCommitReader {
                         setPathFilter(PathSuffixFilter.create(".java")).
                 call();
 
-        RenameDetector renameDetector = new RenameDetector(repository); // TODO - test renamed files
+        RenameDetector renameDetector = new RenameDetector(repository);
         renameDetector.addAll(diff);
         diff = renameDetector.compute();
 
@@ -298,7 +288,6 @@ public class GitCommitReader {
 
         }
 
-        // TODO - test renamed files
         if (!deletedClasses.contains(fullFilename)) {
             System.out.println("COULD NOT FIND " + fullFilename);
         }
