@@ -36,7 +36,7 @@ public class CodeVizInterface {
      * @return boolean, whether the entity generation was successful
      */
     public void generateEntitiesAndConnections(String folderName, String localDirectory, int maxNumCommits) {
-        String repoURl = "https://github.com/maishabd23/online-bookstore";
+        String repoURl = "https://github.com/martinmimigames/little-music-player";
         gitHubRepoController.analyzeCodebase(gitHubRepoController.retrieveGitHubCodebase(repoURl));
         gitHubRepoController.generateEntitiesAndConnections();
 //        boolean success = javaBytecodeReader.generateEntitiesAndConnections(folderName);

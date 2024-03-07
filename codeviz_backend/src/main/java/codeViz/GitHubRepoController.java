@@ -3,7 +3,9 @@ package codeViz;
 import codeViz.entity.*;
 import com.github.javaparser.ParseResult;
 
+import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
+import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.*;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -192,57 +195,6 @@ public class GitHubRepoController {
     }
 
 
-    private void createPackageConnections() throws IOException {
-        JavaParser javaParser = new JavaParser();
-
-        // HashMap to store package connections
-        HashMap<PackageEntity, Set<PackageEntity>> connectedPackages = new HashMap<>();
-
-        for (byte[] entryContent : entryContentsList) {
-            String code = new String(entryContent, StandardCharsets.UTF_8);
-            ParseResult<CompilationUnit> parseResult = javaParser.parse(new StringReader(code));
-
-            if (parseResult.isSuccessful()) {
-                CompilationUnit compilationUnit = parseResult.getResult().get();
-
-                // Extract package information from the compilation unit
-                String currentPackageName = compilationUnit.getPackageDeclaration()
-                        .map(pd -> pd.getName().toString())
-                        .orElse("");
-
-                // Iterate over imports to identify external package dependencies
-                compilationUnit.getImports().forEach(importDeclaration -> {
-                    String importedPackageName = importDeclaration.getNameAsString();
-                    // Extract the package name from the import statement
-                    String importedPackage = importedPackageName.substring(0, importedPackageName.lastIndexOf('.'));
-                    // Assuming that the package structure is the same as the folder structure
-                    // Create PackageEntity objects for both current and imported packages
-                    PackageEntity currentPackage = new PackageEntity(currentPackageName);
-                    PackageEntity imported = new PackageEntity(importedPackage);
-
-                    // Add the imported package to the connected packages of the current package
-                    connectedPackages.computeIfAbsent(currentPackage, k -> new HashSet<>()).add(imported);
-                });
-            } else {
-                // Handle parsing errors
-                parseResult.getProblems().forEach(problem -> {
-                    System.err.println("Parsing error: " + problem.getMessage());
-                });
-            }
-        }
-
-        // Print out package connections
-        for (Map.Entry<PackageEntity, Set<PackageEntity>> entry : connectedPackages.entrySet()) {
-            System.out.println("PACKAGE CONNECTIONS");
-            System.out.println("----------------------------------------------");
-            String key = entry.getKey().getName();
-            String value = entry.getValue().toString();
-            System.out.println("Package=" + key + ", Connected Packages=" + value);
-            System.out.println("----------------------------------------------");
-        }
-    }
-
-
 
     private void createClassConnections() throws IOException {
         JavaParser javaParser = new JavaParser();
@@ -295,6 +247,24 @@ public class GitHubRepoController {
                                 });
                             }
                         });
+
+                        classDeclaration.getMethods().forEach(methodDeclaration -> {
+                            // Connect method entities based on method invocations
+                            MethodEntity methodEntity = (MethodEntity) graphGenerator.getMethodEntities().get(methodDeclaration.getNameAsString());
+                            methodDeclaration.accept(new VoidVisitorAdapter<Void>() {
+                                @Override
+                                public void visit(MethodCallExpr methodCallExpr, Void arg) {
+                                    super.visit(methodCallExpr, arg);
+                                    String calledMethodName = methodCallExpr.getNameAsString();
+                                    // Assuming the method entity is available in the graph generator
+                                    MethodEntity calledMethodEntity = (MethodEntity) graphGenerator.getMethodEntities().get(calledMethodName);
+                                    if (calledMethodEntity != null) {
+                                        // Add called method entity to the connected entities of the current method entity
+                                        methodEntity.addConnectedEntity(calledMethodEntity);
+                                    }
+                                }
+                            }, null);
+                        });
                     }
                 });
             } else {
@@ -311,7 +281,6 @@ public class GitHubRepoController {
             String value = entry.getValue().toString();
             System.out.println("Class=" + key + ", Connected Classes=" + value);
             System.out.println("----------------------------------------------");
-
         }
     }
 
@@ -406,6 +375,7 @@ public class GitHubRepoController {
             }
         }
     }
+
 
     private void updatePackageConnections(){
         Collection<Entity> packageEntities = graphGenerator.getPackageEntities().values();
