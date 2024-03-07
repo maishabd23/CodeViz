@@ -15,7 +15,8 @@ import forceAtlas2 from "graphology-layout-forceatlas2";
 // Load external GEXF file:
 function GraphViz() {
   const [data, setData] = useState(null);
-  const initialNodeMessage = "Hover over a node to view its details. Select the node to view the filtered graph at the inner level."
+  const initialNodeMessage = "Hover over a node to view its details. Select the node to view the filtered graph at the inner level." +
+      "<br/>If the 'Git History' graph is displayed, hover over an edge to view its details."
 
   useEffect(() => {
     // Make the API request when the component loads
@@ -217,7 +218,7 @@ function GraphViz() {
         </div>
         <div id="nodeDetailsDisplay">
           <div className="node-help">
-            <h2 className="h2">Node Details:</h2>
+            <h2 className="h2">Node/Edge Details:</h2>
             <img src="/info-icon.png" alt='icon' className="info--icon" />
             <p className='tooltip-node'>Information on an node such as class/package that it belongs to and methods within it (if applicable)
             <br/>If the 'Git History' graph is displayed, information on the most recent commit between two nodes.

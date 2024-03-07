@@ -35,7 +35,8 @@ public class GitCommitReader {
 
     private Git git;
     private final GraphGenerator graphGenerator;
-    private LinkedHashMap<String, String> renamedClassEntityNames;
+    private final LinkedHashMap<String, String> renamedClassEntityNames;
+    private final Set<String> deletedClasses;
     private GitDiffAssociationRules gitDiffAssociationRules;
     private static final int WEIGHT_ADJUSTER = 2;
 
@@ -46,6 +47,7 @@ public class GitCommitReader {
     public GitCommitReader(GraphGenerator graphGenerator){
         this.graphGenerator = graphGenerator;
         this.renamedClassEntityNames = new LinkedHashMap<>();
+        this.deletedClasses = new HashSet<>();
         this.gitDiffAssociationRules = new GitDiffAssociationRules();
     }
 
@@ -101,7 +103,6 @@ public class GitCommitReader {
         }
         boolean firstCommit = true;
         RevCommit nextCommit = null;
-        RevCommit nextNextCommit = null;
 
         int numCommits = 0;
 
@@ -114,7 +115,7 @@ public class GitCommitReader {
 
             if (!firstCommit) { // means that nextCommit != null
                 try {
-                    this.getDiffs(commit, nextCommit, nextNextCommit);
+                    this.getDiffs(commit, nextCommit);
                 } catch (IOException | GitAPIException e) {
                     throw new RuntimeException(e);
                 }
@@ -123,9 +124,17 @@ public class GitCommitReader {
             }
 
             firstCommit = false;
-            nextNextCommit = nextCommit;
             nextCommit = commit;
 
+        }
+
+        // handle first commit (where there's no previous commit)
+        if (!(maxNumCommits > 0 && numCommits >= maxNumCommits)) {
+            try {
+                this.getDiffs(null, nextCommit);
+            } catch (IOException | GitAPIException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         // after storing all the commits and classes, now store the connections between classes and git commits
@@ -140,12 +149,9 @@ public class GitCommitReader {
 
         // for each pair of entities, want to store the diffs of each in a list
         // that can be used for correlation analysis after?
-        MultiKeyMap classesAndDiffPairs = new MultiKeyMap(); // NOTE: has some limitations, try to only use locally
-//        LinkedHashMap<ClassEntity, ClassEntity> classesPairs = new LinkedHashMap<>(); // TODO - test and switch from MultiKeyMap to this
-//        ClassEntity dummyClassEntity = new ClassEntity("dummy");
-
+        var classesAndDiffPairs = new MultiKeyMap(); // NOTE: has some limitations, try to only use locally
         for (CommitInfo commitInfo : gitDiffAssociationRules.getCommitInfos()){
-            Set<ClassEntity> classEntitySet = commitInfo.getClassesAndCommits().keySet();
+            Set<ClassEntity> classEntitySet = commitInfo.getClasses();
             // TODO - fix size complexity - currently O(n^2), seems excessive
             for (ClassEntity outerClassEntity : classEntitySet){
                 for (ClassEntity innerClassEntity : classEntitySet){
@@ -157,21 +163,14 @@ public class GitCommitReader {
                         || classesAndDiffPairs.containsKey(innerClassEntity, outerClassEntity))){
                         classesAndDiffPairs.put(outerClassEntity, innerClassEntity, 0);
                     }
-
-//                    if (!classesPairs.getOrDefault(outerClassEntity, dummyClassEntity).equals(innerClassEntity) &&
-//                            !classesPairs.getOrDefault(innerClassEntity, dummyClassEntity).equals(outerClassEntity)){
-//                        classesPairs.put(outerClassEntity, innerClassEntity);
-//                    }
                 }
             }
         }
 
-        System.out.println("Done getting git diff pairs!");
+        System.out.println("Done getting git diff pairs! Size " + classesAndDiffPairs.size());
 
-//        for (ClassEntity classEntity1 : classesPairs.keySet()){
-//            ClassEntity classEntity2 = classesPairs.get(classEntity1);
         for (Object object : classesAndDiffPairs.keySet()){
-            MultiKey multiKey = (MultiKey) object;
+            var multiKey = (MultiKey) object;
             ClassEntity classEntity1 = (ClassEntity) multiKey.getKey(0);
             ClassEntity classEntity2 = (ClassEntity) multiKey.getKey(1);
 
@@ -193,11 +192,10 @@ public class GitCommitReader {
 
     /**
      * Similar to the command: git diff <previous-commit> <new-commit>
-     * @param previousCommit    previous commit
+     * @param previousCommit    previous commit (might be null)
      * @param currentCommit     current commit
-     * @param futureCommit      future commit
      */
-    private void getDiffs(RevCommit previousCommit, RevCommit currentCommit, RevCommit futureCommit) throws IOException, GitAPIException {
+    private void getDiffs(RevCommit previousCommit, RevCommit currentCommit) throws IOException, GitAPIException {
 
         Repository repository = git.getRepository();
 
@@ -212,7 +210,7 @@ public class GitCommitReader {
                         setPathFilter(PathSuffixFilter.create(".java")).
                 call();
 
-        RenameDetector renameDetector = new RenameDetector(repository); // TODO - test renamed files
+        RenameDetector renameDetector = new RenameDetector(repository);
         renameDetector.addAll(diff);
         diff = renameDetector.compute();
 
@@ -238,20 +236,14 @@ public class GitCommitReader {
             formatter.format(entry);
 //            System.out.println(outputStream.toString());
 
-            CommitDiffInfo commitDiffInfo = new CommitDiffInfo(
-                    currentCommit.getId().getName(),
-                    currentCommit.getAuthorIdent().getName(),
-                    currentCommit.getCommitTime(),
-                    currentCommit.getShortMessage(),
-                    entry.getOldPath(), entry.getNewPath(),
-                    outputStream.toString()
-            );
-
-            if (commitDiffInfo.getCommitType() != CommitType.DELETE && graphGenerator != null) { // Note: deletes will not have their code details stored
+            if (CommitInfo.determineCommitType(entry.getOldPath(), entry.getNewPath()) == CommitType.DELETE){ // Note: deletes will not have their code details stored
+                System.out.println("DELETED CLASS " + entry.getOldPath());
+                deletedClasses.add(entry.getOldPath());
+            } else if (graphGenerator != null) {
                 ClassEntity classEntity = getClassEntity(entry.getNewPath());
                 if (classEntity != null) {
                     classEntity.addCommitInfo(commitInfo);
-                    commitInfo.addClassCommitPair(classEntity, commitDiffInfo);
+                    commitInfo.addClass(classEntity);
                     gitDiffAssociationRules.addClassEntity(classEntity);
                 }
             }
@@ -296,8 +288,9 @@ public class GitCommitReader {
 
         }
 
-        // TODO - test renamed files
-        System.out.println("COULD NOT FIND " + fullFilename);
+        if (!deletedClasses.contains(fullFilename)) {
+            System.out.println("COULD NOT FIND " + fullFilename);
+        }
 
         return null;
     }
@@ -307,11 +300,13 @@ public class GitCommitReader {
         // from the commit we can build the tree which allows us to construct the TreeParser
 
         RevWalk walk = new RevWalk(repository);
-        ObjectId treeId = commit.getTree().getId();
-
         CanonicalTreeParser treeParser = new CanonicalTreeParser();
         ObjectReader reader = repository.newObjectReader();
-        treeParser.reset(reader, treeId);
+
+        if (commit != null){ // not first commit
+            ObjectId treeId = commit.getTree().getId();
+            treeParser.reset(reader, treeId);
+        }
 
         walk.dispose();
 

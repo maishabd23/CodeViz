@@ -1,6 +1,5 @@
 package codeViz;
 
-import codeViz.gitHistory.CommitDiffInfo;
 import codeViz.gitHistory.GitCommitReader;
 
 // For backend testing
