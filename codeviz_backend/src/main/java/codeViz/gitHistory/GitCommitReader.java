@@ -265,7 +265,7 @@ public class GitCommitReader {
 
     /**
      * Get the classEntity that corresponds with the filename
-     * @param fullFilename      the filename
+     * @param fullFilename      the filename of the Java Class
      * @return  the classEntity, or null if it doesn't exist in the graph generator
      */
     private ClassEntity getClassEntity(String fullFilename) {
@@ -280,14 +280,20 @@ public class GitCommitReader {
         LinkedHashMap<String, Entity> packages = graphGenerator.getPackageEntities();
         LinkedHashMap<String, Entity> classes = graphGenerator.getClassEntities();
 
+        // Note: need to iterate over each folder (fileSection)
+        // because the valid package name might start in an inner folder.
+        // This makes sure we know that we are starting at a valid package/class name
         String keyName = "";
         for (String fileSection : fileSections){
-            keyName += fileSection.replace(".java", "");
-            if (packages.containsKey(keyName) || classes.containsKey(keyName)){
-                System.out.println("FOUND ENTITY FOR " + fullFilename + " AS " + keyName);
+            fileSection = fileSection.replace(".java", "");
+            keyName += fileSection;
+            if (packages.containsKey(keyName) || classes.containsKey(fileSection)){ // TODO - change back to key name here and in GitHubRepoController
 
-                if (classes.containsKey(keyName)){
-                    return (ClassEntity) classes.get(keyName);
+                if (classes.containsKey(fileSection)){
+                    System.out.println("FOUND CLASS FOR " + fullFilename + " AS " + keyName);
+                    return (ClassEntity) classes.get(fileSection);
+                } else {
+                    System.out.println("FOUND PACKAGE FOR " + fullFilename + " AS " + keyName);
                 }
                 keyName += ".";
             } else {

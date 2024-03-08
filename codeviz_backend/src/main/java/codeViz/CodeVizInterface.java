@@ -37,6 +37,8 @@ public class CodeVizInterface {
         String repoURl = "https://github.com/martinmimigames/little-music-player";
         gitHubRepoController.analyzeCodebase(gitHubRepoController.retrieveGitHubCodebase(repoURl));
         gitHubRepoController.generateEntitiesAndConnections();
+        String tokenPassword = ""; // empty string for public repos
+        gitCommitReader.extractCommitHistory(repoURl, tokenPassword, maxNumCommits);
 //        boolean success = javaBytecodeReader.generateEntitiesAndConnections(folderName);
 //        if (success){
 //            gitCommitReader.extractCommitHistory(localDirectory, maxNumCommits);
