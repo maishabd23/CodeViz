@@ -49,6 +49,7 @@ public class ClassEntity extends Entity {
 
     public void setSuperClass(ClassEntity superClass) {
         this.superClass = superClass;
+        superClass.incrementSize();
     }
 
     public ClassEntity getSuperClass() {
@@ -139,6 +140,7 @@ public class ClassEntity extends Entity {
 
     public void addField(ClassEntity field) {
         this.fields.add(field);
+        incrementSize();
     }
 
 
