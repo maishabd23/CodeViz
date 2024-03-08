@@ -72,6 +72,10 @@ public abstract class Entity {
         this.size += SIZE_INCREMENT;
     }
 
+    public static int getSizeIncrement() {
+        return SIZE_INCREMENT;
+    }
+
     public int getSize() {
         return size;
     }

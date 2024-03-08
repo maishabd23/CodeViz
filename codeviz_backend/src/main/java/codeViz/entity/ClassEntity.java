@@ -140,6 +140,7 @@ public class ClassEntity extends Entity {
 
     public void addField(ClassEntity field) {
         this.fields.add(field);
+        incrementSize();
     }
 
 
