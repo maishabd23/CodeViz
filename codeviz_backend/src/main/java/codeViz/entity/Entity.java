@@ -17,6 +17,8 @@ public abstract class Entity {
     private final Map<Entity, Float> connectedEntitiesAndWeights; //stores the weight of connections
 
     private int size;
+    private static final int SIZE_INCREMENT = 2;
+
     private final Color colour;
     private static final Color HIGHLIGHED_COLOUR = new Color(255,255,50);
     private boolean isHighlighed;
@@ -39,7 +41,7 @@ public abstract class Entity {
         this.name = name;
         this.entityType = entityType;
         this.connectedEntitiesAndWeights = new LinkedHashMap<>();
-        this.size = 1;
+        this.size = SIZE_INCREMENT;
         this.colour = getRandomColour();
         this.isHighlighed = false;
         // NOTE: might want to move within ClassEntity
@@ -66,8 +68,8 @@ public abstract class Entity {
     }
 
 
-    public void incrementSize(){
-        this.size += 1;
+    protected void incrementSize(){
+        this.size += SIZE_INCREMENT;
     }
 
     public int getSize() {
@@ -202,7 +204,6 @@ public abstract class Entity {
         float initialWeight = connectedEntitiesAndWeights.getOrDefault(entity, (float) 0);
         //System.out.println(initialWeight);
         connectedEntitiesAndWeights.put(entity, initialWeight + 1);
-        incrementSize();
     }
 
     protected void addGitConnectedEntity(Entity entity, float weight){
