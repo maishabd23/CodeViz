@@ -102,20 +102,26 @@ public class CodeVizController {
      * Search at the current level of the graph
      * Updates the displayed code graph
      * @param searchValue       the search value
-     * @param detailed          whether the search is detailed or not
      * @return                  string response, message of the search result
      */
     @CrossOrigin
     @GetMapping("/api/searchGraph")
-    public Map<String, String> searchGraph(@RequestParam(name = "searchValue", required = false, defaultValue = "") String searchValue,
-                                              @RequestParam(name = "detailed", required = false, defaultValue = "false") boolean detailed)
-    {
+    public Map<String, String> searchGraph(
+            @RequestParam(name = "searchValue", required = false, defaultValue = "") String searchValue,
+            @RequestParam(name = "searchClasses", required = false, defaultValue = "false") boolean searchClasses,
+            @RequestParam(name = "searchMethods", required = false, defaultValue = "false") boolean searchMethods,
+            @RequestParam(name = "searchAttributes", required = false, defaultValue = "false") boolean searchAttributes,
+            @RequestParam(name = "searchParameters", required = false, defaultValue = "false") boolean searchParameters,
+            @RequestParam(name = "searchReturnType", required = false, defaultValue = "false") boolean searchReturnType,
+            @RequestParam(name = "searchConnections", required = false, defaultValue = "false") boolean searchConnections
+    ) {
         Map<String, String> response = new HashMap<>();
 
         if (success) {
             if (!searchValue.isEmpty()) {
                 System.out.println("SEARCHING FOR " + searchValue);
-                codeVizInterface.performSearch(searchValue, detailed);
+                codeVizInterface.performSearch(searchValue, searchClasses, searchMethods, searchAttributes,
+                        searchParameters, searchReturnType, searchConnections);
             }
             codeVizInterface.generateGraph(currentLevel, GEXF_FILE, this.gitHistory);
         }

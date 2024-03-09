@@ -167,4 +167,18 @@ public class ClassEntity extends Entity {
             return packageEntity.getKey() + "." + name;
         }
     }
+    /**
+     * Check if the class has a field with the given name.
+     *
+     * @param name Name of the attribute to check for.
+     * @return true if the attribute exists, false otherwise.
+     */
+    public boolean hasAttributeWithName(String name) {
+        for (ClassEntity field : fields) {
+            if (field.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

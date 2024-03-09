@@ -334,7 +334,7 @@ public class GraphGenerator {
     }
 
 
-    /**
+    /*
      * Perform a search on a given entity type
      * Note: is case-sensitive
      *
@@ -342,7 +342,7 @@ public class GraphGenerator {
      * @param entities         the entities to search
      * @param isDetailedSearch if the search is detailed or not
      * @author Thanuja Sivaananthan
-     */
+
     private void performSearch(String searchValue, LinkedHashMap<String, Entity> entities, boolean isDetailedSearch){
         for (String entityKey : entities.keySet()) {
             Entity entity = entities.get(entityKey);
@@ -356,13 +356,12 @@ public class GraphGenerator {
         }
     }
 
-    /**
      * Perform a search
      *
      * @param searchValue      the search value
      * @param isDetailedSearch if the search is detailed or not
      * @author Thanuja Sivaananthan
-     */
+
     public void performSearch(String searchValue, boolean isDetailedSearch) {
         // start a fresh search
         clearSearch();
@@ -372,6 +371,54 @@ public class GraphGenerator {
         performSearch(searchValue, classEntities, isDetailedSearch);
         performSearch(searchValue, methodEntities, isDetailedSearch);
     }
+*/
+    public void performSearch(String searchValue, boolean searchClasses, boolean searchMethods, boolean searchAttributes,
+                              boolean searchParameters, boolean searchReturnType, boolean searchConnections) {
+        clearSearch(); // Clear previous search results
+
+        // Start the search based on entity levels and their attributes
+        if (searchClasses) {
+            performSearchOnEntities(searchValue, classEntities, searchAttributes, false, false);
+        }
+        if (searchMethods || searchParameters || searchReturnType) {
+            performSearchOnEntities(searchValue, methodEntities, false, searchParameters, searchReturnType);
+        }
+        if (searchConnections) {
+            performSearchOnEntities(searchValue, packageEntities, false, false, false);
+        }
+    }
+
+    /**
+     * A helper method to perform search on a collection of entities
+     */
+    private void performSearchOnEntities(String searchValue, LinkedHashMap<String, Entity> entities,
+                                         boolean searchAttributes, boolean searchParameters, boolean searchReturnType) {
+        for (Entity entity : entities.values()) {
+            boolean isHighlighted = entity.nameContains(searchValue); // Simplified the condition
+
+            if (entity instanceof ClassEntity && searchAttributes) {
+                ClassEntity classEntity = (ClassEntity) entity;
+                if (classEntity.hasAttributeWithName(searchValue)) {
+                    isHighlighted = true;
+                }
+            }
+
+            if (entity instanceof MethodEntity) {
+                MethodEntity methodEntity = (MethodEntity) entity;
+                if (searchParameters && methodEntity.hasParameterWithName(searchValue)) {
+                    isHighlighted = true;
+                }
+                if (searchReturnType && methodEntity.hasReturnTypeWithName(searchValue)) {
+                    isHighlighted = true;
+                }
+            }
+
+            entity.setHighlighed(isHighlighted);
+        }
+    }
+
+
+
 
     /**
      * Clear any previous searches

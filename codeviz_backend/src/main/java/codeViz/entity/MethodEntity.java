@@ -2,6 +2,7 @@ package codeViz.entity;
 
 import java.awt.Color;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -103,4 +104,20 @@ public class MethodEntity extends Entity {
         String name = getName();
         return classEntity.getKey() + "." + name;
     }
+    // Check if the method has a parameter with the given name
+    // In MethodEntity class
+    public boolean hasParameterWithName(String name) {
+        for (ClassEntity argument : arguments) {
+            if (argument.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Check if the method's return type has the given name
+    public boolean hasReturnTypeWithName(String name) {
+        return returnType != null && returnType.getName().equals(name);
+    }
+
 }

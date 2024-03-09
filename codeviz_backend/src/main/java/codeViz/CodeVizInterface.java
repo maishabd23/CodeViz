@@ -51,10 +51,18 @@ public class CodeVizInterface {
         return success;
     }
 
-
+    /*
     public void performSearch(String searchValue, boolean isDetailedSearch) {
         if (success) {
             graphGenerator.performSearch(searchValue, isDetailedSearch);
+        }
+    }
+*/
+    public void performSearch(String searchValue, boolean searchClasses, boolean searchMethods, boolean searchAttributes,
+                              boolean searchParameters, boolean searchReturnType, boolean searchConnections) {
+        if (success) {
+            graphGenerator.performSearch(searchValue, searchClasses, searchMethods, searchAttributes,
+                    searchParameters, searchReturnType, searchConnections);
         }
     }
 
