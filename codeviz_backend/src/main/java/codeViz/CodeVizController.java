@@ -178,6 +178,7 @@ public class CodeVizController {
         if (currentLevel.getChild() != null){
             EntityType newLevel = currentLevel.getChild();
             System.out.println("Generate inner graph for " + nodeName + " at " + currentLevel);
+            gitHistory = false; // default git history is false
             codeVizInterface.generateInnerGraph(nodeName, currentLevel, newLevel, GEXF_FILE, gitHistory);
             currentLevel = newLevel;
         }
