@@ -19,9 +19,6 @@ public class PackageEntity extends Entity {
 
         this.classes = new LinkedHashSet<>();
         this.superpackage = superpackage;
-        if (superpackage != null) {
-            superpackage.incrementSize();
-        }
     }
 
     public PackageEntity(String name){

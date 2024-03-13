@@ -78,14 +78,10 @@ public class MethodEntity extends Entity {
 
     public void addArgument(ClassEntity argument) {
         this.arguments.add(argument);
-        incrementSize();
     }
 
     public void setReturnType(ClassEntity returnType) {
         this.returnType = returnType;
-        if (!returnType.getName().equals("void")){
-            incrementSize();
-        }
     }
 
 
