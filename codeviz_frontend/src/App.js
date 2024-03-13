@@ -65,19 +65,14 @@ function App() {
     // Render the form if not submitted, otherwise render Navbar and MainSection
     return (
         <div className="App">
-            {submitted ? (
-                <>
-                    <Navbar />
-                    <MainSection />
-                </>
-            ) : (
-                <>
-                    <input type="text" value={repoURL} onChange={handleRepoURLChange} placeholder="Enter Repository URL" />
-                    <button onClick={handleSubmit} disabled={loading}>Submit</button>
-                    {error && <p className="error">{error}</p>}
-                    {loading && <p>Loading...</p>}
-                </>
-            )}
+            <>
+                <input type="text" value={repoURL} onChange={handleRepoURLChange} placeholder="Enter Repository URL" />
+                <button onClick={handleSubmit} disabled={loading}>Submit</button>
+                {error && <p className="error">{error}</p>}
+                {loading && <p>Loading...</p>}
+                <Navbar />
+                <MainSection />
+            </>
         </div>
     );
 }
