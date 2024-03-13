@@ -1,9 +1,7 @@
 package codeViz;
 import codeViz.entity.EntityType;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,20 +17,49 @@ public class CodeVizController {
     private final CodeVizInterface codeVizInterface;
     private boolean success;
     private boolean gitHistory;
-    public CodeVizController(){
+
+    private String repoURL;
+
+    private boolean isDisplayingGraph = false;
+
+    public CodeVizController() {
         this.codeVizInterface = new CodeVizInterface();
-        this.success = true; // TODO - change to false after target can be chosen
+        this.success = true; // Change to false after target can be chosen
         this.gitHistory = false;
 
-        // TODO - only call this method when a new target is chosen
-        //success = codeVizInterface.generateEntitiesAndConnections(currentTarget, currentSrc, 50);
-        codeVizInterface.generateEntitiesAndConnections(currentTarget, currentSrc, 50);
+//        // Call generateEntitiesAndConnections method with repoURL
+//        codeVizInterface.generateEntitiesAndConnections(currentTarget, repoURL, currentSrc, 50);
+//        codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory); // FIXME
+    }
+
+    @CrossOrigin
+    @PostMapping("/init")
+    public Map<String, String> initController(@RequestBody Map<String, String> requestBody) {
+        this.repoURL = requestBody.get("repoURL");
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("isSuccessful", "true");
+
+        System.out.println("THE REPO URL WAS SENT TO BACKEND " + repoURL);
+
+        // Call generateEntitiesAndConnections method with repoURL
+        codeVizInterface.generateEntitiesAndConnections(currentTarget, this.repoURL, currentSrc, 50);
         codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory); // FIXME
+
+        this.isDisplayingGraph = true;
+        return responseBody;
     }
 
     @GetMapping("/")
     public String index() {
         return "Welcome to the CodeViz API";
+    }
+
+    @CrossOrigin
+    @GetMapping("/api/isDisplayingGraph")
+    public Map<String, String> isDisplayingGraph() {
+        Map<String, String> response = new HashMap<>();
+        response.put("isSuccessful", String.valueOf(isDisplayingGraph));
+        return response; //each API call returns a JSON object that the React app parses
     }
 
     @CrossOrigin
@@ -65,7 +92,7 @@ public class CodeVizController {
         if (!targetFolder.isEmpty() && !targetFolder.equals(currentTarget)){
             System.out.println("GENERATING FOR "  + targetFolder); // TODO - allow user to enter own path / github url
             //success = codeVizInterface.generateEntitiesAndConnections(targetFolder, currentSrc, 10);
-            codeVizInterface.generateEntitiesAndConnections(targetFolder, currentSrc, 20);
+            codeVizInterface.generateEntitiesAndConnections(targetFolder, repoURL, currentSrc, 20);
         }
 
         if (success) {

@@ -54,14 +54,14 @@ public class GitCommitReader {
      * @param localDirectory    the local directory to read from
      * @param maxNumCommits the number of commits to get the history from, -1 if all commits
      */
-    public void extractCommitHistory(String localDirectory, int maxNumCommits){
-        try {
-            git = Git.init().setDirectory(new File(localDirectory)).call();
-        } catch (GitAPIException e) {
-            throw new RuntimeException(e);
-        }
-        storeCommitHistory(maxNumCommits);
-    }
+//    public void extractCommitHistory(String localDirectory, int maxNumCommits){
+//        try {
+//            git = Git.init().setDirectory(new File(localDirectory)).call();
+//        } catch (GitAPIException e) {
+//            throw new RuntimeException(e);
+//        }
+//        storeCommitHistory(maxNumCommits);
+//    }
 
     /**
      * Read commit history via gitHub
