@@ -1,6 +1,5 @@
 package codeViz;
 import codeViz.entity.EntityType;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -9,16 +8,12 @@ import java.util.Map;
 @RestController
 public class CodeVizController {
 
-    private static final String currentSrc = "./"; // weird things happen in intelliJ's project/vcs if I try setting this as anything else like ./codeviz_backend, ./codeviz_backend/src, etc
-    private String currentTarget = "./codeviz_backend/target/classes/codeViz/";
     private EntityType currentLevel = EntityType.CLASS;
     private static final String GEXF_FILE = "./codeviz_frontend/public/codeviz_demo.gexf";
 
     private final CodeVizInterface codeVizInterface;
     private boolean success;
     private boolean gitHistory;
-
-    private String repoURL;
 
     private boolean isDisplayingGraph = false;
 
@@ -27,23 +22,27 @@ public class CodeVizController {
         this.success = true; // Change to false after target can be chosen
         this.gitHistory = false;
 
-//        // Call generateEntitiesAndConnections method with repoURL
-//        codeVizInterface.generateEntitiesAndConnections(currentTarget, repoURL, currentSrc, 50);
 //        codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory); // FIXME
     }
 
+    /**
+     * Input a new repo url
+     * @author Maisha Abdullah
+     * @param requestBody   request body
+     * @return              response, whether it was successful
+     */
     @CrossOrigin
     @PostMapping("/init")
     public Map<String, String> initController(@RequestBody Map<String, String> requestBody) {
-        this.repoURL = requestBody.get("repoURL");
+        String repoURL = requestBody.get("repoURL");
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("isSuccessful", "true");
 
         System.out.println("THE REPO URL WAS SENT TO BACKEND " + repoURL);
 
         // Call generateEntitiesAndConnections method with repoURL
-        codeVizInterface.generateEntitiesAndConnections(currentTarget, this.repoURL, currentSrc, 50);
-        codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory); // FIXME
+        codeVizInterface.generateEntitiesAndConnections(repoURL, 50);
+        codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory);
 
         this.isDisplayingGraph = true;
         return responseBody;
@@ -75,13 +74,11 @@ public class CodeVizController {
      * Select the level of the graph to view at
      * Returns the default code graph at the given level (no annotations, inner graphs, etc.)
      * @param level             either the PACKAGE, CLASS, or METHOD level
-     * @param targetFolder      the folder to generate the graph from
      * @return                  file response, name of gexf file
      */
     @CrossOrigin
     @GetMapping("/api/viewGraphLevel")
-    public Map<String, String> viewGraphLevel(@RequestParam(name = "level", required = false, defaultValue = "") String level,
-                                              @RequestParam(name = "targetFolder", required = false, defaultValue = "") String targetFolder)
+    public Map<String, String> viewGraphLevel(@RequestParam(name = "level", required = false, defaultValue = "") String level)
     {
         Map<String, String> response = new HashMap<>();
 
@@ -89,16 +86,7 @@ public class CodeVizController {
             currentLevel = EntityType.valueOf(level);
         }
 
-        if (!targetFolder.isEmpty() && !targetFolder.equals(currentTarget)){
-            System.out.println("GENERATING FOR "  + targetFolder); // TODO - allow user to enter own path / github url
-            //success = codeVizInterface.generateEntitiesAndConnections(targetFolder, currentSrc, 10);
-            codeVizInterface.generateEntitiesAndConnections(targetFolder, repoURL, currentSrc, 20);
-        }
-
         if (success) {
-            if (!targetFolder.isEmpty()) {
-                currentTarget = targetFolder; // only if it's a valid non-empty path, update target
-            }
 
             codeVizInterface.clearSelectedNode(); // clicking the level buttons will clear any filters
             // TODO - also clear searches? (could be useful to keep search results when viewing other levels)

@@ -9,17 +9,15 @@ import codeViz.gitHistory.GitCommitReader;
  * Note: This class should not introduce any new behavior, only follow existing behavior set by the CodeViz classes
  */
 public class CodeVizInterface {
-    private JavaBytecodeReader javaBytecodeReader;
-    private GraphGenerator graphGenerator;
-    private GitCommitReader gitCommitReader;
+    private final GraphGenerator graphGenerator;
+    private final GitCommitReader gitCommitReader;
+    private final GitHubRepoController gitHubRepoController;
+
     private Entity selectedNode;
     private boolean success;
 
-    private GitHubRepoController gitHubRepoController;
 
     public CodeVizInterface(){
-        this.javaBytecodeReader = new JavaBytecodeReader();
-        //this.graphGenerator = javaBytecodeReader.getGraphGenerator();
         this.gitHubRepoController = new GitHubRepoController();
         this.graphGenerator = gitHubRepoController.getGraphGenerator();
         this.gitCommitReader = new GitCommitReader(graphGenerator);
@@ -30,10 +28,9 @@ public class CodeVizInterface {
     /**
      * Generate the entities and connections between them AND annotate with local git history
      * @author Thanuja Sivaananthan
-     * @param folderName      folder name to get file paths from
-     * @return boolean, whether the entity generation was successful
+     * @author Maisha Abdullah
      */
-    public void generateEntitiesAndConnections(String folderName, String repoURL, String localDirectory, int maxNumCommits) {
+    public void generateEntitiesAndConnections(String repoURL, int maxNumCommits) {
         //String repoURl = "https://github.com/martinmimigames/little-music-player";
         System.out.println("THE REPO URL WAS SENT TO BACKEND IN CODE VIZ INTERFACE " + repoURL);
         graphGenerator.clearEntities(); //  making a new graph, clear all entities
@@ -41,26 +38,7 @@ public class CodeVizInterface {
         gitHubRepoController.generateEntitiesAndConnections();
         String tokenPassword = ""; // empty string for public repos
         gitCommitReader.extractCommitHistory(repoURL, tokenPassword, maxNumCommits);
-//        boolean success = javaBytecodeReader.generateEntitiesAndConnections(folderName);
-//        if (success){
-//            gitCommitReader.extractCommitHistory(localDirectory, maxNumCommits);
-//        }
-//        return success;
     }
-
-//    /**
-//     * Generate the entities and connections between them AND annotate with remote git history
-//     * @author Thanuja Sivaananthan
-//     * @param folderName      folder name to get file paths from
-//     * @return boolean, whether the entity generation was successful
-//     */
-//    public boolean generateEntitiesAndConnections(String folderName, String gitHubURI, String tokenPassword, int maxNumCommits) {
-//        boolean success = javaBytecodeReader.generateEntitiesAndConnections(folderName);
-//        if (success){
-//            gitCommitReader.extractCommitHistory(gitHubURI, tokenPassword, maxNumCommits);
-//        }
-//        return success;
-//    }
 
 
     public void performSearch(String searchValue, boolean isDetailedSearch) {
