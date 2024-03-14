@@ -101,16 +101,6 @@ function Menu() {
                     setMilestoneValue(responseData.string);
                 });
 
-            fetch('/api/isDisplayingGraph')
-                .then(response => response.json())
-                .then(responseData => {
-                    setSubmitted(responseData.string);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    setError(error.message || 'An unexpected error occurred');
-                });
-
             const search = document.getElementById("searchInput");
             search.addEventListener("search", mySearchFunction);
             function mySearchFunction() {
