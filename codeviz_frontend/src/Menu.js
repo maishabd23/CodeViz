@@ -1,8 +1,57 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 function Menu() {
     const [milestone, setMilestoneValue] = React.useState('m1');
     const [level, setLevel] = React.useState('Class');
+
+    //FOR VIEWING REPO
+    const [repoURL, setRepoURL] = useState('');
+    const [submitted, setSubmitted] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+
+    // Function to handle changes in the repoURL input field
+    const handleRepoURLChange = (e) => {
+        const newRepoURL = e.target.value;
+        setRepoURL(newRepoURL);
+    };
+
+    // Function to handle form submission
+    const handleSubmit = () => {
+        setLoading(true);
+        // Make a POST request to initialize CodeVizController with repoURL
+        const isSuccessful = fetch('/init', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({repoURL}),
+        })
+            .then(response => {
+                console.log(response);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Handle successful response
+                console.log("SUCCESS!");
+                console.log('Response data:', data);
+                setSubmitted(true);
+            })
+            .catch(error => {
+                // Handle error
+                console.error('Error:', error);
+                setError(error.message || 'An unexpected error occurred');
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+        console.log(isSuccessful)
+    };
+
 
     const handleM1Change = () => {
         fetch('/api/annotateGraph?gitHistory=false');
@@ -84,6 +133,22 @@ function Menu() {
     return (
         <div className='menu'>
             <h2>Menu</h2>
+            <div id="menu-controls">
+                <h3>View Repo</h3>
+                <table className="center">
+                    <tbody>
+                    <tr><td>
+                        <div className="help-display">
+                            <input type="text" value={repoURL} onChange={handleRepoURLChange} placeholder="Enter Repository URL" />
+                            <button onClick={handleSubmit} disabled={loading}>Submit</button>
+                            {error && <p className="error">{error}</p>}
+                            {loading && <p>Loading...</p>}
+                        </div>
+                    </td></tr>
+                    </tbody>
+                </table>
+            </div>
+
             {/*TODO - add submit button?*/}
             {/*TODO - remove duplicate search bars and use dropdown instead - either simple or detailed search*/}
             <div id="menu-controls">
@@ -111,7 +176,7 @@ function Menu() {
                     </td></tr>
                     </tbody>
                 </table>
-                        <p id="printSearch"></p>
+                <p id="printSearch"></p>
             </div>
 
             <div id="menu-controls">
@@ -149,7 +214,6 @@ function Menu() {
                     <img src="/info-icon.png" alt='icon' className="info--icon" />
                     <p className='tooltip'>Graph type to view. Note: Git History graph is only available for class view</p>
                 </div>
-
             </div>
         </div>
     );

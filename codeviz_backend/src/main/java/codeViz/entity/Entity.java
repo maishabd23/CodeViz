@@ -205,6 +205,9 @@ public abstract class Entity {
      * @param entity entity to add
      */
     protected void addConnectedEntity(Entity entity){
+        if (entity == null){
+            return;
+        }
         float initialWeight = connectedEntitiesAndWeights.getOrDefault(entity, (float) 0);
         //System.out.println(initialWeight);
         connectedEntitiesAndWeights.put(entity, initialWeight + 1);
