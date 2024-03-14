@@ -22,7 +22,8 @@ public class CodeVizController {
         this.success = true; // Change to false after target can be chosen
         this.gitHistory = false;
 
-//        codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory); // FIXME
+        // create empty graph on start-up
+        codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory);
     }
 
     /**

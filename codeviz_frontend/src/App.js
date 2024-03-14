@@ -50,18 +50,6 @@ function App() {
         console.log(isSuccessful)
     };
 
-    useEffect(() => {
-        fetch('/api/isDisplayingGraph')
-            .then(response => response.json())
-            .then(responseData => {
-                setSubmitted(responseData.string);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                setError(error.message || 'An unexpected error occurred');
-            });
-    }, []); // Empty dependency array ensures that this effect runs only once after the initial render
-
     // Render the form if not submitted, otherwise render Navbar and MainSection
     return (
         <div className="App">

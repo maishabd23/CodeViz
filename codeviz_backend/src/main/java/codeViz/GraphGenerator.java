@@ -170,9 +170,9 @@ public class GraphGenerator {
         } else {
             System.out.println("ERROR, parentEntity null ");
         }
-        if (entities.isEmpty()){
-            System.out.println("EMPTY entities list");
-        }
+//        if (entities.isEmpty()){
+//            System.out.println("EMPTY entities list");
+//        }
         return entitiesToNodes(entities, gitHistory);
     }
 
@@ -182,7 +182,8 @@ public class GraphGenerator {
         // NOTE: assuming all entities are properly set up with connections already
 
         if (entities.isEmpty()){
-            return null;
+            System.out.println("EMPTY entities list");
+            // allow empty graph to be created
         }
 
         List<Node> nodes = new ArrayList<>();
