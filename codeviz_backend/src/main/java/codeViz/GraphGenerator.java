@@ -25,9 +25,9 @@ public class GraphGenerator {
 
     // can look at the individual list when making that specific level's view
     // NOTE: kept all List types as Entity to allow for code reuse, might need to specify type as PackageEntity, etc, later on
-    private final LinkedHashMap<String, Entity> packageEntities;
-    private final LinkedHashMap<String, Entity> classEntities;
-    private final LinkedHashMap<String, Entity> methodEntities;
+    private LinkedHashMap<String, Entity> packageEntities;
+    private LinkedHashMap<String, Entity> classEntities;
+    private LinkedHashMap<String, Entity> methodEntities;
     private String searchValue;
 
     // details on the most recently generated graph
@@ -333,9 +333,13 @@ public class GraphGenerator {
      * @author Thanuja Sivaananthan
      */
     public void clearEntities() {
-        this.packageEntities.clear();
-        this.classEntities.clear();
-        this.methodEntities.clear();
+        packageEntities.clear();
+        classEntities.clear();
+        methodEntities.clear();
+
+        packageEntities = new LinkedHashMap<>();
+        classEntities = new LinkedHashMap<>();
+        methodEntities = new LinkedHashMap<>();
     }
 
 

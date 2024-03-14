@@ -31,8 +31,9 @@ import java.util.*;
  */
 public class GitCommitReader {
 
-    private static final String gitCloneDirectory = "./testgithistory"; // local directory to clone into
+    private static final String GIT_CLONE_DIR_PATH = "./testgithistory"; // local directory to clone into
 
+    private final File GIT_CLONE_DIRECTORY;
     private Git git;
     private final GraphGenerator graphGenerator;
     private LinkedHashMap<String, String> renamedClassEntityNames;
@@ -47,6 +48,7 @@ public class GitCommitReader {
         this.graphGenerator = graphGenerator;
         this.renamedClassEntityNames = new LinkedHashMap<>();
         this.gitDiffAssociationRules = new GitDiffAssociationRules();
+        this.GIT_CLONE_DIRECTORY = new File(GIT_CLONE_DIR_PATH);
     }
 
     /**
@@ -72,16 +74,17 @@ public class GitCommitReader {
     public void extractCommitHistory(String gitHubURI, String tokenPassword, int maxNumCommits){
         // TODO - make this properly secure
         try {
-            FileUtils.deleteDirectory(new File(gitCloneDirectory));
+            FileUtils.deleteDirectory(GIT_CLONE_DIRECTORY);
             this.git = Git.cloneRepository()
                     .setURI(gitHubURI)
                     .setCredentialsProvider(new UsernamePasswordCredentialsProvider(tokenPassword, ""))
-                    .setDirectory(new File(gitCloneDirectory))
+                    .setDirectory(GIT_CLONE_DIRECTORY)
                     .call();
         } catch (IOException | GitAPIException e) {
             throw new RuntimeException(e);
         }
         storeCommitHistory(maxNumCommits);
+        git.getRepository().close(); // close this, so a new repo can be visualized later
     }
 
     /**

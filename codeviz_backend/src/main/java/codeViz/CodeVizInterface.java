@@ -36,6 +36,7 @@ public class CodeVizInterface {
     public void generateEntitiesAndConnections(String folderName, String repoURL, String localDirectory, int maxNumCommits) {
         //String repoURl = "https://github.com/martinmimigames/little-music-player";
         System.out.println("THE REPO URL WAS SENT TO BACKEND IN CODE VIZ INTERFACE " + repoURL);
+        graphGenerator.clearEntities(); //  making a new graph, clear all entities
         gitHubRepoController.analyzeCodebase(gitHubRepoController.retrieveGitHubCodebase(repoURL));
         gitHubRepoController.generateEntitiesAndConnections();
         String tokenPassword = ""; // empty string for public repos

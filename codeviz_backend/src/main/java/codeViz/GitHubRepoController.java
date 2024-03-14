@@ -48,7 +48,7 @@ public class GitHubRepoController {
     private List<byte[]> entryContentsList = new ArrayList<>();
 
     public GitHubRepoController(){
-        this.graphGenerator = new GraphGenerator();
+        this.graphGenerator = new GraphGenerator(); // only set this once (clear entities each time a new graph is made)
         this.compilationUnit = new CompilationUnit();
         this.entryContentsList = new ArrayList<>();
         //this.zipEntry = new ZipEntry();
@@ -285,6 +285,11 @@ public class GitHubRepoController {
     }
 
     public void analyzeCodebase(byte[] codebase) {
+
+        // reset when analyzing new codebase
+        this.compilationUnit = new CompilationUnit();
+        this.entryContentsList = new ArrayList<>();
+
         try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(codebase)) {
             List<PackageEntity> packages = parseJavaFilesFromZip(byteArrayInputStream);
             createClassConnections();
