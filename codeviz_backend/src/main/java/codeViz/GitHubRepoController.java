@@ -1,7 +1,8 @@
 package codeViz;
 
+import codeViz.codeComplexity.CyclomaticComplexity.CyclomaticComplexityVisitor;
 import codeViz.entity.*;
-import com.github.javaparser.ParseResult;
+import com.github.javaparser.*;
 
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
@@ -144,6 +145,19 @@ public class GitHubRepoController {
                     MethodEntity methodEntity = new MethodEntity(methodDeclaration.getNameAsString(), classEntity);
                     boolean methodSuccess = graphGenerator.addEntity(methodEntity.getName(), methodEntity);
                     classEntity.addMethod(methodEntity);
+
+                    // Complexity Metrics: Lines of Code
+                    // includes blank lines and comments (not JavaDoc)
+                    Optional<Position> startPosition = methodDeclaration.getBegin();
+                    Optional<Position> endPosition = methodDeclaration.getEnd();
+                    if (startPosition.isPresent() && endPosition.isPresent()){
+                        int startLine = startPosition.get().line;
+                        int endLine = endPosition.get().line;
+                        int linesOfCode = endLine - startLine + 1;
+
+                        System.out.println("Method: " + methodDeclaration.getNameAsString() + ", Lines of Code: " + linesOfCode);
+                        methodEntity.getComplexityDetails().setLinesOfCode(linesOfCode);
+                    }
                 });
 
                 System.out.println("Class: " + classDeclaration.getNameAsString());
@@ -273,14 +287,15 @@ public class GitHubRepoController {
                 CyclomaticComplexityVisitor visitor = new CyclomaticComplexityVisitor();
                 visitor.visit(compilationUnit, null);
 
-                // M = E – N + 2P where E = the number of edges in the control flow graph
+                // Cyclomatic complexity
+                // CC = E – N + 2P where E = the number of edges in the control flow graph
                 //N = the number of nodes in the control flow graph
-                //P = the number of connected components
-
-                // Print cyclomatic complexity for each method
-                System.out.println("Cyclomatic complexity for methods:");
-                visitor.getMethodComplexities().forEach((methodName, complexity) ->
-                        System.out.println(methodName + ": " + complexity));
+                //P = the number of connected components                System.out.println("Cyclomatic complexity for methods:");
+                visitor.getMethodComplexities().forEach((methodName, complexity) -> {
+                    System.out.println(methodName + ": " + complexity);
+                    MethodEntity methodEntity = (MethodEntity) graphGenerator.getMethodEntities().get(methodName);
+                    methodEntity.getComplexityDetails().setCyclomaticComplexity(complexity);
+                });
 
             } else {
                 // Handle parsing errors

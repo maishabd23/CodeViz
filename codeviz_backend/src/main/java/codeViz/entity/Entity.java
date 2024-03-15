@@ -1,5 +1,6 @@
 package codeViz.entity;
 
+import codeViz.codeComplexity.ComplexityDetails;
 import codeViz.gitHistory.CommitInfo;
 import codeViz.TextAnnotate;
 import org.gephi.graph.api.Node;
@@ -30,6 +31,8 @@ public abstract class Entity {
     private final ArrayList<CommitInfo> commitInfos; // stored in order of most recent to the least recent
     private final Map<Entity, Float> gitConnectedEntitiesAndWeights; //stores the weight of connections
 
+    private final ComplexityDetails complexityDetails;
+
     /**
      * Set up an Entity
      * @author Thanuja Sivaananthan
@@ -49,6 +52,8 @@ public abstract class Entity {
         this.gitConnectedEntitiesAndWeights = new LinkedHashMap<>();
         this.x_pos = 0;
         this.y_pos = 0;
+
+        this.complexityDetails = new ComplexityDetails(); // TODO - might only be needed in MethodEntity
     }
 
     public String getName() {
@@ -256,5 +261,9 @@ public abstract class Entity {
 
     protected void addCommitInfo(CommitInfo commitInfo){
         this.commitInfos.add(commitInfo);
+    }
+
+    public ComplexityDetails getComplexityDetails() {
+        return complexityDetails;
     }
 }

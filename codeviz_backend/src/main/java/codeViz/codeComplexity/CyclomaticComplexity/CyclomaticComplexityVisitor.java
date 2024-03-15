@@ -1,14 +1,15 @@
-package codeViz;
+package codeViz.codeComplexity.CyclomaticComplexity;
 
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.stmt.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 // Visitor to compute cyclomatic complexity
 public class CyclomaticComplexityVisitor extends VoidVisitorAdapter<Void> {
-    private final MethodComplexities methodComplexities = new MethodComplexities();
+    private final HashMap<String, Integer> methodComplexities = new HashMap<>();
 
     @Override
     public void visit(MethodDeclaration n, Void arg) {
@@ -25,7 +26,7 @@ public class CyclomaticComplexityVisitor extends VoidVisitorAdapter<Void> {
         return 0; // if case it's empty
     }
 
-    public MethodComplexities getMethodComplexities() {
+    public HashMap<String, Integer> getMethodComplexities() {
         return methodComplexities;
     }
 }
