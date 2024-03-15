@@ -23,6 +23,13 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>dotenv-java</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+
+
         <!-- gephi dependencies-->
         <dependency>
             <!-- note - has two vulnerabilities-->

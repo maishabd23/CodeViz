@@ -1,6 +1,7 @@
 package codeViz;
 import codeViz.entity.EntityType;
 import org.springframework.web.bind.annotation.*;
+import io.github.cdimascio.dotenv.Dotenv;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,14 +16,53 @@ public class CodeVizController {
     private boolean success;
     private boolean gitHistory;
 
+    String clientId = System.getenv("CLIENT_ID");
+    String clientSecret = System.getenv("CLIENT_SECRET");
+
+
     private boolean isDisplayingGraph = false;
 
     public CodeVizController() {
         this.codeVizInterface = new CodeVizInterface();
         this.success = true; // Change to false after target can be chosen
         this.gitHistory = false;
+        Dotenv dotenv = Dotenv.configure().load();
+        clientId = dotenv.get("CLIENT_ID");
+        clientSecret = dotenv.get("CLIENT_SECRET");
+        System.out.println("Client ID: " + clientId);
+        System.out.println("Client Secret: " + clientSecret);
 
 //        codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory); // FIXME
+    }
+
+    /**
+     * @author mei
+     * @return link to github login/authorize page
+     */
+    @CrossOrigin
+    @GetMapping("/authorize")
+    public String login() {
+        return "https://github.com/login/oauth/authorize?client_id=" + clientId;
+    }
+
+    /**
+     * @author mei
+     * @param code
+     * @return
+     */
+
+    // Callback endpoint
+    @CrossOrigin
+    @GetMapping("/github/callback")
+    public String handleGitHubCallback(@RequestParam("code") String code) {
+        System.out.println("DEBUG: callback function code - " + code);
+        // Exchange the code for an access token
+//        String accessToken = exchangeCodeForAccessToken(code);
+
+        // Store the access token securely or associate it with the user's session
+
+        // Redirect the user to the frontend application
+        return "redirect:/"; // Redirect to the main page
     }
 
     /**
