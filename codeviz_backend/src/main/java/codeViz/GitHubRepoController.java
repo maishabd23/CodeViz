@@ -267,6 +267,21 @@ public class GitHubRepoController {
                         });
                     }
                 });
+
+
+                // Create a visitor to compute cyclomatic complexity
+                CyclomaticComplexityVisitor visitor = new CyclomaticComplexityVisitor();
+                visitor.visit(compilationUnit, null);
+
+                // M = E – N + 2P where E = the number of edges in the control flow graph
+                //N = the number of nodes in the control flow graph
+                //P = the number of connected components
+
+                // Print cyclomatic complexity for each method
+                System.out.println("Cyclomatic complexity for methods:");
+                visitor.getMethodComplexities().forEach((methodName, complexity) ->
+                        System.out.println(methodName + ": " + complexity));
+
             } else {
                 // Handle parsing errors
                 parseResult.getProblems().forEach(problem -> {
