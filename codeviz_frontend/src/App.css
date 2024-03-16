@@ -75,6 +75,7 @@ canvas {
   text-align: left;
   padding: 10px 10px;
   background-color: lightgrey;
+  border-radius: 10px;
 }
 
 #menu-controls {
@@ -82,6 +83,7 @@ canvas {
   border-width: 5px;
   border-color: #F4F7FC;
   border-style: solid;
+  border-radius: 10px;
 }
 
 #nodeDetailsDisplay {
@@ -96,6 +98,7 @@ canvas {
   height: 200px;
   overflow: auto; 
   box-sizing: border-box;
+  border-radius: 10px;
 }
 
 .info--icon{

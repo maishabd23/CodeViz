@@ -17,8 +17,8 @@ import RightContext from './RightContext';
 // Load external GEXF file:
 function GraphViz() {
   const [data, setData] = useState(null);
-  const initialNodeMessage = "Hover over a node to view its details. Select the node to view the filtered graph at the inner level." +
-      "<br/>If the 'Git History' graph is displayed, hover over an edge to view its details."
+  const initialNodeMessage = "Right-click on a node to view more options." +
+      "<br/>If the 'Git History' graph is displayed, hover over an edge to view its git history details."
 
   useEffect(() => {
     // Make the API request when the component loads
@@ -66,16 +66,10 @@ function GraphViz() {
         const camera = renderer.getCamera();
         renderer.refresh(); // to make sure graph appears right away
 
-        // TODO when pressing elsewhere, reset to original message?
-
-        renderer.on("enterNode", (e) => {
-          document.getElementById("nodeDetails").innerHTML = "Right click on this node to view more options.";
+        // when clicking (not dragging) elsewhere, reset the details
+        renderer.on("clickStage", () => {
+          document.getElementById("nodeDetails").innerHTML = initialNodeMessage;
         });
-
-        renderer.on("rightClickNode", (e) => {
-          document.getElementById("nodeDetails").innerHTML = "Right clicked " + e.node;
-        });
-
 
         renderer.on("enterEdge", (e) => {
           fetch('/api/getEdgeDetails?edgeName=' + e.edge.toString())
@@ -87,13 +81,9 @@ function GraphViz() {
               });
         });
 
-        renderer.on("leaveEdge", () => {
-          document.getElementById("nodeDetails").innerHTML = initialNodeMessage;
-        });
-
-        renderer.on("leaveNode", () => {
-          document.getElementById("nodeDetails").innerHTML = initialNodeMessage;
-        });
+        // renderer.on("leaveEdge", () => { // TODO FIX Git Graph
+        //   document.getElementById("nodeDetails").innerHTML = initialNodeMessage;
+        // });
   
         // Bind zoom manipulation buttons
         zoomInBtn.addEventListener("click", () => {
@@ -132,11 +122,26 @@ function GraphViz() {
         let hoveredNeighbors = undefined;
 
         // Bind graph interactions:
+        // also set node in backend, so it can be used by RightContext Menu
         renderer.on("enterNode", ({ node }) => {
           setHoveredNode(node);
+          fetch('/api/setHoveredNodeString', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({"hoveredNode": node}),
+          });
         });
         renderer.on("leaveNode", () => {
           setHoveredNode(undefined);
+          fetch('/api/setHoveredNodeString', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({"hoveredNode": null}),
+          });
         });
 
         function setHoveredNode(node) {

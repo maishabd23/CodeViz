@@ -16,11 +16,13 @@ public class CodeVizController {
     private boolean gitHistory;
 
     private boolean isDisplayingGraph = false;
+    private String hoveredNodeString;
 
     public CodeVizController() {
         this.codeVizInterface = new CodeVizInterface();
         this.success = true; // Change to false after target can be chosen
         this.gitHistory = false;
+        this.hoveredNodeString = "";
 
         // create empty graph on start-up
         codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory);
@@ -178,6 +180,22 @@ public class CodeVizController {
         return response; //each API call returns a JSON object that the React app parses
     }
 
+
+    @CrossOrigin
+    @GetMapping("/api/getHoveredNodeString")
+    public Map<String, String> getHoveredNodeString() {
+        Map<String, String> response = new HashMap<>();
+        response.put("string", hoveredNodeString);
+        return response; //each API call returns a JSON object that the React app parses
+    }
+
+    @CrossOrigin
+    @PostMapping("/api/setHoveredNodeString")
+    public void setComplexityDetails(@RequestBody Map<String, String> requestBody) {
+        hoveredNodeString = requestBody.get("hoveredNode");
+        System.out.println("SET hoveredNodeString " + hoveredNodeString);
+    }
+
     /**
      * Get the details of an edge
      * Note: Only works for git history annotations
@@ -229,7 +247,6 @@ public class CodeVizController {
         Map<String, String> response = new HashMap<>();
 
         String currentLevelString = currentLevel.getName();
-        System.out.println(currentLevelString);
         response.put("string", currentLevelString);
         return response;
     }
@@ -250,7 +267,6 @@ public class CodeVizController {
             currentLevelString += " at " + selectedNodeName;
         }
 
-        System.out.println(currentLevelString);
         response.put("string", currentLevelString);
         return response;
     }

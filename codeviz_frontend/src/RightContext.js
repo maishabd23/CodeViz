@@ -6,6 +6,13 @@ function RightContext() {
     //state variables
     const [context, setContext] = React.useState(false);
     const [xyPosition, setxyPosition] = React.useState({ x: 0, y: 0 });
+    const [level, setLevel] = React.useState('Class');
+
+    fetch('/api/getCurrentLevel')
+        .then((response) => response.json())
+        .then((responseData) => {
+            setLevel(responseData.string);
+        });
 
     //event handler for showing the context menu
     const showNav = (event) => {
@@ -25,22 +32,26 @@ function RightContext() {
     };
 
     //function to set the chosen menu option
-    const [chosenNodeApi, setChosenApi] = React.useState();
     const handleNodeOption = (chosenNodeApi) => {
-        setChosenApi(chosenNodeApi);
-        // TODO - use renderer
-        // renderer.on("enterNode", (e) => {
-        //     let selectedNode= e.node;
-        //     if (setChosenApi === 'generateInnerGraph'){
-        //         fetch('/api/generateInnerGraph?nodeName=' + selectedNode.toString());
-        //     } else {
-        //         fetch('/api/' + setChosenApi + '?nodeName=' + selectedNode.toString())
-        //             .then((response) => response.json())
-        //             .then((responseData) => {
-        //                 document.getElementById("nodeDetails").innerHTML = responseData.string;
-        //             });
-        //     }
-        // });
+        fetch('/api/getHoveredNodeString')
+            .then((response) => response.json())
+            .then((responseData) => {
+                let hoveredNode = responseData.string;
+                if (hoveredNode != null) {
+                    if (chosenNodeApi === 'generateInnerGraph') {
+                        fetch('/api/generateInnerGraph?nodeName=' + hoveredNode.toString());
+                    } else {
+                        fetch('/api/' + chosenNodeApi + '?nodeName=' + hoveredNode.toString())
+                            .then((response) => response.json())
+                            .then((responseData) => {
+                                document.getElementById("nodeDetails").innerHTML = responseData.string;
+                            });
+                    }
+                } else {
+                    console.log("ERROR, hoveredNode is " + hoveredNode);
+                }
+            });
+
     };
 
     //JavaScript XML (JSX) returned by the component
@@ -51,7 +62,6 @@ function RightContext() {
                 onContextMenu={showNav}
                 onClick={hideContext}
             >
-                {chosenNodeApi && <h4>"{chosenNodeApi}" is chosen</h4>}
                 {context && (
                     <div
                         style={{ top: xyPosition.y, left: xyPosition.x }}
