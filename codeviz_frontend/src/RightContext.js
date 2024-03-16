@@ -67,16 +67,19 @@ function RightContext() {
                         style={{ top: xyPosition.y, left: xyPosition.x }}
                         className="rightClick"
                     >
-                        {/*TODO - disable based on current level*/}
                         <div className="menuElement" onClick={() => handleNodeOption("getNodeDetails")}>
                             View Node Details
                         </div>
-                        <div className="menuElement" onClick={() => handleNodeOption("getComplexityDetails")}>
+                        {level !== 'Package' && (
+                            <div className="menuElement" onClick={() => handleNodeOption("getComplexityDetails")}>
                             View Complexity Metrics
-                        </div>
-                        <div className="menuElement" onClick={() => handleNodeOption("generateInnerGraph")}>
-                            Generate Inner Graph
-                        </div>
+                            </div>
+                        )}
+                        {level !== 'Method' && (
+                            <div className="menuElement" onClick={() => handleNodeOption("generateInnerGraph")}>
+                                Generate Inner Graph
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
