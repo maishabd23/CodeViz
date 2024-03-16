@@ -148,7 +148,7 @@ public class GraphGenerator {
                     PackageEntity packageEntity = (PackageEntity) parentEntity;
                     Set<ClassEntity> classEntities1 = packageEntity.getClasses();
                     for (Entity entityInner : classEntities1) {
-                        entities.put(entityInner.getKey(), entityInner);
+                        entities.put(entityInner.getName(), entityInner); // FIXME - change back to getKey when doing full name
                     }
                 } else if (childLevel.equals(EntityType.METHOD)) { // package - method
                     PackageEntity packageEntity = (PackageEntity) parentEntity;
@@ -156,7 +156,7 @@ public class GraphGenerator {
                     for (ClassEntity classEntityInner : classEntities1) {
                         Set<MethodEntity> methodEntities1 = classEntityInner.getMethods();
                         for (Entity entityInner : methodEntities1) {
-                            entities.put(entityInner.getKey(), entityInner);
+                            entities.put(entityInner.getName(), entityInner); // FIXME - change back to getKey when doing full name
                         }
                     }
                 }
@@ -164,7 +164,7 @@ public class GraphGenerator {
                 ClassEntity classEntity = (ClassEntity) parentEntity;
                 Set<MethodEntity> methodEntities1 = classEntity.getMethods();
                 for (Entity entityInner : methodEntities1) {
-                    entities.put(entityInner.getKey(), entityInner);
+                    entities.put(entityInner.getName(), entityInner); // FIXME - change back to getKey when doing full name
                 }
             }
         } else {

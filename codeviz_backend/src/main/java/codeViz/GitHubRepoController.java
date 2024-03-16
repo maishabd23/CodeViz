@@ -125,6 +125,32 @@ public class GitHubRepoController {
         }
     }
 
+
+    /**
+     * Get the connected class entity for a given name
+     * If a valid entity, will add a connection
+     * @param classEntity               class that has the connection destination
+     * @param connectedClassName        class name of the connection source
+     * @return                          the connected class (or dummy class if not valid)
+     */
+    private ClassEntity getAndStoreConnectedClassEntity(ClassEntity classEntity, String connectedClassName) {
+        // TODO - handle List/Set types that hold another class type
+        ClassEntity connectedClassEntity = (ClassEntity) graphGenerator.getClassEntities().get(connectedClassName);
+
+        if (connectedClassEntity == null){
+            //String[] connectedClassNames = connectedClassName.split("\\.");
+            //connectedClassName = connectedClassNames[connectedClassNames.length - 1];
+            connectedClassEntity = new ClassEntity(connectedClassName);
+        } else {
+            classEntity.addConnectedEntity(connectedClassEntity);
+        }
+
+        if (classEntity.equals(connectedClassEntity)){ // FIXME - investigate this further (occurs with enum)
+            System.out.println("ERROR, circular reference with class " + classEntity.getName() + " and connected class " + connectedClassName);
+        }
+        return connectedClassEntity;
+    }
+
     private Set<PackageEntity> createEntities(CompilationUnit compilationUnit) {
         Set<PackageEntity> packages = new HashSet<>();
         ConnectionVisitor connectionVisitor = new ConnectionVisitor();
@@ -160,7 +186,26 @@ public class GitHubRepoController {
                     boolean methodSuccess = graphGenerator.addEntity(methodEntity.getName(), methodEntity);
                     classEntity.addMethod(methodEntity);
 
+                    System.out.println("METHOD " + methodDeclaration.getNameAsString() + " PARAMETERS: " + methodDeclaration.getParameters());
+                    methodDeclaration.getParameters().forEach(parameter -> {
+                        String stringArgumentType = String.valueOf(parameter.getType());
+                        ClassEntity argumentClassEntity = getAndStoreConnectedClassEntity(classEntity, stringArgumentType);
+                        methodEntity.addArgument(argumentClassEntity);
+                    });
+
+                    System.out.println("METHOD " + methodDeclaration.getNameAsString() + " RETURN TYPE: " + methodDeclaration.getType());
+                    String stringReturnType = String.valueOf(methodDeclaration.getType());
+                    ClassEntity returnClassEntity = getAndStoreConnectedClassEntity(classEntity, stringReturnType);
+                    methodEntity.setReturnType(returnClassEntity);
+
                     setLinesOfCode(methodDeclaration.getBegin(), methodDeclaration.getEnd(), methodEntity);
+                });
+
+                System.out.println("CLASS " + classDeclaration.getNameAsString() + " FIELDS: " + classDeclaration.getFields());
+                classDeclaration.getFields().forEach(fieldDeclaration -> {
+                    String fieldType = String.valueOf(fieldDeclaration.getElementType());
+                    ClassEntity fieldClassEntity = getAndStoreConnectedClassEntity(classEntity, fieldType);
+                    classEntity.addField(fieldClassEntity);
                 });
 
                 System.out.println("Class: " + classDeclaration.getNameAsString());
