@@ -1,5 +1,7 @@
 package codeViz.entity;
 
+import codeViz.codeComplexity.ComplexityDetails;
+
 import java.awt.Color;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -18,7 +20,7 @@ public class MethodEntity extends Entity {
     private ClassEntity returnType;
 
     public MethodEntity(String name, ClassEntity classEntity){
-        super(getProperName(name), EntityType.METHOD);
+        super(getProperName(name), EntityType.METHOD, new ComplexityDetails());
         this.classEntity = classEntity;
 
         // should classEntity store its methods (easier to reference), or is that too much coupling?

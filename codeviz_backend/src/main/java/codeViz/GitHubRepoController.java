@@ -1,7 +1,9 @@
 package codeViz;
 
+import codeViz.codeComplexity.ClassComplexityDetails;
+import codeViz.codeComplexity.CyclomaticComplexity.CyclomaticComplexityVisitor;
 import codeViz.entity.*;
-import com.github.javaparser.ParseResult;
+import com.github.javaparser.*;
 
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
@@ -110,6 +112,45 @@ public class GitHubRepoController {
         return new ArrayList<>(packages);
     }
 
+    private void setLinesOfCode(Optional<Position> startPosition, Optional<Position> endPosition, Entity entity){
+        // Complexity Metrics: Lines of Code
+        // includes blank lines and comments (not JavaDoc)
+        if (startPosition.isPresent() && endPosition.isPresent()){
+            int startLine = startPosition.get().line;
+            int endLine = endPosition.get().line;
+            int linesOfCode = endLine - startLine + 1;
+
+            System.out.println(entity.getEntityType().getName() + ": " + entity.getName() + ", Lines of Code: " + linesOfCode);
+            entity.getComplexityDetails().setLinesOfCode(linesOfCode);
+        }
+    }
+
+
+    /**
+     * Get the connected class entity for a given name
+     * If a valid entity, will add a connection
+     * @param classEntity               class that has the connection destination
+     * @param connectedClassName        class name of the connection source
+     * @return                          the connected class (or dummy class if not valid)
+     */
+    private ClassEntity getAndStoreConnectedClassEntity(ClassEntity classEntity, String connectedClassName) {
+        // TODO - handle List/Set types that hold another class type
+        ClassEntity connectedClassEntity = (ClassEntity) graphGenerator.getClassEntities().get(connectedClassName);
+
+        if (connectedClassEntity == null){
+            //String[] connectedClassNames = connectedClassName.split("\\.");
+            //connectedClassName = connectedClassNames[connectedClassNames.length - 1];
+            connectedClassEntity = new ClassEntity(connectedClassName);
+        } else {
+            classEntity.addConnectedEntity(connectedClassEntity);
+        }
+
+        if (classEntity.equals(connectedClassEntity)){ // FIXME - investigate this further (occurs with enum)
+            System.out.println("ERROR, circular reference with class " + classEntity.getName() + " and connected class " + connectedClassName);
+        }
+        return connectedClassEntity;
+    }
+
     private Set<PackageEntity> createEntities(CompilationUnit compilationUnit) {
         Set<PackageEntity> packages = new HashSet<>();
         ConnectionVisitor connectionVisitor = new ConnectionVisitor();
@@ -144,9 +185,31 @@ public class GitHubRepoController {
                     MethodEntity methodEntity = new MethodEntity(methodDeclaration.getNameAsString(), classEntity);
                     boolean methodSuccess = graphGenerator.addEntity(methodEntity.getName(), methodEntity);
                     classEntity.addMethod(methodEntity);
+
+                    System.out.println("METHOD " + methodDeclaration.getNameAsString() + " PARAMETERS: " + methodDeclaration.getParameters());
+                    methodDeclaration.getParameters().forEach(parameter -> {
+                        String stringArgumentType = String.valueOf(parameter.getType());
+                        ClassEntity argumentClassEntity = getAndStoreConnectedClassEntity(classEntity, stringArgumentType);
+                        methodEntity.addArgument(argumentClassEntity);
+                    });
+
+                    System.out.println("METHOD " + methodDeclaration.getNameAsString() + " RETURN TYPE: " + methodDeclaration.getType());
+                    String stringReturnType = String.valueOf(methodDeclaration.getType());
+                    ClassEntity returnClassEntity = getAndStoreConnectedClassEntity(classEntity, stringReturnType);
+                    methodEntity.setReturnType(returnClassEntity);
+
+                    setLinesOfCode(methodDeclaration.getBegin(), methodDeclaration.getEnd(), methodEntity);
+                });
+
+                System.out.println("CLASS " + classDeclaration.getNameAsString() + " FIELDS: " + classDeclaration.getFields());
+                classDeclaration.getFields().forEach(fieldDeclaration -> {
+                    String fieldType = String.valueOf(fieldDeclaration.getElementType());
+                    ClassEntity fieldClassEntity = getAndStoreConnectedClassEntity(classEntity, fieldType);
+                    classEntity.addField(fieldClassEntity);
                 });
 
                 System.out.println("Class: " + classDeclaration.getNameAsString());
+                setLinesOfCode(classDeclaration.getBegin(), classDeclaration.getEnd(), classEntity);
             }
         });
 
@@ -267,6 +330,28 @@ public class GitHubRepoController {
                         });
                     }
                 });
+
+
+                // Create a visitor to compute cyclomatic complexity
+                CyclomaticComplexityVisitor visitor = new CyclomaticComplexityVisitor();
+                visitor.visit(compilationUnit, null);
+
+                // Cyclomatic complexity
+                // CC = E – N + 2P where E = the number of edges in the control flow graph
+                //N = the number of nodes in the control flow graph
+                //P = the number of connected components                System.out.println("Cyclomatic complexity for methods:");
+                visitor.getMethodComplexities().forEach((methodName, complexity) -> {
+                    System.out.println(methodName + ": " + complexity);
+                    MethodEntity methodEntity = (MethodEntity) graphGenerator.getMethodEntities().get(methodName);
+                    if (methodEntity != null) {
+                        methodEntity.getComplexityDetails().setCyclomaticComplexity(complexity);
+                        // Cyclomatic complexity of class = sum of cyclomatic complexities of the methods.
+                        ((ClassComplexityDetails) methodEntity.getClassEntity().getComplexityDetails()).incrementCyclomaticComplexity(complexity);
+                    } else {
+                        System.out.println("ERROR, Method is null for methodName: " + methodName);
+                    }
+                });
+
             } else {
                 // Handle parsing errors
                 parseResult.getProblems().forEach(problem -> {

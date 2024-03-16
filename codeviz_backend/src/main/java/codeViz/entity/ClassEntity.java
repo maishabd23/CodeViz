@@ -1,5 +1,6 @@
 package codeViz.entity;
 
+import codeViz.codeComplexity.ClassComplexityDetails;
 import codeViz.gitHistory.CommitInfo;
 
 import java.awt.*;
@@ -20,7 +21,7 @@ public class ClassEntity extends Entity {
     private ClassEntity superClass; // may have methods not defined in this class alone
 
     public ClassEntity(String name, PackageEntity packageEntity){
-        super(name, EntityType.CLASS);
+        super(name, EntityType.CLASS, new ClassComplexityDetails());
         this.packageEntity = packageEntity;
         this.fields = new LinkedHashSet<>();
         this.methods = new LinkedHashSet<>();
