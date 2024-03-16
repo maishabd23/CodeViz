@@ -12,6 +12,8 @@ import { parse } from "graphology-gexf/browser";
 import React, { useState, useEffect} from 'react';
 import forceAtlas2 from "graphology-layout-forceatlas2";
 
+import RightContext from './RightContext';
+
 // Load external GEXF file:
 function GraphViz() {
   const [data, setData] = useState(null);
@@ -64,23 +66,14 @@ function GraphViz() {
         const camera = renderer.getCamera();
         renderer.refresh(); // to make sure graph appears right away
 
-        let selectedNode= null;
-
-        // On mouse down on a node
-        //  - display node details
-        //  - save in the dragged node in the state
-        renderer.on("downNode", (e) => {
-          selectedNode = e.node;
-          fetch('/api/generateInnerGraph?nodeName=' + selectedNode.toString());
-        });
+        // TODO when pressing elsewhere, reset to original message?
 
         renderer.on("enterNode", (e) => {
-          selectedNode = e.node;
-          fetch('/api/getNodeDetails?nodeName=' + selectedNode.toString())
-              .then((response) => response.json())
-              .then((responseData) => {
-                document.getElementById("nodeDetails").innerHTML = responseData.string;
-              });
+          document.getElementById("nodeDetails").innerHTML = "Right click on this node to view more options.";
+        });
+
+        renderer.on("rightClickNode", (e) => {
+          document.getElementById("nodeDetails").innerHTML = "Right clicked " + e.node;
         });
 
 
@@ -182,6 +175,7 @@ function GraphViz() {
 
     return (
       <div className="graphDisplay">
+        <RightContext />
         <div className="graphDisplay--image"></div>
         <div id="controls">
           <div className="center">
