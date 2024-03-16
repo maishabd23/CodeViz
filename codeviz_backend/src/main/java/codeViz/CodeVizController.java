@@ -162,6 +162,23 @@ public class CodeVizController {
     }
 
     /**
+     * Get complexity details of a highlighted node
+     * @param nodeName      name of the highlighted node
+     * @return              string response of the complexity details
+     */
+    @CrossOrigin
+    @GetMapping("/api/getComplexityDetails")
+    public Map<String, String> getComplexityDetails(@RequestParam(name = "nodeName", defaultValue = "") String nodeName) {
+        Map<String, String> response = new HashMap<>();
+
+        String results = codeVizInterface.getComplexityDetails(nodeName, currentLevel);
+        results = TextAnnotate.javaToHtml(results);
+
+        response.put("string", results);
+        return response; //each API call returns a JSON object that the React app parses
+    }
+
+    /**
      * Get the details of an edge
      * Note: Only works for git history annotations
      * @param edgeName  name of the edge

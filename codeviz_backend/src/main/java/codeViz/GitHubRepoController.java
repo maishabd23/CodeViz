@@ -1,5 +1,6 @@
 package codeViz;
 
+import codeViz.codeComplexity.ClassComplexityDetails;
 import codeViz.codeComplexity.CyclomaticComplexity.CyclomaticComplexityVisitor;
 import codeViz.entity.*;
 import com.github.javaparser.*;
@@ -111,6 +112,19 @@ public class GitHubRepoController {
         return new ArrayList<>(packages);
     }
 
+    private void setLinesOfCode(Optional<Position> startPosition, Optional<Position> endPosition, Entity entity){
+        // Complexity Metrics: Lines of Code
+        // includes blank lines and comments (not JavaDoc)
+        if (startPosition.isPresent() && endPosition.isPresent()){
+            int startLine = startPosition.get().line;
+            int endLine = endPosition.get().line;
+            int linesOfCode = endLine - startLine + 1;
+
+            System.out.println(entity.getEntityType().getName() + ": " + entity.getName() + ", Lines of Code: " + linesOfCode);
+            entity.getComplexityDetails().setLinesOfCode(linesOfCode);
+        }
+    }
+
     private Set<PackageEntity> createEntities(CompilationUnit compilationUnit) {
         Set<PackageEntity> packages = new HashSet<>();
         ConnectionVisitor connectionVisitor = new ConnectionVisitor();
@@ -146,21 +160,11 @@ public class GitHubRepoController {
                     boolean methodSuccess = graphGenerator.addEntity(methodEntity.getName(), methodEntity);
                     classEntity.addMethod(methodEntity);
 
-                    // Complexity Metrics: Lines of Code
-                    // includes blank lines and comments (not JavaDoc)
-                    Optional<Position> startPosition = methodDeclaration.getBegin();
-                    Optional<Position> endPosition = methodDeclaration.getEnd();
-                    if (startPosition.isPresent() && endPosition.isPresent()){
-                        int startLine = startPosition.get().line;
-                        int endLine = endPosition.get().line;
-                        int linesOfCode = endLine - startLine + 1;
-
-                        System.out.println("Method: " + methodDeclaration.getNameAsString() + ", Lines of Code: " + linesOfCode);
-                        methodEntity.getComplexityDetails().setLinesOfCode(linesOfCode);
-                    }
+                    setLinesOfCode(methodDeclaration.getBegin(), methodDeclaration.getEnd(), methodEntity);
                 });
 
                 System.out.println("Class: " + classDeclaration.getNameAsString());
+                setLinesOfCode(classDeclaration.getBegin(), classDeclaration.getEnd(), classEntity);
             }
         });
 
@@ -294,7 +298,13 @@ public class GitHubRepoController {
                 visitor.getMethodComplexities().forEach((methodName, complexity) -> {
                     System.out.println(methodName + ": " + complexity);
                     MethodEntity methodEntity = (MethodEntity) graphGenerator.getMethodEntities().get(methodName);
-                    methodEntity.getComplexityDetails().setCyclomaticComplexity(complexity);
+                    if (methodEntity != null) {
+                        methodEntity.getComplexityDetails().setCyclomaticComplexity(complexity);
+                        // Cyclomatic complexity of class = sum of cyclomatic complexities of the methods.
+                        ((ClassComplexityDetails) methodEntity.getClassEntity().getComplexityDetails()).incrementCyclomaticComplexity(complexity);
+                    } else {
+                        System.out.println("ERROR, Method is null for methodName: " + methodName);
+                    }
                 });
 
             } else {

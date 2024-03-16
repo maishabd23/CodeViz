@@ -92,6 +92,10 @@ public class CodeVizInterface {
         return graphGenerator.getNodeDetails(nodeName, currentLevel);
     }
 
+    public String getComplexityDetails(String nodeName, EntityType currentLevel) {
+        return graphGenerator.getComplexityDetails(nodeName, currentLevel);
+    }
+
     public String getSearchResult(EntityType entityType) {
         return graphGenerator.getSearchResult(entityType);
     }

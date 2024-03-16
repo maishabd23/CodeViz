@@ -1,5 +1,7 @@
 package codeViz.entity;
 
+import codeViz.codeComplexity.ComplexityDetails;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.awt.Color;
@@ -15,7 +17,7 @@ public class PackageEntity extends Entity {
     private final PackageEntity superpackage;
 
     public PackageEntity(String name, PackageEntity superpackage){
-        super(name, EntityType.PACKAGE);
+        super(name, EntityType.PACKAGE, new ComplexityDetails()); // TODO might not use complexity details
 
         this.classes = new LinkedHashSet<>();
         this.superpackage = superpackage;

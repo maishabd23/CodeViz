@@ -35,12 +35,14 @@ public abstract class Entity {
 
     /**
      * Set up an Entity
+     *
+     * @param name              name of entity
+     * @param entityType        entity type
+     * @param complexityDetails complexity details
      * @author Thanuja Sivaananthan
      * @author Sabah Samwatin
-     * @param name          name of entity
-     * @param entityType    entity type
      */
-    public Entity(String name, EntityType entityType){
+    public Entity(String name, EntityType entityType, ComplexityDetails complexityDetails){
         this.name = name;
         this.entityType = entityType;
         this.connectedEntitiesAndWeights = new LinkedHashMap<>();
@@ -53,7 +55,8 @@ public abstract class Entity {
         this.x_pos = 0;
         this.y_pos = 0;
 
-        this.complexityDetails = new ComplexityDetails(); // TODO - might only be needed in MethodEntity
+        this.complexityDetails = complexityDetails;
+        complexityDetails.setEntity(this);
     }
 
     public String getName() {

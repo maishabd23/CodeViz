@@ -462,12 +462,20 @@ public class GraphGenerator {
     }
 
     public String getNodeDetails(String nodeName, EntityType entityType) {
-        // FIXME - duplicated code
         Entity entity = getNode(nodeName, entityType);
         if (entity == null){
             return "";
         } else {
             return entity.toString();
+        }
+    }
+
+    public String getComplexityDetails(String nodeName, EntityType entityType) {
+        Entity entity = getNode(nodeName, entityType);
+        if (entity == null){
+            return "";
+        } else {
+            return entity.getComplexityDetails().toString();
         }
     }
 
