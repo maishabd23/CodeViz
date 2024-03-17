@@ -12,11 +12,15 @@ import { parse } from "graphology-gexf/browser";
 import React, { useState, useEffect} from 'react';
 import forceAtlas2 from "graphology-layout-forceatlas2";
 
+import RightContext from './RightContext';
+export var hoveredNodeString = null; // create shared variable here, so it can edit it
+
 // Load external GEXF file:
 function GraphViz() {
   const [data, setData] = useState(null);
-  const initialNodeMessage = "Hover over a node to view its details. Select the node to view the filtered graph at the inner level." +
-      "<br/>If the 'Git History' graph is displayed, hover over an edge to view its details."
+  const initialNodeMessage = "Right-click on a node to view more options." +
+      "<br/>If the 'Git History' graph is displayed, hover over an edge to view its git history details."
+  let hoveredEdge = null;
 
   useEffect(() => {
     // Make the API request when the component loads
@@ -64,43 +68,26 @@ function GraphViz() {
         const camera = renderer.getCamera();
         renderer.refresh(); // to make sure graph appears right away
 
-        let selectedNode= null;
-
-        // On mouse down on a node
-        //  - display node details
-        //  - save in the dragged node in the state
-        renderer.on("downNode", (e) => {
-          selectedNode = e.node;
-          fetch('/api/generateInnerGraph?nodeName=' + selectedNode.toString());
+        // when clicking (not dragging) elsewhere, reset the details
+        renderer.on("clickStage", () => {
+          document.getElementById("nodeDetails").innerHTML = initialNodeMessage;
         });
-
-        renderer.on("enterNode", (e) => {
-          selectedNode = e.node;
-          fetch('/api/getNodeDetails?nodeName=' + selectedNode.toString())
-              .then((response) => response.json())
-              .then((responseData) => {
-                document.getElementById("nodeDetails").innerHTML = responseData.string;
-              });
-        });
-
 
         renderer.on("enterEdge", (e) => {
           fetch('/api/getEdgeDetails?edgeName=' + e.edge.toString())
               .then((response) => response.json())
               .then((responseData) => {
                 if (responseData.string) {
+                  hoveredEdge = e.edge;
+                  setHoveredNeighbours(graph, renderer);
                   document.getElementById("nodeDetails").innerHTML = responseData.string;
                 }
               });
         });
 
-        renderer.on("leaveEdge", () => {
-          document.getElementById("nodeDetails").innerHTML = initialNodeMessage;
-        });
-
-        renderer.on("leaveNode", () => {
-          document.getElementById("nodeDetails").innerHTML = initialNodeMessage;
-        });
+        // renderer.on("leaveEdge", () => { // TODO FIX Git Graph
+        //   document.getElementById("nodeDetails").innerHTML = initialNodeMessage;
+        // });
   
         // Bind zoom manipulation buttons
         zoomInBtn.addEventListener("click", () => {
@@ -139,11 +126,14 @@ function GraphViz() {
         let hoveredNeighbors = undefined;
 
         // Bind graph interactions:
+        // also set node in backend, so it can be used by RightContext Menu
         renderer.on("enterNode", ({ node }) => {
           setHoveredNode(node);
+          hoveredNodeString = node;
         });
         renderer.on("leaveNode", () => {
           setHoveredNode(undefined);
+          hoveredNodeString = null;
         });
 
         function setHoveredNode(node) {
@@ -171,6 +161,8 @@ function GraphViz() {
           const res = { ...data };
           if (hoveredNode && !graph.hasExtremity(edge, hoveredNode)) {
             res.hidden = true; // could set as a colour instead
+          } else if (hoveredEdge && hoveredEdge === edge){
+            res.color = "#858990";
           }
           return res;
         });
@@ -182,6 +174,7 @@ function GraphViz() {
 
     return (
       <div className="graphDisplay">
+        <RightContext />
         <div className="graphDisplay--image"></div>
         <div id="controls">
           <div className="center">

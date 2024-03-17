@@ -229,7 +229,6 @@ public class CodeVizController {
         Map<String, String> response = new HashMap<>();
 
         String currentLevelString = currentLevel.getName();
-        System.out.println(currentLevelString);
         response.put("string", currentLevelString);
         return response;
     }
@@ -250,7 +249,6 @@ public class CodeVizController {
             currentLevelString += " at " + selectedNodeName;
         }
 
-        System.out.println(currentLevelString);
         response.put("string", currentLevelString);
         return response;
     }
