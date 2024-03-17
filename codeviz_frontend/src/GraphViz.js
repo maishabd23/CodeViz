@@ -13,6 +13,7 @@ import React, { useState, useEffect} from 'react';
 import forceAtlas2 from "graphology-layout-forceatlas2";
 
 import RightContext from './RightContext';
+export var hoveredNodeString = null; // create shared variable here, so it can edit it
 
 // Load external GEXF file:
 function GraphViz() {
@@ -128,23 +129,11 @@ function GraphViz() {
         // also set node in backend, so it can be used by RightContext Menu
         renderer.on("enterNode", ({ node }) => {
           setHoveredNode(node);
-          fetch('/api/setHoveredNodeString', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({"hoveredNode": node}),
-          });
+          hoveredNodeString = node;
         });
         renderer.on("leaveNode", () => {
           setHoveredNode(undefined);
-          fetch('/api/setHoveredNodeString', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({"hoveredNode": null}),
-          });
+          hoveredNodeString = null;
         });
 
         function setHoveredNode(node) {

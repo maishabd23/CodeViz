@@ -1,5 +1,6 @@
 import React from "react";
 import './RightContext.css';
+import {hoveredNodeString} from './GraphViz'; // read-only
 
 //define a functional component for the right-click context menu
 function RightContext() {
@@ -7,6 +8,7 @@ function RightContext() {
     const [context, setContext] = React.useState(false);
     const [xyPosition, setxyPosition] = React.useState({ x: 0, y: 0 });
     const [level, setLevel] = React.useState('Class');
+    let clickedOption = false
 
     fetch('/api/getCurrentLevel')
         .then((response) => response.json())
@@ -15,43 +17,45 @@ function RightContext() {
         });
 
     //event handler for showing the context menu
-    const showNav = (event) => {
-        event.preventDefault();
-        setContext(false);
-        const positionChange = {
-            x: event.pageX,
-            y: event.pageY,
-        };
-        setxyPosition(positionChange);
-        setContext(true);
+    const showNavOnNodes = (event) => {
+        // if clickedOption is true, that means a menu option was just clicked,
+        // so do not show the menu again
+        if (hoveredNodeString != null && clickedOption !== true) {
+            event.preventDefault();
+            setContext(false);
+            const positionChange = {
+                x: event.pageX,
+                y: event.pageY,
+            };
+            setxyPosition(positionChange);
+            setContext(true);
+        } else {
+            hideContext(); // hide context if a user clicks outside a node
+        }
+        clickedOption = false;
     };
 
     //event handler for hiding the context menu
-    const hideContext = (event) => {
+    const hideContext = () => {
         setContext(false);
     };
 
     //function to set the chosen menu option
     const handleNodeOption = (chosenNodeApi) => {
-        fetch('/api/getHoveredNodeString')
-            .then((response) => response.json())
-            .then((responseData) => {
-                let hoveredNode = responseData.string;
-                if (hoveredNode != null) {
-                    if (chosenNodeApi === 'generateInnerGraph') {
-                        fetch('/api/generateInnerGraph?nodeName=' + hoveredNode.toString());
-                    } else {
-                        fetch('/api/' + chosenNodeApi + '?nodeName=' + hoveredNode.toString())
-                            .then((response) => response.json())
-                            .then((responseData) => {
-                                document.getElementById("nodeDetails").innerHTML = responseData.string;
-                            });
-                    }
-                } else {
-                    console.log("ERROR, hoveredNode is " + hoveredNode);
-                }
-            });
-
+        clickedOption = true;
+        if (hoveredNodeString != null) {
+            if (chosenNodeApi === 'generateInnerGraph') {
+                fetch('/api/generateInnerGraph?nodeName=' + hoveredNodeString.toString());
+            } else {
+                fetch('/api/' + chosenNodeApi + '?nodeName=' + hoveredNodeString.toString())
+                    .then((response) => response.json())
+                    .then((responseData) => {
+                        document.getElementById("nodeDetails").innerHTML = responseData.string;
+                    });
+            }
+        } else {
+            console.log("ERROR, hoveredNode is " + hoveredNodeString);
+        }
     };
 
     //JavaScript XML (JSX) returned by the component
@@ -59,8 +63,8 @@ function RightContext() {
         <>
             <div
                 className="graphDisplay--image"
-                onContextMenu={showNav}
-                onClick={hideContext}
+                onContextMenu={showNavOnNodes} // right-click on element
+                onClick={showNavOnNodes} // (left-)click on element
             >
                 {context && (
                     <div
