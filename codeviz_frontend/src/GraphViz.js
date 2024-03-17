@@ -19,6 +19,7 @@ function GraphViz() {
   const [data, setData] = useState(null);
   const initialNodeMessage = "Right-click on a node to view more options." +
       "<br/>If the 'Git History' graph is displayed, hover over an edge to view its git history details."
+  let hoveredEdge = null;
 
   useEffect(() => {
     // Make the API request when the component loads
@@ -76,6 +77,8 @@ function GraphViz() {
               .then((response) => response.json())
               .then((responseData) => {
                 if (responseData.string) {
+                  hoveredEdge = e.edge;
+                  setHoveredNeighbours(graph, renderer);
                   document.getElementById("nodeDetails").innerHTML = responseData.string;
                 }
               });
@@ -169,6 +172,8 @@ function GraphViz() {
           const res = { ...data };
           if (hoveredNode && !graph.hasExtremity(edge, hoveredNode)) {
             res.hidden = true; // could set as a colour instead
+          } else if (hoveredEdge && hoveredEdge === edge){
+            res.color = "#858990";
           }
           return res;
         });
