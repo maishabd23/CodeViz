@@ -171,8 +171,9 @@ function GraphViz() {
 
     return (
       <div className="graphDisplay">
-        <RightContext />
-        <div className="graphDisplay--image"></div>
+        <RightContext>
+          <div className="graphDisplay--image"></div>
+        </RightContext>
         <div id="controls">
           <div className="center">
             <h2>Controls</h2>
