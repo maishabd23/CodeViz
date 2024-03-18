@@ -4,7 +4,10 @@ import './PopUpHelp.css';
 import {setContext} from './RightContext'; // read-only
 
 function PopUpHelp(props) {
-    setContext(false); // remove right click menu if it's visible
+
+    if (setContext != null) {
+        setContext(false); // remove right click menu if it's visible
+    }
 
     return (props.trigger) ? (
         <div className="popup-help">

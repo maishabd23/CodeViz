@@ -14,7 +14,9 @@ let thresholdStep = DEFAULT_STEP;
 
 function PopUpThreshold(props) {
 
-    setContext(false); // remove right click menu if it's visible
+    if (setContext != null) {
+        setContext(false); // remove right click menu if it's visible
+    }
 
     const updateThresholdSettings = (props) => {
         // basic error handling
