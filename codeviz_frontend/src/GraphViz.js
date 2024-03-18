@@ -13,7 +13,11 @@ import React, { useState, useEffect} from 'react';
 import forceAtlas2 from "graphology-layout-forceatlas2";
 
 import RightContext from './RightContext';
-export var hoveredNodeString = null; // create shared variable here, so it can edit it
+import PopUpThreshold from "./PopUpThreshold";
+
+// create shared variable here, so it can edit it
+export var hoveredNodeString = null;
+export var labelsThresholdRange, thresholdLabel = null;
 
 // Load external GEXF file:
 function GraphViz() {
@@ -21,6 +25,7 @@ function GraphViz() {
   const initialNodeMessage = "Right-click on a node to view more options." +
       "<br/>If the 'Git History' graph is displayed, hover over an edge to view its git history details."
   let hoveredEdge = null;
+  const [popUpMenu, setPopUpMenu] = React.useState(false);
 
   useEffect(() => {
     // Make the API request when the component loads
@@ -45,9 +50,8 @@ function GraphViz() {
         const zoomOutBtn = document.getElementById("zoom-out");
         const zoomResetBtn = document.getElementById("zoom-reset");
 
-        const labelsThresholdRange = document.getElementById("labels-threshold");
-        const updateThresholdSettings = document.getElementById("update-threshold-settings");
-
+        labelsThresholdRange = document.getElementById("labels-threshold");
+        thresholdLabel = document.getElementById("thresholdLabel");
 
         const settings = forceAtlas2.inferSettings(graph);
         forceAtlas2.assign(graph, { settings, iterations: 600 });
@@ -103,18 +107,11 @@ function GraphViz() {
         // Bind labels threshold to range input
         labelsThresholdRange.addEventListener("input", () => {
           renderer.setSetting("labelRenderedSizeThreshold", +labelsThresholdRange.value);
-          document.getElementById("thresholdLabel").innerHTML = "Threshold: " + labelsThresholdRange.value;
+          thresholdLabel.innerHTML = "Threshold: " + labelsThresholdRange.value;
         });
 
         // Set proper range initial value:
         labelsThresholdRange.value = renderer.getSetting("labelRenderedSizeThreshold") + "";
-
-        // update threshold settings to match inputs
-        updateThresholdSettings.addEventListener("click", () => {
-          labelsThresholdRange.min = document.getElementById("min").value;
-          labelsThresholdRange.max = document.getElementById("max").value;
-          labelsThresholdRange.step = document.getElementById("step").value;
-        });
 
         setHoveredNeighbours(graph, renderer);
       };
@@ -174,8 +171,9 @@ function GraphViz() {
 
     return (
       <div className="graphDisplay">
-        <RightContext />
-        <div className="graphDisplay--image"></div>
+        <RightContext>
+          <div className="graphDisplay--image"></div>
+        </RightContext>
         <div id="controls">
           <div className="center">
             <h2>Controls</h2>
@@ -186,27 +184,10 @@ function GraphViz() {
           <div className="input">
             <label htmlFor="labels-threshold">Threshold </label>
             <input id="labels-threshold" type="range" min="0" max="15" step="0.5" />
-            <table className="center">{/*for ease of use, ideally these values should be set dynamically based on the graph*/}
-              <tbody>
-              <tr><td>
-                <label htmlFor="min">min </label><input id="min" type="number" min="0" step="1" defaultValue={"0"}/>
-              </td></tr>
-              <tr><td>
-                <label htmlFor="max">max </label><input id="max" type="number" max="100" step="1" defaultValue={"15"}/>
-              </td></tr>
-              <tr><td>
-                <label htmlFor="step">step </label><input id="step" type="number" min="0.01" step="0.01" defaultValue={"0.5"}/>
-              </td></tr>
-              <tr><td>
-                <div className="help-display">
-                  <button id="update-threshold-settings">Update Threshold Settings</button>
-                  <img src="/info-icon.png" alt='icon' className="info--icon" />
-                  <p className='tooltip'>Adjust the max, min and step values for the threshold slider</p> 
-                </div>
-              </td></tr>
-              </tbody>
-            </table>
             <p id="thresholdLabel"></p>
+            <button onClick={() => setPopUpMenu(true)}>Modify Threshold Settings</button>
+            <PopUpThreshold id="popUpThreshold" trigger={popUpMenu} setTrigger={setPopUpMenu}>
+            </PopUpThreshold>
           </div>
         </div>
         <div id="nodeDetailsDisplay">

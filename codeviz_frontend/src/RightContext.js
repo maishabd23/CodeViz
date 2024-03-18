@@ -2,10 +2,13 @@ import React from "react";
 import './RightContext.css';
 import {hoveredNodeString} from './GraphViz'; // read-only
 
+export var context, setContext;
+
+
 //define a functional component for the right-click context menu
 function RightContext() {
     //state variables
-    const [context, setContext] = React.useState(false);
+    [context, setContext] = React.useState(false);
     const [xyPosition, setxyPosition] = React.useState({ x: 0, y: 0 });
     const [level, setLevel] = React.useState('Class');
     let clickedOption = false
