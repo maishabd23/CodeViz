@@ -1,5 +1,5 @@
 
-.popup {
+.popup-help {
     position: fixed;
     top: 0;
     left: 0;
@@ -14,16 +14,18 @@
 }
 
 
-.popup-inner {
+.popup-help-inner {
     position: relative;
     padding: 32px;
     width: 100%;
+    max-height: 90%;
     max-width: 800px;
     background-color: #FFF;
     border-radius: 10px;
+    overflow: auto; /* scroll bar */
 }
 
-.popup-inner .close-btn {
+.popup-help-inner .close-btn {
     position: absolute;
     top: 16px;
     right: 16px;

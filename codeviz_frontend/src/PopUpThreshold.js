@@ -1,7 +1,8 @@
-import React, {useEffect} from "react";
+import React from "react";
 import './PopUpThreshold.css';
 import './App.css';
 import {labelsThresholdRange, thresholdLabel} from './GraphViz'; // read-only
+import {setContext} from './RightContext'; // read-only
 
 // set values outside the function so their state can be saved
 const DEFAULT_MIN = 0;
@@ -12,6 +13,8 @@ let thresholdMax = DEFAULT_MAX;
 let thresholdStep = DEFAULT_STEP;
 
 function PopUpThreshold(props) {
+
+    setContext(false); // remove right click menu if it's visible
 
     const updateThresholdSettings = (props) => {
         // basic error handling
@@ -42,8 +45,8 @@ function PopUpThreshold(props) {
     };
 
     return (props.trigger) ? (
-        <div className="popup">
-            <div className="popup-inner">
+        <div className="popup-thres">
+            <div className="popup-thres-inner">
                 <button className="close-btn" onClick={() => props.setTrigger(false)}>cancel</button>
                 {props.children}
 
