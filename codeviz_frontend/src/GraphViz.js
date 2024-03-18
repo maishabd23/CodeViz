@@ -1,3 +1,10 @@
+/**
+ * This example shows how to load a GEXF graph file (using the dedicated
+ * graphology parser), and display it with some basic map features: Zoom in and
+ * out buttons, reset zoom button, and a slider to increase or decrease the
+ * quantity of labels displayed on screen.
+ */
+
 import Sigma from "sigma";
 import Graph from "graphology";
 import { parse } from "graphology-gexf/browser";
@@ -31,9 +38,7 @@ function GraphViz() {
 
   useEffect(() => {
       const fetchData = async () => {
-        try {
         const response = await fetch("codeviz_demo.gexf"); //needs to be in 'public' folder // TODO - don't hardcode here
-        if (response.ok) {
         const gexf = await response.text();
   
         // Parse GEXF string:
@@ -109,11 +114,7 @@ function GraphViz() {
         labelsThresholdRange.value = renderer.getSetting("labelRenderedSizeThreshold") + "";
 
         setHoveredNeighbours(graph, renderer);
-      }
-        } catch (error) {
-        console.error('Error fetching or parsing GEXF file:', error);
-      }
-    };
+      };
 
       function setHoveredNeighbours(graph, renderer){
 

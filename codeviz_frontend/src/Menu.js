@@ -9,26 +9,6 @@ function Menu() {
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [authorizeLink, setAuthorizeLink] = useState('');
-
-    // Function to handle login with Github
-    const authorizeGithub = () => {
-        console.log("DEBUG: Call login endpoint")
-        fetch('/authorize')
-            .then(response => {
-                return response.text();
-            })
-            .then(data => {
-                setAuthorizeLink(data)
-                console.log(data); // Log the link to the console
-                window.location.href = data; //open auth link
-            })
-            .catch(error => {
-                console.error('Error fetching login URL:', error);
-            });
-    };
-
 
 
     // Function to handle changes in the repoURL input field
@@ -39,11 +19,6 @@ function Menu() {
 
     // Function to handle form submission
     const handleSubmit = () => {
-
-        if (!repoURL) {
-            return; // Prevent form submission if empty repo url
-        }
-
         setLoading(true);
         // Make a POST request to initialize CodeVizController with repoURL
         const isSuccessful = fetch('/init', {
@@ -159,29 +134,17 @@ function Menu() {
         <div className='menu'>
             <h2>Menu</h2>
             <div id="menu-controls">
-                <h3>Select Repo</h3>
+                <h3>View Repo</h3>
                 <table className="center">
                     <tbody>
-                    <tr>
-                        <td>
-                            <div className="help-display">
-                            <button onClick={authorizeGithub}>
-                                {console.log(authorizeLink)}
-                                Login with GitHub
-                            </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div className="help-display">
-                                <input type="text" value={repoURL} onChange={handleRepoURLChange} placeholder="Enter Repository URL" />
-                                <button onClick={handleSubmit} disabled={loading}>Submit</button>
-                                {error && <p className="error">{error}</p>}
-                                {loading && <p>Loading...</p>}
-                            </div>
-                        </td>
-                    </tr>
+                    <tr><td>
+                        <div className="help-display">
+                            <input type="text" value={repoURL} onChange={handleRepoURLChange} placeholder="Enter Repository URL" />
+                            <button onClick={handleSubmit} disabled={loading}>Submit</button>
+                            {error && <p className="error">{error}</p>}
+                            {loading && <p>Loading...</p>}
+                        </div>
+                    </td></tr>
                     </tbody>
                 </table>
             </div>
