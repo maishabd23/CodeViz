@@ -32,7 +32,7 @@ function GraphViz() {
   useEffect(() => {
       const fetchData = async () => {
         try {
-        const response = await fetch("codeviz_demo.gexf"); //needs to be in 'public' folder // TODO - don't hardcode here
+        const response = await fetch("/codeviz_demo.gexf"); //needs to be in 'public' folder // TODO - don't hardcode here
         if (response.ok) {
         const gexf = await response.text();
   
