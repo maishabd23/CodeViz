@@ -1,6 +1,9 @@
 package codeViz;
 import codeViz.entity.EntityType;
 import org.springframework.web.bind.annotation.*;
+import io.github.cdimascio.dotenv.Dotenv;
+import org.springframework.http.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +20,11 @@ public class CodeVizController {
 
     private boolean isDisplayingGraph = false;
 
+    private final String clientId;
+    private final String clientSecret;
+    private final String redirect_uri;
+
+
     public CodeVizController() {
         this.codeVizInterface = new CodeVizInterface();
         this.success = true; // Change to false after target can be chosen
@@ -24,6 +32,69 @@ public class CodeVizController {
 
         // create empty graph on start-up
         codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory);
+
+        Dotenv dotenv = Dotenv.configure().load();
+        this.clientId = dotenv.get("CLIENT_ID");
+        this.clientSecret = dotenv.get("CLIENT_SECRET");
+        this.redirect_uri = dotenv.get("REDIRECT_URI");
+    }
+
+    /**
+     * @author mei
+     * @return link to github login/authorize page
+     */
+    @CrossOrigin
+    @GetMapping("/authorize")
+    public String login() {
+        System.out.println("DEBUG: In /authorize endpoint with clientID " + clientId);
+        return "https://github.com/login/oauth/authorize?client_id=" + clientId;
+    }
+
+    /**
+     * @author mei
+     * @param code github code
+     * @return access token
+     */
+
+    // Callback endpoint
+    @CrossOrigin
+    @GetMapping("/github/callback")
+    public String handleGitHubCallback(@RequestParam("code") String code) {
+        String accessToken = exchangeCodeForAccessToken(code);
+
+        // You can store the access token securely or associate it with the user's session
+        // For demonstration purposes, I'm just returning the access token here
+        return "Access Token: " + accessToken;
+    }
+
+    /**
+     * @author mei
+     * @param code github code
+     * @return access token
+     */
+    private String exchangeCodeForAccessToken(String code) {
+        String tokenUrl = "https://github.com/login/oauth/access_token";
+
+        // Construct the token request body
+        String requestBody = "client_id=" + clientId + "&client_secret=" + clientSecret + "&code=" + code + "&redirect_uri=" + redirect_uri;
+
+        // Set headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        // Create request entity
+        HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        // Send POST request to exchange code for access token
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.exchange(tokenUrl, HttpMethod.POST, requestEntity, String.class);
+
+        // Parse response to extract access token
+        // Note: This is a basic parsing example. You should handle error cases and parse the response according to GitHub's documentation.
+        String accessToken = response.getBody().split("&")[0].split("=")[1];
+        System.out.println("DEBUG: Access token: " + accessToken);
+
+        return accessToken;
     }
 
     /**
