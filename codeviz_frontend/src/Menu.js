@@ -245,6 +245,7 @@ function Menu() {
                                     id="searchInput"
                                     placeholder="Input a search term"
                                 />
+                                <button onClick={mySearchFunction}>Search</button>
                                 <img src="/info-icon.png" alt='icon' className="info--icon" />
                                 <p className='tooltip'>Search for specific node names</p>
                             </div>
@@ -252,9 +253,7 @@ function Menu() {
                     </tr>
                     </tbody>
                 </table>
-                <button onClick={mySearchFunction}>Search</button>
                 {/* ... */}
-            </div>
 
         {/* Conditional rendering based on 'level' */}
             {level === 'Package' && (
@@ -296,7 +295,9 @@ function Menu() {
             <button id="clear-search" onClick={() => { /* Implement clear search logic */ }}>Clear Search</button>
             <p id="printSearch"></p>
 
-        <div id="switch-level-controls">
+            </div>
+
+            <div id="menu-controls">
             <h3>Switch Level</h3>
             <p id="currentLevel"></p>
             <table className="center">
@@ -320,19 +321,17 @@ function Menu() {
                 </tr>
                 </tbody>
             </table>
+            <div className="help-display">
+                <input type="radio" id="M1" name="graph_type" value={milestone === 'm1'} onChange={handleM1Change} checked={milestone === 'm1'}>
+                </input>
+                <label htmlFor="M1">Dependency</label>
+                <input type="radio" id="M2" name="graph_type" value={milestone === 'm2'} onChange={handleM2Change} checked={milestone === 'm2'} disabled={level !== 'Class'} >
+                </input>
+                <label htmlFor="M2">Git History</label>
+                <img src="/info-icon.png" alt='icon' className="info--icon" />
+                <p className='tooltip'>Graph type to view. Note: Git History graph is only available for class view</p>
+            </div>
         </div>
-
-        <div className="help-display">
-            <input type="radio" id="M1" name="graph_type" value={milestone === 'm1'} onChange={handleM1Change} checked={milestone === 'm1'}>
-            </input>
-        <label htmlFor="M1">Dependency</label>
-            <input type="radio" id="M2" name="graph_type" value={milestone === 'm2'} onChange={handleM2Change} checked={milestone === 'm2'} disabled={level !== 'Class'} >
-            </input>
-        <label htmlFor="M2">Git History</label>
-            <img src="/info-icon.png" alt='icon' className="info--icon" />
-            <p className='tooltip'>Graph type to view. Note: Git History graph is only available for class view</p>
-        </div>
-
     </div>
     );
 }
