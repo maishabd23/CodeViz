@@ -123,16 +123,20 @@ public class CodeVizController {
      * @return                  string response, message of the search result
      */
     @CrossOrigin
-    @GetMapping("/api/searchGraph")
-    public Map<String, String> searchGraph(
-            @RequestParam(name = "searchValue", required = false, defaultValue = "") String searchValue,
-            @RequestParam(name = "searchClasses", required = false, defaultValue = "false") boolean searchClasses,
-            @RequestParam(name = "searchMethods", required = false, defaultValue = "false") boolean searchMethods,
-            @RequestParam(name = "searchAttributes", required = false, defaultValue = "false") boolean searchAttributes,
-            @RequestParam(name = "searchParameters", required = false, defaultValue = "false") boolean searchParameters,
-            @RequestParam(name = "searchReturnType", required = false, defaultValue = "false") boolean searchReturnType,
-            @RequestParam(name = "searchConnections", required = false, defaultValue = "false") boolean searchConnections
+    @PostMapping("/api/searchGraph")
+    public Map<String, String> searchGraph(@RequestBody Map<String, String> requestBody
     ) {
+        String searchValue;
+        boolean searchClasses, searchMethods, searchAttributes, searchParameters, searchReturnType, searchConnections;
+
+        searchValue = requestBody.getOrDefault("value", "");
+        searchClasses = Boolean.parseBoolean(requestBody.getOrDefault("searchClasses", "false"));
+        searchMethods = Boolean.parseBoolean(requestBody.getOrDefault("searchMethods", "false"));
+        searchAttributes = Boolean.parseBoolean(requestBody.getOrDefault("searchAttributes", "false"));
+        searchParameters = Boolean.parseBoolean(requestBody.getOrDefault("searchParameters", "false"));
+        searchReturnType = Boolean.parseBoolean(requestBody.getOrDefault("searchReturnType", "false"));
+        searchConnections = Boolean.parseBoolean(requestBody.getOrDefault("searchConnections", "false"));
+
         Map<String, String> response = new HashMap<>();
 
         if (success) {
@@ -145,6 +149,8 @@ public class CodeVizController {
         }
 
         String result = codeVizInterface.getSearchResult(currentLevel);
+        System.out.println("Search Result: " + result);
+
         result = TextAnnotate.javaToHtml(result);
         response.put("string", result);
         return response;

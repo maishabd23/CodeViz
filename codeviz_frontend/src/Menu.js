@@ -68,6 +68,7 @@ function Menu() {
         fetch('/api/annotateGraph?gitHistory=true');
     };
     const mySearchFunction = async () => {
+        const searchValue = document.getElementById("searchInput").value;
         // Constructing the search query object
         const searchQuery = {
             value: searchValue,
@@ -81,7 +82,7 @@ function Menu() {
         // Use fetch to send the search query to backend API
         try {
             const response = await fetch('/api/searchGraph', {
-                method: 'GET',
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -166,7 +167,7 @@ function Menu() {
 
             const search = document.getElementById("searchInput");
             search.addEventListener("search", mySearchFunction);
-            function mySearchFunction() {
+            /*function mySearchFunction() { // duplicated? seems to be unused
                 const searchValue = document.getElementById("searchInput").value;
                 // Construct the search query object
                 const searchQuery = {
@@ -194,7 +195,7 @@ function Menu() {
                     .catch((error) => {
                         console.error('Error:', error);
                     });
-            }
+            }*/
 
 
             /*const detailedSearch = document.getElementById("detailedSearchInput");

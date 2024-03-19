@@ -386,6 +386,11 @@ public class GraphGenerator {
                               boolean searchParameters, boolean searchReturnType, boolean searchConnections) {
         clearSearch(); // Clear previous search results
 
+        // base case - check the entity names
+        checkAllNames(searchValue, packageEntities);
+        checkAllNames(searchValue, classEntities);
+        checkAllNames(searchValue, methodEntities);
+
         // Start the search based on entity levels and their attributes
         if (searchClasses) {
             performSearchOnEntities(searchValue, classEntities, searchAttributes, false, false);
@@ -398,13 +403,21 @@ public class GraphGenerator {
         }
     }
 
+    private void checkAllNames(String searchValue, LinkedHashMap<String, Entity> entities){
+        for (Entity entity : entities.values()) {
+            if (entity.nameContains(searchValue)){ // Simplified the condition
+                entity.setHighlighed(true);
+            }
+        }
+    }
+
     /**
      * A helper method to perform search on a collection of entities
      */
     private void performSearchOnEntities(String searchValue, LinkedHashMap<String, Entity> entities,
                                          boolean searchAttributes, boolean searchParameters, boolean searchReturnType) {
         for (Entity entity : entities.values()) {
-            boolean isHighlighted = entity.nameContains(searchValue); // Simplified the condition
+            boolean isHighlighted = false;
 
             if (entity instanceof ClassEntity && searchAttributes) {
                 ClassEntity classEntity = (ClassEntity) entity;
@@ -423,7 +436,9 @@ public class GraphGenerator {
                 }
             }
 
-            entity.setHighlighed(isHighlighted);
+            if (isHighlighted) { // only set highlighted true (they are all false initially)
+                entity.setHighlighed(isHighlighted);
+            }
         }
     }
 
