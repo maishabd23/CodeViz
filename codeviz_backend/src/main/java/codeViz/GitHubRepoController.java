@@ -5,6 +5,7 @@ import codeViz.codeComplexity.CyclomaticComplexity.CyclomaticComplexityVisitor;
 import codeViz.entity.*;
 import com.github.javaparser.*;
 
+import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
@@ -41,6 +42,7 @@ import java.util.zip.ZipInputStream;
 public class GitHubRepoController {
 
     private final GraphGenerator graphGenerator;
+
     private CompilationUnit compilationUnit;
 
     private  ZipEntry zipEntry;
@@ -183,7 +185,8 @@ public class GitHubRepoController {
 
                 classDeclaration.getMethods().forEach(methodDeclaration -> {
                     MethodEntity methodEntity = new MethodEntity(methodDeclaration.getNameAsString(), classEntity);
-                    boolean methodSuccess = graphGenerator.addEntity(methodEntity.getName(), methodEntity);
+                    String methodName = classEntity.getName() + "." + methodEntity.getName();
+                    boolean methodSuccess = graphGenerator.addEntity(methodName, methodEntity);
                     classEntity.addMethod(methodEntity);
 
                     System.out.println("METHOD " + methodDeclaration.getNameAsString() + " PARAMETERS: " + methodDeclaration.getParameters());
@@ -313,18 +316,29 @@ public class GitHubRepoController {
 
                         classDeclaration.getMethods().forEach(methodDeclaration -> {
                             // Connect method entities based on method invocations
-                            MethodEntity methodEntity = (MethodEntity) graphGenerator.getMethodEntities().get(methodDeclaration.getNameAsString());
+                            String methodName = classDeclaration.getNameAsString() + "." + methodDeclaration.getNameAsString();
+                            MethodEntity methodEntity = (MethodEntity) graphGenerator.getMethodEntities().get(methodName);
                             methodDeclaration.accept(new VoidVisitorAdapter<Void>() {
                                 @Override
                                 public void visit(MethodCallExpr methodCallExpr, Void arg) {
                                     super.visit(methodCallExpr, arg);
-                                    String calledMethodName = methodCallExpr.getNameAsString();
-                                    // Assuming the method entity is available in the graph generator
-                                    MethodEntity calledMethodEntity = (MethodEntity) graphGenerator.getMethodEntities().get(calledMethodName);
-                                    if (calledMethodEntity != null) {
-                                        // Add called method entity to the connected entities of the current method entity
-                                        methodEntity.addConnectedEntity(calledMethodEntity);
+
+                                    // Find the class or interface declaration containing the method call
+                                    Optional<ClassOrInterfaceDeclaration> containingClassNode = methodCallExpr.findAncestor(ClassOrInterfaceDeclaration.class);
+
+                                    if (containingClassNode.isPresent()) {
+                                        ClassOrInterfaceDeclaration containingClass = (ClassOrInterfaceDeclaration) containingClassNode.get();
+                                        String containingClassName = containingClass.getNameAsString();
+                                        String calledMethodName = methodCallExpr.getNameAsString();
+                                        // Assuming the method entity is available in the graph generator
+                                        MethodEntity calledMethodEntity = (MethodEntity) graphGenerator.getMethodEntities().get(containingClassName + "." + calledMethodName);
+                                        if (calledMethodEntity != null) {
+                                            // Add called method entity to the connected entities of the current method entity
+                                            methodEntity.addConnectedEntity(calledMethodEntity);
+                                        }
                                     }
+
+
                                 }
                             }, null);
                         });
