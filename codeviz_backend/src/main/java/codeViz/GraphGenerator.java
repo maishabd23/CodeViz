@@ -383,7 +383,7 @@ public class GraphGenerator {
     }
 */
     public void performSearch(String searchValue, boolean searchClasses, boolean searchMethods, boolean searchAttributes,
-                              boolean searchParameters, boolean searchReturnType, boolean searchConnections) {
+                              boolean searchParameters, boolean searchReturnType, boolean searchConnections, EntityType currentLevel) {
         clearSearch(); // Clear previous search results
 
         // base case - check the entity names
@@ -399,13 +399,21 @@ public class GraphGenerator {
             performSearchOnEntities(searchValue, methodEntities, false, searchParameters, searchReturnType);
         }
         if (searchConnections) {
-            performSearchOnEntities(searchValue, packageEntities, false, false, false);
+            checkConnections(searchValue, getEntities(currentLevel));
         }
     }
 
     private void checkAllNames(String searchValue, LinkedHashMap<String, Entity> entities){
         for (Entity entity : entities.values()) {
             if (entity.nameContains(searchValue)){ // Simplified the condition
+                entity.setHighlighed(true);
+            }
+        }
+    }
+
+    private void checkConnections(String searchValue, LinkedHashMap<String, Entity> entities){
+        for (Entity entity : entities.values()) {
+            if (entity.containsSearchValue(searchValue)){ // calling the superclass containsSearchValue will just check the connections
                 entity.setHighlighed(true);
             }
         }

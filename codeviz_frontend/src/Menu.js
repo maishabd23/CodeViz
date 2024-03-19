@@ -77,7 +77,7 @@ function Menu() {
             searchAttributes: level === 'Class' ? searchAttributes : false,
             searchParameters: level === 'Method' ? searchParameters : false,
             searchReturnType: level === 'Method' ? searchReturnType : false,
-            searchConnections: level === 'Package' ? searchConnections : false,
+            searchConnections: searchConnections,
         };
         // Use fetch to send the search query to backend API
         try {
@@ -279,6 +279,10 @@ function Menu() {
                         <input type="checkbox" checked={searchAttributes} onChange={(e) => setSearchAttributes(e.target.checked)} />
                         Attributes
                     </label>
+                    <label>
+                        <input type="checkbox" checked={searchConnections} onChange={(e) => setSearchConnections(e.target.checked)} />
+                        Connections
+                    </label>
                 </>
             )}
             {level === 'Method' && (
@@ -290,6 +294,10 @@ function Menu() {
                     <label>
                         <input type="checkbox" checked={searchReturnType} onChange={(e) => setSearchReturnType(e.target.checked)} />
                         Return Type
+                    </label>
+                    <label>
+                        <input type="checkbox" checked={searchConnections} onChange={(e) => setSearchConnections(e.target.checked)} />
+                        Connections
                     </label>
                 </>
             )}

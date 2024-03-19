@@ -48,10 +48,10 @@ public class CodeVizInterface {
     }
 */
     public void performSearch(String searchValue, boolean searchClasses, boolean searchMethods, boolean searchAttributes,
-                              boolean searchParameters, boolean searchReturnType, boolean searchConnections) {
+                              boolean searchParameters, boolean searchReturnType, boolean searchConnections, EntityType currentLevel) {
         if (success) {
             graphGenerator.performSearch(searchValue, searchClasses, searchMethods, searchAttributes,
-                    searchParameters, searchReturnType, searchConnections);
+                    searchParameters, searchReturnType, searchConnections, currentLevel);
         }
     }
 

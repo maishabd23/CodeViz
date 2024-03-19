@@ -143,7 +143,7 @@ public class CodeVizController {
             if (!searchValue.isEmpty()) {
                 System.out.println("SEARCHING FOR " + searchValue);
                 codeVizInterface.performSearch(searchValue, searchClasses, searchMethods, searchAttributes,
-                        searchParameters, searchReturnType, searchConnections);
+                        searchParameters, searchReturnType, searchConnections, currentLevel);
             }
             codeVizInterface.generateGraph(currentLevel, GEXF_FILE, this.gitHistory);
         }
