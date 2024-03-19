@@ -1,7 +1,12 @@
 package codeViz;
 
+import codeViz.entity.ClassEntity;
+import codeViz.entity.Entity;
+import codeViz.entity.EntityType;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import codeViz.entity.*;
 import codeViz.gitHistory.CommitInfo;
+//import codeViz.gitHistory.GitCommitReader;
 import codeViz.gitHistory.GitCommitReader;
 import org.gephi.graph.api.*;
 import org.gephi.project.api.ProjectController;
@@ -20,9 +25,9 @@ public class GraphGenerator {
 
     // can look at the individual list when making that specific level's view
     // NOTE: kept all List types as Entity to allow for code reuse, might need to specify type as PackageEntity, etc, later on
-    private final LinkedHashMap<String, Entity> packageEntities;
-    private final LinkedHashMap<String, Entity> classEntities;
-    private final LinkedHashMap<String, Entity> methodEntities;
+    private LinkedHashMap<String, Entity> packageEntities;
+    private LinkedHashMap<String, Entity> classEntities;
+    private LinkedHashMap<String, Entity> methodEntities;
     private String searchValue;
 
     // details on the most recently generated graph
@@ -143,7 +148,7 @@ public class GraphGenerator {
                     PackageEntity packageEntity = (PackageEntity) parentEntity;
                     Set<ClassEntity> classEntities1 = packageEntity.getClasses();
                     for (Entity entityInner : classEntities1) {
-                        entities.put(entityInner.getKey(), entityInner);
+                        entities.put(entityInner.getName(), entityInner); // FIXME - change back to getKey when doing full name
                     }
                 } else if (childLevel.equals(EntityType.METHOD)) { // package - method
                     PackageEntity packageEntity = (PackageEntity) parentEntity;
@@ -151,7 +156,7 @@ public class GraphGenerator {
                     for (ClassEntity classEntityInner : classEntities1) {
                         Set<MethodEntity> methodEntities1 = classEntityInner.getMethods();
                         for (Entity entityInner : methodEntities1) {
-                            entities.put(entityInner.getKey(), entityInner);
+                            entities.put(entityInner.getName(), entityInner); // FIXME - change back to getKey when doing full name
                         }
                     }
                 }
@@ -159,15 +164,15 @@ public class GraphGenerator {
                 ClassEntity classEntity = (ClassEntity) parentEntity;
                 Set<MethodEntity> methodEntities1 = classEntity.getMethods();
                 for (Entity entityInner : methodEntities1) {
-                    entities.put(entityInner.getKey(), entityInner);
+                    entities.put(entityInner.getName(), entityInner); // FIXME - change back to getKey when doing full name
                 }
             }
         } else {
             System.out.println("ERROR, parentEntity null ");
         }
-        if (entities.isEmpty()){
-            System.out.println("EMPTY entities list");
-        }
+//        if (entities.isEmpty()){
+//            System.out.println("EMPTY entities list");
+//        }
         return entitiesToNodes(entities, gitHistory);
     }
 
@@ -177,7 +182,8 @@ public class GraphGenerator {
         // NOTE: assuming all entities are properly set up with connections already
 
         if (entities.isEmpty()){
-            return null;
+            System.out.println("EMPTY entities list");
+            // allow empty graph to be created
         }
 
         List<Node> nodes = new ArrayList<>();
@@ -328,9 +334,13 @@ public class GraphGenerator {
      * @author Thanuja Sivaananthan
      */
     public void clearEntities() {
-        this.packageEntities.clear();
-        this.classEntities.clear();
-        this.methodEntities.clear();
+        packageEntities.clear();
+        classEntities.clear();
+        methodEntities.clear();
+
+        packageEntities = new LinkedHashMap<>();
+        classEntities = new LinkedHashMap<>();
+        methodEntities = new LinkedHashMap<>();
     }
 
 
@@ -499,12 +509,20 @@ public class GraphGenerator {
     }
 
     public String getNodeDetails(String nodeName, EntityType entityType) {
-        // FIXME - duplicated code
         Entity entity = getNode(nodeName, entityType);
         if (entity == null){
             return "";
         } else {
             return entity.toString();
+        }
+    }
+
+    public String getComplexityDetails(String nodeName, EntityType entityType) {
+        Entity entity = getNode(nodeName, entityType);
+        if (entity == null){
+            return "";
+        } else {
+            return entity.getComplexityDetails().toString();
         }
     }
 
@@ -602,5 +620,13 @@ public class GraphGenerator {
             return true;
         }
         return false;
+    }
+
+    public ClassEntity changeInterfaceToClassEntity(ClassOrInterfaceDeclaration classOrInterfaceDeclaration){
+        ClassEntity classEntity = null;
+        if (classEntities.containsKey(classOrInterfaceDeclaration.getNameAsString())){
+            classEntity = (ClassEntity) classEntities.get(classOrInterfaceDeclaration.getNameAsString());
+        }
+        return classEntity;
     }
 }

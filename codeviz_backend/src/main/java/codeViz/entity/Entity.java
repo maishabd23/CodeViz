@@ -1,5 +1,6 @@
 package codeViz.entity;
 
+import codeViz.codeComplexity.ComplexityDetails;
 import codeViz.gitHistory.CommitInfo;
 import codeViz.TextAnnotate;
 import org.gephi.graph.api.Node;
@@ -17,6 +18,8 @@ public abstract class Entity {
     private final Map<Entity, Float> connectedEntitiesAndWeights; //stores the weight of connections
 
     private int size;
+    private static final int SIZE_INCREMENT = 2;
+
     private final Color colour;
     private static final Color HIGHLIGHED_COLOUR = new Color(255,255,50);
     private boolean isHighlighed;
@@ -28,18 +31,22 @@ public abstract class Entity {
     private final ArrayList<CommitInfo> commitInfos; // stored in order of most recent to the least recent
     private final Map<Entity, Float> gitConnectedEntitiesAndWeights; //stores the weight of connections
 
+    private final ComplexityDetails complexityDetails;
+
     /**
      * Set up an Entity
+     *
+     * @param name              name of entity
+     * @param entityType        entity type
+     * @param complexityDetails complexity details
      * @author Thanuja Sivaananthan
      * @author Sabah Samwatin
-     * @param name          name of entity
-     * @param entityType    entity type
      */
-    public Entity(String name, EntityType entityType){
+    public Entity(String name, EntityType entityType, ComplexityDetails complexityDetails){
         this.name = name;
         this.entityType = entityType;
         this.connectedEntitiesAndWeights = new LinkedHashMap<>();
-        this.size = 1;
+        this.size = SIZE_INCREMENT;
         this.colour = getRandomColour();
         this.isHighlighed = false;
         // NOTE: might want to move within ClassEntity
@@ -47,6 +54,9 @@ public abstract class Entity {
         this.gitConnectedEntitiesAndWeights = new LinkedHashMap<>();
         this.x_pos = 0;
         this.y_pos = 0;
+
+        this.complexityDetails = complexityDetails;
+        complexityDetails.setEntity(this);
     }
 
     public String getName() {
@@ -66,8 +76,12 @@ public abstract class Entity {
     }
 
 
-    public void incrementSize(){
-        this.size += 1;
+    protected void incrementSize(){
+        this.size += SIZE_INCREMENT;
+    }
+
+    public static int getSizeIncrement() {
+        return SIZE_INCREMENT;
     }
 
     public int getSize() {
@@ -199,10 +213,12 @@ public abstract class Entity {
      * @param entity entity to add
      */
     protected void addConnectedEntity(Entity entity){
+        if (entity == null){
+            return;
+        }
         float initialWeight = connectedEntitiesAndWeights.getOrDefault(entity, (float) 0);
         //System.out.println(initialWeight);
         connectedEntitiesAndWeights.put(entity, initialWeight + 1);
-        incrementSize();
     }
 
     protected void addGitConnectedEntity(Entity entity, float weight){
@@ -248,5 +264,9 @@ public abstract class Entity {
 
     protected void addCommitInfo(CommitInfo commitInfo){
         this.commitInfos.add(commitInfo);
+    }
+
+    public ComplexityDetails getComplexityDetails() {
+        return complexityDetails;
     }
 }

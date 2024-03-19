@@ -12,11 +12,20 @@ import { parse } from "graphology-gexf/browser";
 import React, { useState, useEffect} from 'react';
 import forceAtlas2 from "graphology-layout-forceatlas2";
 
+import RightContext from './RightContext';
+import PopUpThreshold from "./PopUpThreshold";
+
+// create shared variable here, so it can edit it
+export var hoveredNodeString = null;
+export var labelsThresholdRange, thresholdLabel = null;
+
 // Load external GEXF file:
 function GraphViz() {
   const [data, setData] = useState(null);
-  const initialNodeMessage = "Hover over a node to view its details. Select the node to view the filtered graph at the inner level." +
-      "<br/>If the 'Git History' graph is displayed, hover over an edge to view its details."
+  const initialNodeMessage = "Right-click on a node to view more options." +
+      "<br/>If the 'Git History' graph is displayed, hover over an edge to view its git history details."
+  let hoveredEdge = null;
+  const [popUpMenu, setPopUpMenu] = React.useState(false);
 
   useEffect(() => {
     // Make the API request when the component loads
@@ -41,9 +50,8 @@ function GraphViz() {
         const zoomOutBtn = document.getElementById("zoom-out");
         const zoomResetBtn = document.getElementById("zoom-reset");
 
-        const labelsThresholdRange = document.getElementById("labels-threshold");
-        const updateThresholdSettings = document.getElementById("update-threshold-settings");
-
+        labelsThresholdRange = document.getElementById("labels-threshold");
+        thresholdLabel = document.getElementById("thresholdLabel");
 
         const settings = forceAtlas2.inferSettings(graph);
         forceAtlas2.assign(graph, { settings, iterations: 600 });
@@ -64,43 +72,26 @@ function GraphViz() {
         const camera = renderer.getCamera();
         renderer.refresh(); // to make sure graph appears right away
 
-        let selectedNode= null;
-
-        // On mouse down on a node
-        //  - display node details
-        //  - save in the dragged node in the state
-        renderer.on("downNode", (e) => {
-          selectedNode = e.node;
-          fetch('/api/generateInnerGraph?nodeName=' + selectedNode.toString());
+        // when clicking (not dragging) elsewhere, reset the details
+        renderer.on("clickStage", () => {
+          document.getElementById("nodeDetails").innerHTML = initialNodeMessage;
         });
-
-        renderer.on("enterNode", (e) => {
-          selectedNode = e.node;
-          fetch('/api/getNodeDetails?nodeName=' + selectedNode.toString())
-              .then((response) => response.json())
-              .then((responseData) => {
-                document.getElementById("nodeDetails").innerHTML = responseData.string;
-              });
-        });
-
 
         renderer.on("enterEdge", (e) => {
           fetch('/api/getEdgeDetails?edgeName=' + e.edge.toString())
               .then((response) => response.json())
               .then((responseData) => {
                 if (responseData.string) {
+                  hoveredEdge = e.edge;
+                  setHoveredNeighbours(graph, renderer);
                   document.getElementById("nodeDetails").innerHTML = responseData.string;
                 }
               });
         });
 
-        renderer.on("leaveEdge", () => {
-          document.getElementById("nodeDetails").innerHTML = initialNodeMessage;
-        });
-
-        renderer.on("leaveNode", () => {
-          document.getElementById("nodeDetails").innerHTML = initialNodeMessage;
-        });
+        // renderer.on("leaveEdge", () => { // TODO FIX Git Graph
+        //   document.getElementById("nodeDetails").innerHTML = initialNodeMessage;
+        // });
   
         // Bind zoom manipulation buttons
         zoomInBtn.addEventListener("click", () => {
@@ -116,18 +107,11 @@ function GraphViz() {
         // Bind labels threshold to range input
         labelsThresholdRange.addEventListener("input", () => {
           renderer.setSetting("labelRenderedSizeThreshold", +labelsThresholdRange.value);
-          document.getElementById("thresholdLabel").innerHTML = "Threshold: " + labelsThresholdRange.value;
+          thresholdLabel.innerHTML = "Threshold: " + labelsThresholdRange.value;
         });
 
         // Set proper range initial value:
         labelsThresholdRange.value = renderer.getSetting("labelRenderedSizeThreshold") + "";
-
-        // update threshold settings to match inputs
-        updateThresholdSettings.addEventListener("click", () => {
-          labelsThresholdRange.min = document.getElementById("min").value;
-          labelsThresholdRange.max = document.getElementById("max").value;
-          labelsThresholdRange.step = document.getElementById("step").value;
-        });
 
         setHoveredNeighbours(graph, renderer);
       };
@@ -139,11 +123,14 @@ function GraphViz() {
         let hoveredNeighbors = undefined;
 
         // Bind graph interactions:
+        // also set node in backend, so it can be used by RightContext Menu
         renderer.on("enterNode", ({ node }) => {
           setHoveredNode(node);
+          hoveredNodeString = node;
         });
         renderer.on("leaveNode", () => {
           setHoveredNode(undefined);
+          hoveredNodeString = null;
         });
 
         function setHoveredNode(node) {
@@ -171,6 +158,8 @@ function GraphViz() {
           const res = { ...data };
           if (hoveredNode && !graph.hasExtremity(edge, hoveredNode)) {
             res.hidden = true; // could set as a colour instead
+          } else if (hoveredEdge && hoveredEdge === edge){
+            res.color = "#858990";
           }
           return res;
         });
@@ -182,7 +171,9 @@ function GraphViz() {
 
     return (
       <div className="graphDisplay">
-        <div className="graphDisplay--image"></div>
+        <RightContext>
+          <div className="graphDisplay--image"></div>
+        </RightContext>
         <div id="controls">
           <div className="center">
             <h2>Controls</h2>
@@ -193,27 +184,10 @@ function GraphViz() {
           <div className="input">
             <label htmlFor="labels-threshold">Threshold </label>
             <input id="labels-threshold" type="range" min="0" max="15" step="0.5" />
-            <table className="center">{/*for ease of use, ideally these values should be set dynamically based on the graph*/}
-              <tbody>
-              <tr><td>
-                <label htmlFor="min">min </label><input id="min" type="number" min="0" step="1" defaultValue={"0"}/>
-              </td></tr>
-              <tr><td>
-                <label htmlFor="max">max </label><input id="max" type="number" max="100" step="1" defaultValue={"15"}/>
-              </td></tr>
-              <tr><td>
-                <label htmlFor="step">step </label><input id="step" type="number" min="0.01" step="0.01" defaultValue={"0.5"}/>
-              </td></tr>
-              <tr><td>
-                <div className="help-display">
-                  <button id="update-threshold-settings">Update Threshold Settings</button>
-                  <img src="/info-icon.png" alt='icon' className="info--icon" />
-                  <p className='tooltip'>Adjust the max, min and step values for the threshold slider</p> 
-                </div>
-              </td></tr>
-              </tbody>
-            </table>
             <p id="thresholdLabel"></p>
+            <button onClick={() => setPopUpMenu(true)}>Modify Threshold Settings</button>
+            <PopUpThreshold id="popUpThreshold" trigger={popUpMenu} setTrigger={setPopUpMenu}>
+            </PopUpThreshold>
           </div>
         </div>
         <div id="nodeDetailsDisplay">

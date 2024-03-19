@@ -31,8 +31,9 @@ import java.util.*;
  */
 public class GitCommitReader {
 
-    private static final String gitCloneDirectory = "./testgithistory"; // local directory to clone into
+    private static final String GIT_CLONE_DIR_PATH = "./testgithistory"; // local directory to clone into
 
+    private final File GIT_CLONE_DIRECTORY;
     private Git git;
     private final GraphGenerator graphGenerator;
     private final LinkedHashMap<String, String> renamedClassEntityNames;
@@ -49,6 +50,7 @@ public class GitCommitReader {
         this.renamedClassEntityNames = new LinkedHashMap<>();
         this.deletedClasses = new HashSet<>();
         this.gitDiffAssociationRules = new GitDiffAssociationRules();
+        this.GIT_CLONE_DIRECTORY = new File(GIT_CLONE_DIR_PATH);
     }
 
     /**
@@ -56,14 +58,14 @@ public class GitCommitReader {
      * @param localDirectory    the local directory to read from
      * @param maxNumCommits the number of commits to get the history from, -1 if all commits
      */
-    public void extractCommitHistory(String localDirectory, int maxNumCommits){
-        try {
-            git = Git.init().setDirectory(new File(localDirectory)).call();
-        } catch (GitAPIException e) {
-            throw new RuntimeException(e);
-        }
-        storeCommitHistory(maxNumCommits);
-    }
+//    public void extractCommitHistory(String localDirectory, int maxNumCommits){
+//        try {
+//            git = Git.init().setDirectory(new File(localDirectory)).call();
+//        } catch (GitAPIException e) {
+//            throw new RuntimeException(e);
+//        }
+//        storeCommitHistory(maxNumCommits);
+//    }
 
     /**
      * Read commit history via gitHub
@@ -74,16 +76,17 @@ public class GitCommitReader {
     public void extractCommitHistory(String gitHubURI, String tokenPassword, int maxNumCommits){
         // TODO - make this properly secure
         try {
-            FileUtils.deleteDirectory(new File(gitCloneDirectory));
+            FileUtils.deleteDirectory(GIT_CLONE_DIRECTORY);
             this.git = Git.cloneRepository()
                     .setURI(gitHubURI)
                     .setCredentialsProvider(new UsernamePasswordCredentialsProvider(tokenPassword, ""))
-                    .setDirectory(new File(gitCloneDirectory))
+                    .setDirectory(GIT_CLONE_DIRECTORY)
                     .call();
         } catch (IOException | GitAPIException e) {
             throw new RuntimeException(e);
         }
         storeCommitHistory(maxNumCommits);
+        git.getRepository().close(); // close this, so a new repo can be visualized later
     }
 
     /**
@@ -257,7 +260,7 @@ public class GitCommitReader {
 
     /**
      * Get the classEntity that corresponds with the filename
-     * @param fullFilename      the filename
+     * @param fullFilename      the filename of the Java Class
      * @return  the classEntity, or null if it doesn't exist in the graph generator
      */
     private ClassEntity getClassEntity(String fullFilename) {
@@ -272,14 +275,20 @@ public class GitCommitReader {
         LinkedHashMap<String, Entity> packages = graphGenerator.getPackageEntities();
         LinkedHashMap<String, Entity> classes = graphGenerator.getClassEntities();
 
+        // Note: need to iterate over each folder (fileSection)
+        // because the valid package name might start in an inner folder.
+        // This makes sure we know that we are starting at a valid package/class name
         String keyName = "";
         for (String fileSection : fileSections){
-            keyName += fileSection.replace(".java", "");
-            if (packages.containsKey(keyName) || classes.containsKey(keyName)){
-                System.out.println("FOUND ENTITY FOR " + fullFilename + " AS " + keyName);
+            fileSection = fileSection.replace(".java", "");
+            keyName += fileSection;
+            if (packages.containsKey(keyName) || classes.containsKey(fileSection)){ // TODO - change back to key name here and in GitHubRepoController
 
-                if (classes.containsKey(keyName)){
-                    return (ClassEntity) classes.get(keyName);
+                if (classes.containsKey(fileSection)){
+                    System.out.println("FOUND CLASS FOR " + fullFilename + " AS " + keyName);
+                    return (ClassEntity) classes.get(fileSection);
+                } else {
+                    System.out.println("FOUND PACKAGE FOR " + fullFilename + " AS " + keyName);
                 }
                 keyName += ".";
             } else {
