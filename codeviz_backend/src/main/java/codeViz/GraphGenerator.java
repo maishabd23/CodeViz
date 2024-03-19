@@ -392,7 +392,7 @@ public class GraphGenerator {
         checkAllNames(searchValue, methodEntities);
 
         // Start the search based on entity levels and their attributes
-        if (searchClasses) {
+        if (searchClasses || searchAttributes) {
             performSearchOnEntities(searchValue, classEntities, searchAttributes, false, false);
         }
         if (searchMethods || searchParameters || searchReturnType) {
@@ -417,7 +417,7 @@ public class GraphGenerator {
     private void performSearchOnEntities(String searchValue, LinkedHashMap<String, Entity> entities,
                                          boolean searchAttributes, boolean searchParameters, boolean searchReturnType) {
         for (Entity entity : entities.values()) {
-            boolean isHighlighted = false;
+            boolean isHighlighted = entity.nameContains(searchValue); // Simplified the condition
 
             if (entity instanceof ClassEntity && searchAttributes) {
                 ClassEntity classEntity = (ClassEntity) entity;
@@ -438,6 +438,18 @@ public class GraphGenerator {
 
             if (isHighlighted) { // only set highlighted true (they are all false initially)
                 entity.setHighlighed(isHighlighted);
+
+                // in case the parent type is performing the search, set the parent's highlight as well
+                if (entity instanceof ClassEntity){
+                    ClassEntity classEntity = (ClassEntity) entity;
+                    if (classEntity.getPackageEntity() != null){
+                        classEntity.getPackageEntity().setHighlighed(isHighlighted);
+                    }
+                } else if (entity instanceof MethodEntity) {
+                    MethodEntity methodEntity = (MethodEntity) entity;
+                    methodEntity.getClassEntity().setHighlighed(isHighlighted);
+                }
+
             }
         }
     }
