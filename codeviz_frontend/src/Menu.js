@@ -72,8 +72,12 @@ function Menu() {
         // Constructing the search query object
         const searchQuery = {
             value: searchValue,
-            searchClasses: level === 'Class' ? searchClasses : false,
-            searchMethods: level === 'Class' ? searchMethods : level === 'Method',
+
+            // level itself can be checked by adjacent levels
+            searchClasses: level !== 'Method' ? searchClasses : false, // only Method cannot search classes
+            searchMethods: level !== 'Package' ? searchMethods : false, // only Package cannot search methods
+
+            // only the specific level can check its own inner details
             searchAttributes: level === 'Class' ? searchAttributes : false,
             searchParameters: level === 'Method' ? searchParameters : false,
             searchReturnType: level === 'Method' ? searchReturnType : false,
