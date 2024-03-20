@@ -12,6 +12,7 @@ function RightContext() {
     const [xyPosition, setxyPosition] = React.useState({ x: 0, y: 0 });
     const [level, setLevel] = React.useState('Class');
     let clickedOption = false
+    const [savedHoveredNodeString, setSavedHoveredNodeString] = React.useState(null);
 
     fetch('/api/getCurrentLevel')
         .then((response) => response.json())
@@ -24,6 +25,9 @@ function RightContext() {
         // if clickedOption is true, that means a menu option was just clicked,
         // so do not show the menu again
         if (hoveredNodeString != null && clickedOption !== true) {
+            // save this locally, in case the user moves out of the node
+            // while still having the right click open
+            setSavedHoveredNodeString(hoveredNodeString);
             event.preventDefault();
             setContext(false);
             const positionChange = {
@@ -33,6 +37,7 @@ function RightContext() {
             setxyPosition(positionChange);
             setContext(true);
         } else {
+            setSavedHoveredNodeString(null);
             hideContext(); // hide context if a user clicks outside a node
         }
         clickedOption = false;
@@ -46,18 +51,18 @@ function RightContext() {
     //function to set the chosen menu option
     const handleNodeOption = (chosenNodeApi) => {
         clickedOption = true;
-        if (hoveredNodeString != null) {
+        if (savedHoveredNodeString != null) {
             if (chosenNodeApi === 'generateInnerGraph') {
-                fetch('/api/generateInnerGraph?nodeName=' + hoveredNodeString.toString());
+                fetch('/api/generateInnerGraph?nodeName=' + savedHoveredNodeString.toString());
             } else {
-                fetch('/api/' + chosenNodeApi + '?nodeName=' + hoveredNodeString.toString())
+                fetch('/api/' + chosenNodeApi + '?nodeName=' + savedHoveredNodeString.toString())
                     .then((response) => response.json())
                     .then((responseData) => {
                         document.getElementById("nodeDetails").innerHTML = responseData.string;
                     });
             }
         } else {
-            console.log("ERROR, hoveredNode is " + hoveredNodeString);
+            console.log("ERROR, hoveredNode is " + savedHoveredNodeString);
         }
     };
 
