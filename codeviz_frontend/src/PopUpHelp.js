@@ -12,8 +12,8 @@ function PopUpHelp(props) {
     return (props.trigger) ? (
         <div className="popup-help">
             <div className="popup-help-inner">
-                <button className="close-btn" onClick={() => props.setTrigger(false)}>close</button>
-                <h1>Documentation:</h1>
+                <button className="close-btn" onClick={() => props.setTrigger(false)}>Close</button>
+                <h1>Documentation</h1>
 
                 <h3>How to Generate Graph:</h3>
                 <p>
