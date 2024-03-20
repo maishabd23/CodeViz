@@ -132,19 +132,20 @@ function Menu() {
 
     return (
         <div className='menu'>
-            <h2>Menu</h2>
             <div id="menu-controls">
                 <h3>View Repo</h3>
                 <table className="center">
                     <tbody>
-                    <tr><td>
-                        <div className="help-display">
-                            <input type="text" value={repoURL} onChange={handleRepoURLChange} placeholder="Enter Repository URL" />
+                    <tr>
+                        <td>
+                        <div className="chooseRepo">
+                            <input type="text" id="viewRepoInput" value={repoURL} onChange={handleRepoURLChange} placeholder="Enter Repository URL" />
                             <button onClick={handleSubmit} disabled={loading}>Submit</button>
                             {error && <p className="error">{error}</p>}
                             {loading && <p>Loading...</p>}
                         </div>
-                    </td></tr>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -204,15 +205,15 @@ function Menu() {
                     </tbody>
                 </table>
 
-                <div className="help-display">
-                <input type="radio" id="M1" name="graph_type" value={milestone === 'm1'} onChange={handleM1Change} checked={milestone === 'm1'}>
-                </input>
-                <label htmlFor="M1">Dependency</label>
-                <input type="radio" id="M2" name="graph_type" value={milestone === 'm2'} onChange={handleM2Change} checked={milestone === 'm2'} disabled={level !== 'Class'} >
-                </input>
-                <label htmlFor="M2">Git History</label>
-                    <img src="/info-icon.png" alt='icon' className="info--icon" />
-                    <p className='tooltip'>Graph type to view. Note: Git History graph is only available for class view</p>
+                <div className="graph-type">
+                    <input type="radio" id="M1" name="graph_type" value={milestone === 'm1'} onChange={handleM1Change} checked={milestone === 'm1'}>
+                    </input>
+                    <label htmlFor="M1">Dependency</label>
+                    <input type="radio" id="M2" name="graph_type" value={milestone === 'm2'} onChange={handleM2Change} checked={milestone === 'm2'} disabled={level !== 'Class'} >
+                    </input>
+                    <label htmlFor="M2">Git History</label>
+                        <img src="/info-icon.png" alt='icon' className="info--icon" />
+                        <p className='tooltip'>Graph type to view. Note: Git History graph is only available for class view</p>
                 </div>
             </div>
         </div>

@@ -43,6 +43,27 @@ nav {
   padding-right: 20px;
 }
 
+#viewRepoInput {
+  margin-right: 5px;
+}
+
+button {
+  border-radius: 5px;
+  background-color: rgb(93, 106, 119); 
+  color: #fff;
+  padding: 6px 10px; 
+  border: none; 
+  cursor: pointer;
+  transition: background-color 0.3s; /* Smooth transition for background color */
+  margin: 5px;
+}
+
+/* Hover state */
+button:hover {
+  background-color: #343434; /* Darker shade of blueish-gray on hover */
+}
+
+
 .nav--dropdownItem {
   font-size: medium;
   font-weight: 500;
@@ -86,6 +107,7 @@ canvas {
   border-color: #F4F7FC;
   border-style: solid;
   border-radius: 10px;
+  padding-bottom: 10px;
 }
 
 #nodeDetailsDisplay {
@@ -121,6 +143,12 @@ canvas {
 
 .help-display {
   display: flex;
+}
+
+.graph-type{
+  display: flex;
+  padding-bottom: 10px;
+  overflow: hidden;
 }
 
 .node-help {
