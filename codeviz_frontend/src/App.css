@@ -124,9 +124,13 @@ canvas {
 
 .node-help {
   display: flex;
-  position: relative;
+  /* position: relative; */
   align-items: center;
   vertical-align: middle;
+}
+
+.nav--documentation {
+  margin: 1em;
 }
 
 .h2 {
