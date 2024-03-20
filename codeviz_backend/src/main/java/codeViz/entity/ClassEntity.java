@@ -65,7 +65,7 @@ public class ClassEntity extends Entity {
      *
      * @param methodEntity method entity to add
      */
-    public void addMethod(MethodEntity methodEntity){ // TODO - allow for overloaded methods
+    protected void addMethod(MethodEntity methodEntity){ // TODO - allow for overloaded methods
         if (getMethod(methodEntity.getName()) == null){
             methods.put(methodEntity.getName(), methodEntity);
             incrementSize();

@@ -183,7 +183,6 @@ public class GitHubRepoController {
                     MethodEntity methodEntity = new MethodEntity(methodDeclaration.getNameAsString(), classEntity);
                     String methodName = classEntity.getName() + "." + methodEntity.getName();
                     boolean methodSuccess = graphGenerator.addEntity(methodName, methodEntity);
-                    classEntity.addMethod(methodEntity);
 
                     setLinesOfCode(methodDeclaration.getBegin(), methodDeclaration.getEnd(), methodEntity);
                 });
@@ -218,41 +217,48 @@ public class GitHubRepoController {
             String code = new String(entryContent, StandardCharsets.UTF_8);
             ParseResult<CompilationUnit> parseResult = javaParser.parse(new StringReader(code));
 
-            // after storing all classes, go back and add other class types: fields, arguments, return type
-            compilationUnit.getTypes().forEach(type -> {
-                if (type instanceof ClassOrInterfaceDeclaration classDeclaration) {
-                    ClassEntity classEntity = (ClassEntity) graphGenerator.getClassEntities().get(classDeclaration.getNameAsString());
-                    System.out.println("CLASS " + classDeclaration.getNameAsString() + " FIELDS: " + classDeclaration.getFields());
-                    classDeclaration.getFields().forEach(fieldDeclaration -> {
-                        String fieldType = String.valueOf(fieldDeclaration.getElementType());
-                        ClassEntity fieldClassEntity = getAndStoreConnectedClassEntity(classEntity, fieldType);
-                        String fieldName = fieldDeclaration.getVariables().get(0).getNameAsString();
-                        System.out.println("Added field " + fieldType + " " + fieldName);
-                        classEntity.addField(fieldName, fieldClassEntity);
-                    });
+            if (parseResult.isSuccessful()) {
+                CompilationUnit compilationUnit = parseResult.getResult().get();
+                ConnectionVisitor connectionVisitor = new ConnectionVisitor();
+                compilationUnit.accept(connectionVisitor, null);
+                connectionVisitor.visit(compilationUnit, null);
 
-                    classDeclaration.getMethods().forEach(methodDeclaration -> {
-                        MethodEntity methodEntity = classEntity.getMethod(methodDeclaration.getNameAsString());
-
-                        System.out.println("METHOD " + methodDeclaration.getNameAsString() + " PARAMETERS: " + methodDeclaration.getParameters());
-                        methodDeclaration.getParameters().forEach(parameter -> {
-                            String stringArgumentType = String.valueOf(parameter.getType());
-                            ClassEntity argumentClassEntity = getAndStoreConnectedClassEntity(classEntity, stringArgumentType);
-                            String argumentName = parameter.getNameAsString();
-                            methodEntity.addArgument(argumentName, argumentClassEntity);
-                            System.out.println("Added argument " + stringArgumentType + " " + argumentName);
+                // after storing all classes, go back and add other class types: fields, arguments, return type
+                compilationUnit.getTypes().forEach(type -> {
+                    if (type instanceof ClassOrInterfaceDeclaration classDeclaration) {
+                        ClassEntity classEntity = (ClassEntity) graphGenerator.getClassEntities().get(classDeclaration.getNameAsString());
+                        System.out.println("CLASS " + classDeclaration.getNameAsString() + " FIELDS: " + classDeclaration.getFields());
+                        classDeclaration.getFields().forEach(fieldDeclaration -> {
+                            String fieldType = String.valueOf(fieldDeclaration.getElementType());
+                            ClassEntity fieldClassEntity = getAndStoreConnectedClassEntity(classEntity, fieldType);
+                            String fieldName = fieldDeclaration.getVariables().get(0).getNameAsString();
+                            System.out.println("Added field " + fieldType + " " + fieldName);
+                            classEntity.addField(fieldName, fieldClassEntity);
                         });
 
-                        System.out.println("METHOD " + methodDeclaration.getNameAsString() + " RETURN TYPE: " + methodDeclaration.getType());
-                        String stringReturnType = String.valueOf(methodDeclaration.getType());
-                        ClassEntity returnClassEntity = getAndStoreConnectedClassEntity(classEntity, stringReturnType);
-                        methodEntity.setReturnType(returnClassEntity);
+                        classDeclaration.getMethods().forEach(methodDeclaration -> {
+                            MethodEntity methodEntity = classEntity.getMethod(methodDeclaration.getNameAsString());
 
-                        setLinesOfCode(methodDeclaration.getBegin(), methodDeclaration.getEnd(), methodEntity);
-                    });
-                }
-            });
+                            System.out.println("METHOD " + methodDeclaration.getNameAsString() + " PARAMETERS: " + methodDeclaration.getParameters());
+                            methodDeclaration.getParameters().forEach(parameter -> {
+                                String stringArgumentType = String.valueOf(parameter.getType());
+                                ClassEntity argumentClassEntity = getAndStoreConnectedClassEntity(classEntity, stringArgumentType);
+                                String argumentName = parameter.getNameAsString();
+                                methodEntity.addArgument(argumentName, argumentClassEntity);
+                                System.out.println("Added argument " + stringArgumentType + " " + argumentName);
+                            });
 
+                            System.out.println("METHOD " + methodDeclaration.getNameAsString() + " RETURN TYPE: " + methodDeclaration.getType());
+                            String stringReturnType = String.valueOf(methodDeclaration.getType());
+                            ClassEntity returnClassEntity = getAndStoreConnectedClassEntity(classEntity, stringReturnType);
+                            methodEntity.setReturnType(returnClassEntity);
+
+                            setLinesOfCode(methodDeclaration.getBegin(), methodDeclaration.getEnd(), methodEntity);
+                        });
+                    }
+                });
+
+            }
         }
 
     }
@@ -385,6 +391,7 @@ public class GitHubRepoController {
                                             ClassOrInterfaceDeclaration containingClass = containingClassNode.get();
                                             String containingClassName = containingClass.getNameAsString(); //get the name of containing class
 
+                                            // try setting called class entity
                                             ClassEntity calledClassEntity = methodEntity.getArguments().getOrDefault(calledObjectName, null);
                                             if (calledClassEntity != null && calledClassEntity.getMethod(calledMethodName) != null){
                                                 MethodEntity calledMethodEntity =  calledClassEntity.getMethod(calledMethodName);
