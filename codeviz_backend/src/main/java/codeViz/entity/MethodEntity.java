@@ -110,7 +110,7 @@ public class MethodEntity extends Entity {
     @Override
     public String toString() {
         String classString = Entity.entityToString(classEntity, "Class");
-        String argumentsString = classEntitySetToString(new LinkedHashSet<>(arguments.values()), "Arguments");
+        String argumentsString = classEntityMapToString(arguments, "Arguments");
         String returnTypeName = Entity.entityToString(returnType, "Return Type");
 
         return titleToString() +

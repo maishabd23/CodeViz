@@ -151,7 +151,7 @@ public class ClassEntity extends Entity {
 
         String packageName = Entity.entityToString(packageEntity, "Package");
         String superClassName = Entity.entityToString(superClass, "Superclass");
-        String fieldsString = classEntitySetToString(new LinkedHashSet<>(fields.values()), "Fields");
+        String fieldsString = classEntityMapToString(fields, "Fields");
 
         return titleToString() +
                 packageName +
