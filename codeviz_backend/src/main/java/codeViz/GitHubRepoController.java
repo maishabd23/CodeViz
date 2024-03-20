@@ -208,42 +208,52 @@ public class GitHubRepoController {
 
     }
 
-    private void createClassMethodInnerVaraibles(CompilationUnit compilationUnit) {
+    private void createClassMethodInnerVariables() {
+        JavaParser javaParser = new JavaParser();
 
-        // after storing all classes, go back and add other class types: fields, arguments, return type
-        compilationUnit.getTypes().forEach(type -> {
-            if (type instanceof ClassOrInterfaceDeclaration classDeclaration) {
-                ClassEntity classEntity = (ClassEntity) graphGenerator.getClassEntities().get(classDeclaration.getNameAsString());
-                System.out.println("CLASS " + classDeclaration.getNameAsString() + " FIELDS: " + classDeclaration.getFields());
-                classDeclaration.getFields().forEach(fieldDeclaration -> {
-                    String fieldType = String.valueOf(fieldDeclaration.getElementType());
-                    ClassEntity fieldClassEntity = getAndStoreConnectedClassEntity(classEntity, fieldType);
-                    String fieldName = fieldDeclaration.getVariables().get(0).getNameAsString();
-                    System.out.println("Added field " + fieldType + " " + fieldName);
-                    classEntity.addField(fieldName, fieldClassEntity);
-                });
+        HashMap<ClassEntity, Set<Entity>> connectedClasses = new HashMap<>();
+        Set<ClassEntity> classEntityList = new HashSet<>();
 
-                classDeclaration.getMethods().forEach(methodDeclaration -> {
-                    MethodEntity methodEntity = classEntity.getMethod(methodDeclaration.getNameAsString());
+        for (byte[] entryContent : entryContentsList) {
+            String code = new String(entryContent, StandardCharsets.UTF_8);
+            ParseResult<CompilationUnit> parseResult = javaParser.parse(new StringReader(code));
 
-                    System.out.println("METHOD " + methodDeclaration.getNameAsString() + " PARAMETERS: " + methodDeclaration.getParameters());
-                    methodDeclaration.getParameters().forEach(parameter -> {
-                        String stringArgumentType = String.valueOf(parameter.getType());
-                        ClassEntity argumentClassEntity = getAndStoreConnectedClassEntity(classEntity, stringArgumentType);
-                        String argumentName = parameter.getNameAsString();
-                        methodEntity.addArgument(argumentName, argumentClassEntity);
-                        System.out.println("Added argument " + stringArgumentType + " " + argumentName);
+            // after storing all classes, go back and add other class types: fields, arguments, return type
+            compilationUnit.getTypes().forEach(type -> {
+                if (type instanceof ClassOrInterfaceDeclaration classDeclaration) {
+                    ClassEntity classEntity = (ClassEntity) graphGenerator.getClassEntities().get(classDeclaration.getNameAsString());
+                    System.out.println("CLASS " + classDeclaration.getNameAsString() + " FIELDS: " + classDeclaration.getFields());
+                    classDeclaration.getFields().forEach(fieldDeclaration -> {
+                        String fieldType = String.valueOf(fieldDeclaration.getElementType());
+                        ClassEntity fieldClassEntity = getAndStoreConnectedClassEntity(classEntity, fieldType);
+                        String fieldName = fieldDeclaration.getVariables().get(0).getNameAsString();
+                        System.out.println("Added field " + fieldType + " " + fieldName);
+                        classEntity.addField(fieldName, fieldClassEntity);
                     });
 
-                    System.out.println("METHOD " + methodDeclaration.getNameAsString() + " RETURN TYPE: " + methodDeclaration.getType());
-                    String stringReturnType = String.valueOf(methodDeclaration.getType());
-                    ClassEntity returnClassEntity = getAndStoreConnectedClassEntity(classEntity, stringReturnType);
-                    methodEntity.setReturnType(returnClassEntity);
+                    classDeclaration.getMethods().forEach(methodDeclaration -> {
+                        MethodEntity methodEntity = classEntity.getMethod(methodDeclaration.getNameAsString());
 
-                    setLinesOfCode(methodDeclaration.getBegin(), methodDeclaration.getEnd(), methodEntity);
-                });
-            }
-        });
+                        System.out.println("METHOD " + methodDeclaration.getNameAsString() + " PARAMETERS: " + methodDeclaration.getParameters());
+                        methodDeclaration.getParameters().forEach(parameter -> {
+                            String stringArgumentType = String.valueOf(parameter.getType());
+                            ClassEntity argumentClassEntity = getAndStoreConnectedClassEntity(classEntity, stringArgumentType);
+                            String argumentName = parameter.getNameAsString();
+                            methodEntity.addArgument(argumentName, argumentClassEntity);
+                            System.out.println("Added argument " + stringArgumentType + " " + argumentName);
+                        });
+
+                        System.out.println("METHOD " + methodDeclaration.getNameAsString() + " RETURN TYPE: " + methodDeclaration.getType());
+                        String stringReturnType = String.valueOf(methodDeclaration.getType());
+                        ClassEntity returnClassEntity = getAndStoreConnectedClassEntity(classEntity, stringReturnType);
+                        methodEntity.setReturnType(returnClassEntity);
+
+                        setLinesOfCode(methodDeclaration.getBegin(), methodDeclaration.getEnd(), methodEntity);
+                    });
+                }
+            });
+
+        }
 
     }
 
@@ -473,7 +483,7 @@ public class GitHubRepoController {
 
         try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(codebase)) {
             List<PackageEntity> packages = parseJavaFilesFromZip(byteArrayInputStream);
-            createClassMethodInnerVaraibles(compilationUnit);
+            createClassMethodInnerVariables();
             createClassConnections();
             //createPackageConnections();
             // Pass the created entities to the model or perform other actions
