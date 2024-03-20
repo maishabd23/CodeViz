@@ -75,6 +75,8 @@ function GraphViz() {
         // when clicking (not dragging) elsewhere, reset the details
         renderer.on("clickStage", () => {
           document.getElementById("nodeDetails").innerHTML = initialNodeMessage;
+          hoveredEdge = null;
+          setHoveredNeighbours(graph, renderer);
         });
 
         renderer.on("enterEdge", (e) => {
@@ -127,6 +129,8 @@ function GraphViz() {
         renderer.on("enterNode", ({ node }) => {
           setHoveredNode(node);
           hoveredNodeString = node;
+          hoveredEdge = null;
+          document.getElementById("nodeDetails").innerHTML = initialNodeMessage; // remove any edge details
         });
         renderer.on("leaveNode", () => {
           setHoveredNode(undefined);
