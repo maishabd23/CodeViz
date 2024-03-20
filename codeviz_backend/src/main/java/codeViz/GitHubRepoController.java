@@ -322,23 +322,59 @@ public class GitHubRepoController {
                                 @Override
                                 public void visit(MethodCallExpr methodCallExpr, Void arg) {
                                     super.visit(methodCallExpr, arg);
+                                    String calledMethodName = methodCallExpr.getNameAsString();
 
-                                    // Find the class or interface declaration containing the method call
-                                    Optional<ClassOrInterfaceDeclaration> containingClassNode = methodCallExpr.findAncestor(ClassOrInterfaceDeclaration.class);
+                                    // Check if the method call has a scope ex. object.methodName()
+                                    if (methodCallExpr.getScope().isPresent()) {
 
-                                    if (containingClassNode.isPresent()) {
-                                        ClassOrInterfaceDeclaration containingClass = (ClassOrInterfaceDeclaration) containingClassNode.get();
-                                        String containingClassName = containingClass.getNameAsString();
-                                        String calledMethodName = methodCallExpr.getNameAsString();
-                                        // Assuming the method entity is available in the graph generator
-                                        MethodEntity calledMethodEntity = (MethodEntity) graphGenerator.getMethodEntities().get(containingClassName + "." + calledMethodName);
-                                        if (calledMethodEntity != null) {
-                                            // Add called method entity to the connected entities of the current method entity
-                                            methodEntity.addConnectedEntity(calledMethodEntity);
+                                        //Get all method names ex. className.methodName
+                                        for (String key : graphGenerator.getMethodEntities().keySet()){
+                                            // Split the string by the dot (.)
+                                            String[] parts = key.split("\\.");
+
+                                            // Extract class name and method name
+                                            String className = parts[0];
+                                            String methodName = parts[1];
+
+                                            // find the class that the method declaration is getting called in
+                                            Optional<ClassOrInterfaceDeclaration> containingClassNode = methodDeclaration.findAncestor(ClassOrInterfaceDeclaration.class);
+
+                                            if (containingClassNode.isPresent()) {
+                                                ClassOrInterfaceDeclaration containingClass = containingClassNode.get();
+                                                String containingClassName = containingClass.getNameAsString(); //get the name of containing class
+
+                                                if (calledMethodName.equals(methodName) && (!containingClassName.equals(className))){
+                                                    MethodEntity calledMethodEntity = (MethodEntity) graphGenerator.getMethodEntities().get(key);
+                                                    if (calledMethodEntity != null) {
+                                                        // Add called method entity to the connected entities of the current method entity
+                                                        methodEntity.addConnectedEntity(calledMethodEntity);
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                    } else { //No scope ex. methodName()
+                                        // Find the class or interface declaration containing the method declaration
+                                        Optional<MethodDeclaration> methodDeclarationNode = methodCallExpr.findAncestor(MethodDeclaration.class);
+
+                                        if (methodDeclarationNode.isPresent()) {
+                                            MethodDeclaration methodDeclaration = methodDeclarationNode.get();
+                                            Optional<ClassOrInterfaceDeclaration> containingClassNode = methodDeclaration.findAncestor(ClassOrInterfaceDeclaration.class);
+
+                                            if (containingClassNode.isPresent()) {
+                                                ClassOrInterfaceDeclaration containingClass = containingClassNode.get();
+                                                String containingClassName = containingClass.getNameAsString();
+//
+                                                // Assuming the method entity is available in the graph generator
+                                                MethodEntity calledMethodEntity = (MethodEntity) graphGenerator.getMethodEntities().get(containingClassName + "." + calledMethodName);
+
+                                                if (calledMethodEntity != null) {
+                                                    // Add called method entity to the connected entities of the current method entity
+                                                    methodEntity.addConnectedEntity(calledMethodEntity);
+                                                }
+                                            }
                                         }
                                     }
-
-
                                 }
                             }, null);
                         });
