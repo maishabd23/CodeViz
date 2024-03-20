@@ -198,6 +198,23 @@ public abstract class Entity {
         return String.valueOf(setString);
     }
 
+    protected String classEntityMapToString(HashMap<String, ClassEntity> classMap, String setTitle){
+        StringBuilder setString = new StringBuilder();
+
+        if (!classMap.isEmpty()) {
+            setString.append(setTitle).append(": ");
+
+            for (String objectName : classMap.keySet()) {
+                setString.append(classMap.get(objectName).getName()).append(" ").append(objectName).append(", ");
+            }
+
+            setString = new StringBuilder(setString.substring(0, setString.length() - 2));
+            setString.append("\n");
+        }
+
+        return String.valueOf(setString);
+    }
+
     protected String classEntitySetToString(Set<ClassEntity> set, String setTitle){
         return entitySetToString((Set<Entity>) (Set<? extends Entity>) set, setTitle);
     }
