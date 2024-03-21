@@ -38,20 +38,28 @@ public class GitHubRepoController {
 
     private final GraphGenerator graphGenerator;
 
-    private CompilationUnit compilationUnit;
-
-    private  ZipEntry zipEntry;
-
-    private  ZipInputStream zipInputStream;
-
     private List<byte[]> entryContentsList = new ArrayList<>();
 
     public GitHubRepoController(){
         this.graphGenerator = new GraphGenerator(); // only set this once (clear entities each time a new graph is made)
-        this.compilationUnit = new CompilationUnit();
         this.entryContentsList = new ArrayList<>();
-        //this.zipEntry = new ZipEntry();
     }
+
+    public boolean isRepoUrlReachable(String repoUrl){
+        HttpClient httpClient = HttpClients.createDefault();
+        HttpGet request = new HttpGet(repoUrl + "/archive/main.zip"); // Assuming main branch
+
+        try {
+            HttpResponse response = httpClient.execute(request);
+
+            // Check the HTTP status code
+            int statusCode = response.getStatusLine().getStatusCode();
+            return statusCode == HttpStatus.SC_OK;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
     public byte[] retrieveGitHubCodebase(String repoUrl) {
         HttpClient httpClient = HttpClients.createDefault();
         HttpGet request = new HttpGet(repoUrl + "/archive/main.zip"); // Assuming main branch
@@ -75,15 +83,17 @@ public class GitHubRepoController {
         }
     }
 
-    private List<PackageEntity> parseJavaFilesFromZip(InputStream byteArrayInputStream) throws IOException {
+    private boolean parseJavaFilesFromZip(InputStream byteArrayInputStream) throws IOException {
+        boolean isValidJavaProject = false;
         Set<PackageEntity> packages = new HashSet<>();
         JavaParser javaParser = new JavaParser();
 
-        this.zipInputStream = new ZipInputStream(byteArrayInputStream);
+        ZipInputStream zipInputStream = new ZipInputStream(byteArrayInputStream);
 
         ZipEntry entry;
         while ((entry = zipInputStream.getNextEntry()) != null) {
             if (!entry.isDirectory() && entry.getName().endsWith(".java")) {
+                isValidJavaProject = true;
                 byte[] entryContent = zipInputStream.readAllBytes();
 
                 if (entryContent.length > 0) {
@@ -94,7 +104,6 @@ public class GitHubRepoController {
 
                     if (parseResult.isSuccessful()) {
                         CompilationUnit compilationUnit = parseResult.getResult().get();
-                        this.compilationUnit = compilationUnit;
                         packages.addAll(createEntities(compilationUnit));
                     } else {
                         // Handle parsing errors
@@ -106,7 +115,7 @@ public class GitHubRepoController {
                 zipInputStream.closeEntry();
             }
         }
-        return new ArrayList<>(packages);
+        return isValidJavaProject;
     }
 
     private void setLinesOfCode(Optional<Position> startPosition, Optional<Position> endPosition, Entity entity){
@@ -482,22 +491,24 @@ public class GitHubRepoController {
         }
     }
 
-    public void analyzeCodebase(byte[] codebase) {
+    public boolean analyzeCodebase(byte[] codebase) {
 
         // reset when analyzing new codebase
-        this.compilationUnit = new CompilationUnit();
         this.entryContentsList = new ArrayList<>();
 
         try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(codebase)) {
-            List<PackageEntity> packages = parseJavaFilesFromZip(byteArrayInputStream);
-            createClassMethodInnerVariables();
-            createClassConnections();
-            //createPackageConnections();
-            // Pass the created entities to the model or perform other actions
-            // model.addAttribute("packages", packages);
+            if (parseJavaFilesFromZip(byteArrayInputStream)) {
+                createClassMethodInnerVariables();
+                createClassConnections();
+                //createPackageConnections();
+                // Pass the created entities to the model or perform other actions
+                // model.addAttribute("packages", packages);
+                return true;
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return false;
     }
 
     private void getAllFilePaths(File[] files, List<String> filePaths){

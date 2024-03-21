@@ -110,6 +110,11 @@ canvas {
   padding-bottom: 10px;
 }
 
+.error {
+  color: red;
+  font-weight: bold;
+}
+
 #nodeDetailsDisplay {
   resize: both;
   position: absolute;
