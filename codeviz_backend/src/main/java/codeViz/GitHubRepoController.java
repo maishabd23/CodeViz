@@ -453,15 +453,15 @@ public class GitHubRepoController {
                 // CC = E – N + 2P where E = the number of edges in the control flow graph
                 //N = the number of nodes in the control flow graph
                 //P = the number of connected components                System.out.println("Cyclomatic complexity for methods:");
-                visitor.getMethodComplexities().forEach((methodName, complexity) -> {
-                    System.out.println(methodName + ": " + complexity);
-                    MethodEntity methodEntity = (MethodEntity) graphGenerator.getMethodEntities().get(methodName);
+                visitor.getMethodComplexities().forEach((classAndMethodName, complexity) -> {
+                    System.out.println(classAndMethodName + ": " + complexity);
+                    MethodEntity methodEntity = (MethodEntity) graphGenerator.getMethodEntities().get(classAndMethodName);
                     if (methodEntity != null) {
                         methodEntity.getComplexityDetails().setCyclomaticComplexity(complexity);
                         // Cyclomatic complexity of class = sum of cyclomatic complexities of the methods.
                         ((ClassComplexityDetails) methodEntity.getClassEntity().getComplexityDetails()).incrementCyclomaticComplexity(complexity);
                     } else {
-                        System.out.println("ERROR, Method is null for methodName: " + methodName);
+                        System.out.println("ERROR, Method is null for: " + classAndMethodName);
                     }
                 });
 
