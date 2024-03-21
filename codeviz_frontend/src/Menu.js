@@ -20,6 +20,7 @@ function Menu() {
     // Function to handle form submission
     const handleSubmit = () => {
         setLoading(true);
+        setError(false); // if retrying, set error to false
         // Make a POST request to initialize CodeVizController with repoURL
         const isSuccessful = fetch('/init', {
             method: 'POST',
@@ -36,10 +37,16 @@ function Menu() {
                 return response.json();
             })
             .then(data => {
-                // Handle successful response
-                console.log("SUCCESS!");
-                console.log('Response data:', data);
-                setSubmitted(true);
+                if (data.ok === 'true') {
+                    // Handle successful response
+                    console.log('SUCCESS!');
+                    console.log('Response data:', data);
+                    setSubmitted(true);
+                } else {
+                    // Handle error response
+                    console.error('Error:', data.error || 'An unexpected error occurred');
+                    setError(data.error || 'An unexpected error occurred');
+                }
             })
             .catch(error => {
                 // Handle error

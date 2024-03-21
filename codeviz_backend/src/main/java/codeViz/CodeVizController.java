@@ -37,15 +37,28 @@ public class CodeVizController {
     public Map<String, String> initController(@RequestBody Map<String, String> requestBody) {
         String repoURL = requestBody.get("repoURL");
         Map<String, String> responseBody = new HashMap<>();
-        responseBody.put("isSuccessful", "true");
+        responseBody.put("ok", "true");
 
         System.out.println("THE REPO URL WAS SENT TO BACKEND " + repoURL);
 
         // Call generateEntitiesAndConnections method with repoURL
-        codeVizInterface.generateEntitiesAndConnections(repoURL, 50);
-        codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory);
+        String repoUrlError = codeVizInterface.isValidRepoUrl(repoURL);
+        if (repoUrlError.isEmpty()) {
+            if (codeVizInterface.generateEntitiesAndConnections(repoURL, 50)) {
+                codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory);
 
-        this.isDisplayingGraph = true;
+                this.isDisplayingGraph = true;
+            } else {
+                repoUrlError = "ERROR, not a valid Java project";
+            }
+        }
+
+        if (!repoUrlError.isEmpty()){
+            repoUrlError = TextAnnotate.javaToHtml(repoUrlError);
+            responseBody.put("ok", "false");
+            responseBody.put("error", repoUrlError);
+        }
+
         return responseBody;
     }
 
