@@ -177,7 +177,12 @@ public abstract class Entity {
      */
     public static String entityToString(Entity entity, String entityTitle){
         String entityName = "";
-        if (entity != null) entityName = entityTitle + ": " + entity.getName() + "\n";
+        if (entity != null) {
+            entityName += TextAnnotate.BOLD.javaText;
+            entityName += entityTitle + ": ";
+            entityName += TextAnnotate.BOLD_OFF.javaText;
+            entityName += entity.getName() + "\n";
+        }
         return entityName;
     }
 
@@ -185,7 +190,9 @@ public abstract class Entity {
         StringBuilder setString = new StringBuilder();
 
         if (!set.isEmpty()) {
+            setString.append(TextAnnotate.BOLD.javaText);
             setString.append(setTitle).append(": ");
+            setString.append(TextAnnotate.BOLD_OFF.javaText);
 
             for (Entity entity : set) {
                 setString.append(entity.getName()).append(", ");
@@ -202,7 +209,9 @@ public abstract class Entity {
         StringBuilder setString = new StringBuilder();
 
         if (!classMap.isEmpty()) {
+            setString.append(TextAnnotate.BOLD.javaText);
             setString.append(setTitle).append(": ");
+            setString.append(TextAnnotate.BOLD_OFF.javaText);
 
             for (String objectName : classMap.keySet()) {
                 setString.append(classMap.get(objectName).getName()).append(" ").append(objectName).append(", ");
