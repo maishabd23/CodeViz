@@ -286,7 +286,7 @@ public class JavaBytecodeReader {
             for (Field field : jc.getFields()){
                 String fieldType = String.valueOf(field.getType());
                 ClassEntity fieldClassEntity = getAndStoreConnectedClassEntity(classEntity, fieldType);
-                classEntity.addField(fieldClassEntity);
+                classEntity.addField("", fieldClassEntity);
             }
 
             // check methods argument/return types and connect classes
@@ -297,7 +297,7 @@ public class JavaBytecodeReader {
                 for (Type argumentType : method.getArgumentTypes()){
                     String stringArgumentType = String.valueOf(argumentType);
                     ClassEntity argumentClassEntity = getAndStoreConnectedClassEntity(classEntity, stringArgumentType);
-                    methodEntity.addArgument(argumentClassEntity);
+                    methodEntity.addArgument("", argumentClassEntity);
                 }
 
                 String stringReturnType = String.valueOf(method.getReturnType());

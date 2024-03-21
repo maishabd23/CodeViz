@@ -4,6 +4,8 @@ import codeViz.codeComplexity.ClassComplexityDetails;
 import codeViz.gitHistory.CommitInfo;
 
 import java.awt.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -15,16 +17,16 @@ import java.util.Set;
 public class ClassEntity extends Entity {
 
     private final PackageEntity packageEntity;
-    private final Set<ClassEntity> fields;
-    private final Set<MethodEntity> methods;
+    private final HashMap<String, ClassEntity> fields;
+    private final HashMap<String, MethodEntity> methods;
 
     private ClassEntity superClass; // may have methods not defined in this class alone
 
     public ClassEntity(String name, PackageEntity packageEntity){
         super(name, EntityType.CLASS, new ClassComplexityDetails());
         this.packageEntity = packageEntity;
-        this.fields = new LinkedHashSet<>();
-        this.methods = new LinkedHashSet<>();
+        this.fields = new LinkedHashMap<>();
+        this.methods = new LinkedHashMap<>();
         this.superClass = null;
 
         if (packageEntity != null){
@@ -63,9 +65,9 @@ public class ClassEntity extends Entity {
      *
      * @param methodEntity method entity to add
      */
-    public void addMethod(MethodEntity methodEntity){ // TODO - allow for overloaded methods
+    protected void addMethod(MethodEntity methodEntity){ // TODO - allow for overloaded methods
         if (getMethod(methodEntity.getName()) == null){
-            methods.add(methodEntity);
+            methods.put(methodEntity.getName(), methodEntity);
             incrementSize();
         } else {
             System.out.println("NOTE, class " + getName() + " already contains method " + methodEntity.getName() );
@@ -73,7 +75,7 @@ public class ClassEntity extends Entity {
     }
 
     public Set<MethodEntity> getMethods() {
-        return methods;
+        return new LinkedHashSet<>(methods.values());
     }
 
     /**
@@ -86,12 +88,7 @@ public class ClassEntity extends Entity {
     public MethodEntity getMethod(String methodName){
         // could simplify this if methods is changed from Set to something like HashMap
         methodName = MethodEntity.getProperName(methodName);
-        for (MethodEntity method : methods){
-            if (method.getName().equals(methodName)){
-                return method;
-            }
-        }
-        return null;
+        return methods.getOrDefault(methodName, null);
     }
 
     /**
@@ -119,7 +116,7 @@ public class ClassEntity extends Entity {
         // TODO check attributes
 
         // check methods
-        for (MethodEntity methodEntity : methods){
+        for (MethodEntity methodEntity : methods.values()){
             if (methodEntity.containsSearchValue(searchValue)){
                 return true;
             }
@@ -139,19 +136,22 @@ public class ClassEntity extends Entity {
         // add to method?
     }
 
-    public void addField(ClassEntity field) {
-        this.fields.add(field);
+    public void addField(String objectName, ClassEntity field) {
+        this.fields.put(objectName, field);
         incrementSize();
     }
 
+    public HashMap<String, ClassEntity> getFields() {
+        return fields;
+    }
 
     @Override
     public String toString() {
-        String methodsString = methodEntitySetToString(methods, "Methods");
+        String methodsString = methodEntitySetToString(new LinkedHashSet<>(methods.values()), "Methods");
 
         String packageName = Entity.entityToString(packageEntity, "Package");
         String superClassName = Entity.entityToString(superClass, "Superclass");
-        String fieldsString = classEntitySetToString(fields, "Fields");
+        String fieldsString = classEntityMapToString(fields, "Fields");
 
         return titleToString() +
                 packageName +
@@ -177,7 +177,7 @@ public class ClassEntity extends Entity {
      * @return true if the attribute exists, false otherwise.
      */
     public boolean hasAttributeWithName(String name) {
-        for (ClassEntity field : fields) {
+        for (ClassEntity field : fields.values()) {
             if (field.getName().equals(name)) {
                 return true;
             }
