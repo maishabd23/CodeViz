@@ -53,7 +53,9 @@ public class CodeVizInterface {
             // check the repo URL, if it's public, contains .Java files, etc
 
             if (!gitHubRepoController.isRepoUrlReachable(repoURL)){
-                errorMessage = "ERROR, only public repos are supported";
+                // this seems to be hit for some public repos if they're not Java
+                // ex. https://github.com/jassics/learning-python
+                errorMessage = "ERROR, only public Java projects are supported";
             }
         }
 
