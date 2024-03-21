@@ -176,50 +176,9 @@ function Menu() {
                     setMilestoneValue(responseData.string);
                 });
 
-            const search = document.getElementById("searchInput");
-            search.addEventListener("search", mySearchFunction);
-            /*function mySearchFunction() { // duplicated? seems to be unused
-                const searchValue = document.getElementById("searchInput").value;
-                // Construct the search query object
-                const searchQuery = {
-                    value: searchValue,
-                    searchClasses: level === 'Class' ? searchClasses : false,
-                    searchMethods: level === 'Class' ? searchMethods : level === 'Method',
-                    searchAttributes: level === 'Class' ? searchAttributes : false,
-                    searchParameters: level === 'Method' ? searchParameters : false,
-                    searchReturnType: level === 'Method' ? searchReturnType : false,
-                    searchConnections: level === 'Package' ? searchConnections : false,
-                };
-
-                // Use fetch to send the search query to backend API
-                fetch('/api/searchGraph', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(searchQuery),
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        document.getElementById("printSearch").innerHTML = data.string;
-                    })
-                    .catch((error) => {
-                        console.error('Error:', error);
-                    });
-            }*/
-
-
-            /*const detailedSearch = document.getElementById("detailedSearchInput");
-            detailedSearch.addEventListener("search", myDetailedSearchFunction);
-            function myDetailedSearchFunction() {
-                var x = document.getElementById("detailedSearchInput");
-                document.getElementById("printSearch").innerHTML = "Searching for: " + x.value;
-                fetch('/api/searchGraph?detailed=true&searchValue=' + x.value)
-                    .then((response) => response.json())
-                    .then((responseData) => {
-                        document.getElementById("printSearch").innerHTML = responseData.string;
-                    });
-            }*/
+            // TODO remove enter trigger until it can be fixed
+            //const search = document.getElementById("searchInput");
+            //search.addEventListener("search", mySearchFunction);
 
             // TODO fix this
             // const repoUrlInputElement = document.getElementById("viewRepoInput");
