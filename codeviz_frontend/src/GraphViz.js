@@ -52,6 +52,7 @@ function GraphViz() {
 
         labelsThresholdRange = document.getElementById("labels-threshold");
         thresholdLabel = document.getElementById("thresholdLabel");
+        var labelSize = document.getElementById("label-size");
 
         const settings = forceAtlas2.inferSettings(graph);
         forceAtlas2.assign(graph, { settings, iterations: 600 });
@@ -114,6 +115,11 @@ function GraphViz() {
 
         // Set proper range initial value:
         labelsThresholdRange.value = renderer.getSetting("labelRenderedSizeThreshold") + "";
+
+        labelSize.addEventListener("input", () => {
+          renderer.setSetting("labelSize", +labelSize.value);
+          thresholdLabel.innerHTML = "Label Size: " + labelSize.value;
+        });
 
         setHoveredNeighbours(graph, renderer);
       };
@@ -186,7 +192,11 @@ function GraphViz() {
           <div className="input"><label htmlFor="zoom-out">Zoom out </label><button id="zoom-out">-</button></div>
           <div className="input"><label htmlFor="zoom-reset">Reset zoom </label><button id="zoom-reset">⊙</button></div>
           <div className="input">
-            <label htmlFor="labels-threshold">Threshold </label>
+            <label htmlFor="label-size">Label Size </label>
+            <input id="label-size" type="range" min="15" max="30" step="0.5" defaultValue={"15"}/>
+          <div className="input">
+          </div>
+            <label htmlFor="labels-threshold">Label Threshold </label>
             <input id="labels-threshold" type="range" min="0" max="15" step="0.5" />
             <p id="thresholdLabel"></p>
             <button onClick={() => setPopUpMenu(true)}>Modify Threshold Settings</button>
