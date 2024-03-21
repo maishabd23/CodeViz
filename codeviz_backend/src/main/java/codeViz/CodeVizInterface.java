@@ -60,6 +60,14 @@ public class CodeVizInterface {
         return errorMessage;
     }
 
+    public String modifyRepoUrl(String repoURL) {
+        if (repoURL.endsWith(".git")){
+            repoURL = repoURL.replace(".git", "");
+        }
+        return repoURL;
+    }
+
+
 
     public void performSearch(String searchValue, boolean isDetailedSearch) {
         if (success) {

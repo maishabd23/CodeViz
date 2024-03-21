@@ -41,6 +41,8 @@ public class CodeVizController {
 
         System.out.println("THE REPO URL WAS SENT TO BACKEND " + repoURL);
 
+        repoURL = codeVizInterface.modifyRepoUrl(repoURL);
+
         // Call generateEntitiesAndConnections method with repoURL
         String repoUrlError = codeVizInterface.isValidRepoUrl(repoURL);
         if (repoUrlError.isEmpty()) {
