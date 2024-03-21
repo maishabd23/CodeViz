@@ -100,6 +100,29 @@ function PopUpHelp(props) {
                     Note that searching is case sensitive.
                 </p>
 
+                <h3>Level Wise Search</h3>
+                <p>
+                    The search filters change according to the level the user is in. For example:
+                </p>
+                <ol>
+                            <li>Package Level: At this level, two checkboxes are available: Classes and Connections. 
+                                If the Classes checkbox is selected, the search will only highlight package nodes containing the specified class.</li>
+                                <p>
+
+                                </p>
+                            <li>Class Level: Upon switching to the Class level, three options are presented: Methods, Attributes, and Connections. 
+                                Selecting the Methods checkbox will highlight only the classes that contain the searched term. 
+                                The same applies to Attributes and Connections. </li>
+                                <p>
+
+                                </p>                
+                            <li>Method Level: At the Method level, the filters are Parameters, Return Types, and Connections. 
+                                For example, if the Return Types box is checked, the search will highlight method nodes with the specified return type.</li>          
+                 </ol>
+                <p>
+                When no checkbox selected the search gets performed only on the displayed node names, and highlights the corresponding node.
+                </p>
+
                 <h3>Label Threshold</h3>
                 <p>
                     The label threshold slider can be used to filter the amount of nodes that have their label displayed,

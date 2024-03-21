@@ -248,9 +248,8 @@ function Menu() {
                                 <input
                                     type="search"
                                     id="searchInput"
-                                    placeholder="Input a search term"
+                                    placeholder="Enter a search term"
                                 />
-                                <button onClick={mySearchFunction}>Search</button>
                                 <img src="/info-icon.png" alt='icon' className="info--icon" />
                                 <p className='tooltip'>Search for specific node names</p>
                             </div>
@@ -259,6 +258,8 @@ function Menu() {
                     </tbody>
                 </table>
                 {/* ... */}
+                <p>
+                </p>
 
         {/* Conditional rendering based on 'level' */}
             {level === 'Package' && (
@@ -305,8 +306,18 @@ function Menu() {
                     </label>
                 </>
             )}
-            <button id="clear-search" onClick={() => { /* Implement clear search logic */ }}>Clear Search</button>
+            <p>
+            </p>
+            <table className="center">
+            <td>
+                <button onClick={mySearchFunction}>Search</button>
+            </td>
+            <td>
+                <button id="clear-search" onClick={() => { /* Implement clear search logic */ }}>Clear Search</button>
+            </td>
             <p id="printSearch"></p>
+            </table>
+            
 
             </div>
 
