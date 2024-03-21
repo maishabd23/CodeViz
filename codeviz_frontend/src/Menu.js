@@ -10,7 +10,6 @@ function Menu() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-
     // Function to handle changes in the repoURL input field
     const handleRepoURLChange = (e) => {
         const newRepoURL = e.target.value;
@@ -70,6 +69,7 @@ function Menu() {
             const clearSearch = document.getElementById("clear-search");
 
             // Bind view level buttons
+
             packageView.addEventListener("click", () => {
                 fetch('/api/viewGraphLevel?level=PACKAGE');
             });
@@ -125,6 +125,9 @@ function Menu() {
                     });
             }
 
+            const repoUrl = document.getElementById("viewRepoInput");
+            repoUrl.addEventListener("search", handleSubmit);
+
         };
 
         fetchData();
@@ -133,14 +136,14 @@ function Menu() {
     return (
         <div className='menu'>
             <div id="menu-controls">
-                <h3>View Repo</h3>
+                <h3>Select Repository</h3>
                 <table className="center">
                     <tbody>
                     <tr>
                         <td>
                         <div className="chooseRepo">
-                            <input type="text" id="viewRepoInput" value={repoURL} onChange={handleRepoURLChange} placeholder="Enter Repository URL" />
-                            <button onClick={handleSubmit} disabled={loading}>Submit</button>
+                            <input type="search" id="viewRepoInput" value={repoURL} onChange={handleRepoURLChange} placeholder="Enter Repository URL" />
+                            <button type="submit" onClick={handleSubmit} disabled={loading}>Submit</button>
                             {error && <p className="error">{error}</p>}
                             {loading && <p>Loading...</p>}
                         </div>
