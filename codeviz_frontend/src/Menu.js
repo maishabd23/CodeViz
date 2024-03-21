@@ -132,8 +132,9 @@ function Menu() {
                     });
             }
 
-            const repoUrl = document.getElementById("viewRepoInput");
-            repoUrl.addEventListener("search", handleSubmit);
+            // TODO fix this
+            // const repoUrlInputElement = document.getElementById("viewRepoInput");
+            // repoUrlInputElement.addEventListener("search", handleSubmit);
 
         };
 
