@@ -49,7 +49,7 @@ function PopUpThreshold(props) {
     return (props.trigger) ? (
         <div className="popup-thres">
             <div className="popup-thres-inner">
-                <button className="close-btn" onClick={() => props.setTrigger(false)}>cancel</button>
+                <button className="close-btn" onClick={() => props.setTrigger(false)}>Cancel</button>
                 {props.children}
 
                 <h4>Update Threshold Settings</h4>

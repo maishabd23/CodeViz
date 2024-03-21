@@ -1,5 +1,6 @@
 package codeViz.codeComplexity.CyclomaticComplexity;
 
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.stmt.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
@@ -14,7 +15,12 @@ public class CyclomaticComplexityVisitor extends VoidVisitorAdapter<Void> {
     @Override
     public void visit(MethodDeclaration n, Void arg) {
         int complexity = calculateCyclomaticComplexity(n.getBody());
-        methodComplexities.put(n.getNameAsString(), complexity);
+        Optional<ClassOrInterfaceDeclaration> containingClassNode = n.findAncestor(ClassOrInterfaceDeclaration.class);
+        if (containingClassNode.isPresent()) {
+            String className = containingClassNode.get().getNameAsString();
+            String methodName = n.getNameAsString();
+            methodComplexities.put(className + "." + methodName, complexity);
+        }
     }
 
     private int calculateCyclomaticComplexity(Optional<BlockStmt> node) {

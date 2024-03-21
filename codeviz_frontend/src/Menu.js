@@ -17,7 +17,6 @@ function Menu() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-
     // Function to handle changes in the repoURL input field
     const handleRepoURLChange = (e) => {
         const newRepoURL = e.target.value;
@@ -27,6 +26,7 @@ function Menu() {
     // Function to handle form submission
     const handleSubmit = () => {
         setLoading(true);
+        setError(false); // if retrying, set error to false
         // Make a POST request to initialize CodeVizController with repoURL
         const isSuccessful = fetch('/init', {
             method: 'POST',
@@ -43,10 +43,16 @@ function Menu() {
                 return response.json();
             })
             .then(data => {
-                // Handle successful response
-                console.log("SUCCESS!");
-                console.log('Response data:', data);
-                setSubmitted(true);
+                if (data.ok === 'true') {
+                    // Handle successful response
+                    console.log('SUCCESS!');
+                    console.log('Response data:', data);
+                    setSubmitted(true);
+                } else {
+                    // Handle error response
+                    console.error('Error:', data.error || 'An unexpected error occurred');
+                    setError(data.error || 'An unexpected error occurred');
+                }
             })
             .catch(error => {
                 // Handle error
@@ -138,6 +144,7 @@ function Menu() {
             const clearSearch = document.getElementById("clear-search");
 
             // Bind view level buttons
+
             packageView.addEventListener("click", () => {
                 fetch('/api/viewGraphLevel?level=PACKAGE');
             });
@@ -214,6 +221,10 @@ function Menu() {
                     });
             }*/
 
+            // TODO fix this
+            // const repoUrlInputElement = document.getElementById("viewRepoInput");
+            // repoUrlInputElement.addEventListener("search", handleSubmit);
+
         };
         fetchData();
 
@@ -221,19 +232,20 @@ function Menu() {
 
     return (
         <div className='menu'>
-            <h2>Menu</h2>
             <div id="menu-controls">
-                <h3>View Repo</h3>
+                <h3>Select Repository</h3>
                 <table className="center">
                     <tbody>
-                    <tr><td>
-                        <div className="help-display">
-                            <input type="text" value={repoURL} onChange={handleRepoURLChange} placeholder="Enter Repository URL" />
-                            <button onClick={handleSubmit} disabled={loading}>Submit</button>
+                    <tr>
+                        <td>
+                        <div className="chooseRepo">
+                            <input type="search" id="viewRepoInput" value={repoURL} onChange={handleRepoURLChange} placeholder="Enter Repository URL" />
+                            <button type="submit" onClick={handleSubmit} disabled={loading}>Submit</button>
                             {error && <p className="error">{error}</p>}
                             {loading && <p>Loading...</p>}
                         </div>
-                    </td></tr>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -317,46 +329,47 @@ function Menu() {
             </td>
             <p id="printSearch"></p>
             </table>
-            
+
 
             </div>
 
             <div id="menu-controls">
-            <h3>Switch Level</h3>
-            <p id="currentLevel"></p>
-            <table className="center">
-                <tbody>
-                <tr>
-                    <td>
-                        <div className="input"><label htmlFor="package-view"></label><button id="package-view">Package</button></div>
-                    </td>
-                    <td>
-                        <div className="input"><label htmlFor="class-view"></label><button id="class-view">Class</button></div>
-                    </td>
-                    <td>
-                        <div className="input"><label htmlFor="method-view"></label><button id="method-view">Method</button></div>
-                    </td>
-                    <td>
-                        <div>
-                            <img src="/info-icon.png" alt='icon' className="info--icon" />
-                            <p className='tooltip'>Level of granularity at which to display the graph</p>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            <div className="help-display">
-                <input type="radio" id="M1" name="graph_type" value={milestone === 'm1'} onChange={handleM1Change} checked={milestone === 'm1'}>
-                </input>
-                <label htmlFor="M1">Dependency</label>
-                <input type="radio" id="M2" name="graph_type" value={milestone === 'm2'} onChange={handleM2Change} checked={milestone === 'm2'} disabled={level !== 'Class'} >
-                </input>
-                <label htmlFor="M2">Git History</label>
-                <img src="/info-icon.png" alt='icon' className="info--icon" />
-                <p className='tooltip'>Graph type to view. Note: Git History graph is only available for class view</p>
+                <h3>Switch Level</h3>
+                <p id="currentLevel"></p>
+                <table className="center">
+                    <tbody>
+                    <tr>
+                        <td>
+                            <div className="input"><label htmlFor="package-view"></label><button id="package-view">Package</button></div>
+                        </td>
+                        <td>
+                            <div className="input"><label htmlFor="class-view"></label><button id="class-view">Class</button></div>
+                        </td>
+                        <td>
+                            <div className="input"><label htmlFor="method-view"></label><button id="method-view">Method</button></div>
+                        </td>
+                        <td>
+                            <div>
+                                <img src="/info-icon.png" alt='icon' className="info--icon" />
+                                <p className='tooltip'>Level of granularity at which to display the graph</p>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div className="graph-type">
+                    <input type="radio" id="M1" name="graph_type" value={milestone === 'm1'} onChange={handleM1Change} checked={milestone === 'm1'}>
+                    </input>
+                    <label htmlFor="M1">Dependency</label>
+                    <input type="radio" id="M2" name="graph_type" value={milestone === 'm2'} onChange={handleM2Change} checked={milestone === 'm2'} disabled={level !== 'Class'} >
+                    </input>
+                    <label htmlFor="M2">Git History</label>
+                        <img src="/info-icon.png" alt='icon' className="info--icon" />
+                        <p className='tooltip'>Graph type to view. Note: Git History graph is only available for class view</p>
+                </div>
             </div>
         </div>
-    </div>
     );
 }
 
