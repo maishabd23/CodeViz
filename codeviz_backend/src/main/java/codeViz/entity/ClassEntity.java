@@ -177,6 +177,9 @@ public class ClassEntity extends Entity {
      * @return true if the attribute exists, false otherwise.
      */
     public boolean hasAttributeWithName(String name) {
+        if (fields.containsKey(name)){
+            return true;
+        }
         for (ClassEntity field : fields.values()) {
             if (field.getName().equals(name)) {
                 return true;

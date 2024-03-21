@@ -386,6 +386,8 @@ public class GraphGenerator {
                               boolean searchParameters, boolean searchReturnType, boolean searchConnections, EntityType currentLevel) {
         clearSearch(); // Clear previous search results
 
+        searchValue = searchValue.replace(" ", ""); // remove any spaces
+
         // base case - check the entity names
         checkAllNames(searchValue, packageEntities);
         checkAllNames(searchValue, classEntities);

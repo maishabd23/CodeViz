@@ -128,6 +128,9 @@ public class MethodEntity extends Entity {
     // Check if the method has a parameter with the given name
     // In MethodEntity class
     public boolean hasParameterWithName(String name) {
+        if (arguments.containsKey(name)){
+            return true;
+        }
         for (ClassEntity argument : arguments.values()) {
             if (argument.getName().equals(name)) {
                 return true;
