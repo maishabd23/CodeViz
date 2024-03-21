@@ -39,3 +39,7 @@
 .help-display-threshold button {
     margin-right: 1px;
 }
+
+#max, #min, #step {
+    margin-left: 10px;
+}

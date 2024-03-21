@@ -77,8 +77,8 @@ public class EntityTest {
         assertEquals((1+1)*size_inc, classEntity1.getSize());
         assertEquals(size_inc, classEntity1a.getSize());
 
-        classEntity1.addField(new ClassEntity("String"));
-        classEntity1.addField(classEntity1a);
+        classEntity1.addField("string", new ClassEntity("String"));
+        classEntity1.addField("class1a", classEntity1a);
 
         methodEntity1 = new MethodEntity("method1", classEntity1);
         methodEntity1a1 = new MethodEntity("method1a1", classEntity1a);
@@ -111,15 +111,15 @@ public class EntityTest {
         assertEquals(size_inc, methodEntity1a1.getSize());
         assertEquals(size_inc, methodEntity1a2.getSize());
 
-        methodEntity1.addArgument(classEntity1a);
-        methodEntity1.addArgument(classEntity1);
+        methodEntity1.addArgument("class1a", classEntity1a);
+        methodEntity1.addArgument("class1", classEntity1);
         methodEntity1.setReturnType(new ClassEntity("String"));
 
-        methodEntity1a1.addArgument(classEntity1a);
-        methodEntity1a1.addArgument(classEntity1);
+        methodEntity1a1.addArgument("class1a", classEntity1a);
+        methodEntity1a1.addArgument("class1", classEntity1);
         methodEntity1a1.setReturnType(new ClassEntity("void"));
 
-        methodEntity1a2.addArgument(new ClassEntity("Color"));
+        methodEntity1a2.addArgument("color", new ClassEntity("Color"));
         methodEntity1a2.setReturnType(classEntity1);
 
         // size based on arguments and return type

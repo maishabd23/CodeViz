@@ -3,8 +3,9 @@ package codeViz.entity;
 import codeViz.codeComplexity.ComplexityDetails;
 
 import java.awt.Color;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.Set;
 
 /**
  * Method entity
@@ -16,7 +17,8 @@ public class MethodEntity extends Entity {
     private final ClassEntity classEntity;
 
     // cannot easily represent with the class connections alone
-    private final Set<ClassEntity> arguments;
+    private final HashMap<String, ClassEntity> arguments;
+    private final HashMap<String, ClassEntity> localVariables;
     private ClassEntity returnType;
 
     public MethodEntity(String name, ClassEntity classEntity){
@@ -26,7 +28,8 @@ public class MethodEntity extends Entity {
         // should classEntity store its methods (easier to reference), or is that too much coupling?
         classEntity.addMethod(this);
 
-        arguments = new LinkedHashSet<>();
+        arguments = new LinkedHashMap<>();
+        localVariables = new LinkedHashMap<>();
         returnType = null;
     }
 
@@ -63,7 +66,7 @@ public class MethodEntity extends Entity {
         }
 
         // check arguments
-        for (ClassEntity argument : arguments){
+        for (ClassEntity argument : arguments.values()){
             if (argument.nameContains(searchValue)){
                 return true;
             }
@@ -78,9 +81,22 @@ public class MethodEntity extends Entity {
     }
 
 
-    public void addArgument(ClassEntity argument) {
-        this.arguments.add(argument);
+    public void addArgument(String argumentName, ClassEntity argument) {
+        this.arguments.put(argumentName, argument);
         incrementSize();
+    }
+
+    public void addLocalVariable(String variableName, ClassEntity className) {
+        this.localVariables.put(variableName, className);
+        incrementSize();
+    }
+
+    public HashMap<String, ClassEntity> getArguments() {
+        return arguments;
+    }
+
+    public HashMap<String, ClassEntity> getLocalVariables() {
+        return localVariables;
     }
 
     public void setReturnType(ClassEntity returnType) {
@@ -94,7 +110,7 @@ public class MethodEntity extends Entity {
     @Override
     public String toString() {
         String classString = Entity.entityToString(classEntity, "Class");
-        String argumentsString = classEntitySetToString(arguments, "Arguments");
+        String argumentsString = classEntityMapToString(arguments, "Arguments");
         String returnTypeName = Entity.entityToString(returnType, "Return Type");
 
         return titleToString() +

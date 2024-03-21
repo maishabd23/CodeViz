@@ -23,6 +23,7 @@
     background-color: #FFF;
     border-radius: 10px;
     overflow: auto; /* scroll bar */
+    text-align: left;
 }
 
 .popup-help-inner .close-btn {
