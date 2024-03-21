@@ -151,6 +151,10 @@ canvas {
   overflow: hidden;
 }
 
+.graph-type input[type="radio"]:disabled + label {
+  color: #999; 
+}
+
 .node-help {
   display: flex;
   position: relative;

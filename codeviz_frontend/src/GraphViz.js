@@ -22,7 +22,7 @@ export var labelsThresholdRange, thresholdLabel = null;
 // Load external GEXF file:
 function GraphViz() {
   const [data, setData] = useState(null);
-  const initialNodeMessage = "Right-click on a node to view more options. If the 'Git History' graph is displayed, hover over an edge to view its git history details."
+  const initialNodeMessage = "Click on a node to view more options. If the 'Git History' graph is displayed, hover over an edge to view its git history details."
   let hoveredEdge = null;
   const [popUpMenu, setPopUpMenu] = React.useState(false);
 
