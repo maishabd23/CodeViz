@@ -1,8 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 
 function Menu() {
-    const [milestone, setMilestoneValue] = React.useState('m1');
-    const [level, setLevel] = React.useState('Class');
+    const [milestone, setMilestoneValue] = useState('m1');
+    const [level, setLevel] = useState('Class');
+    const [searchValue, setSearchValue] = useState('');
+    const [searchClasses, setSearchClasses] = useState(false);
+    const [searchMethods, setSearchMethods] = useState(false);
+    const [searchAttributes, setSearchAttributes] = useState(false);
+    const [searchParameters, setSearchParameters] = useState(false);
+    const [searchReturnType, setSearchReturnType] = useState(false);
+    const [searchConnections, setSearchConnections] = useState(false);
 
     //FOR VIEWING REPO
     const [repoURL, setRepoURL] = useState('');
@@ -66,6 +73,67 @@ function Menu() {
     const handleM2Change = () => {
         fetch('/api/annotateGraph?gitHistory=true');
     };
+    const mySearchFunction = async () => {
+        const searchValue = document.getElementById("searchInput").value;
+        // Constructing the search query object
+        const searchQuery = {
+            value: searchValue,
+
+            // level itself can be checked by adjacent levels
+            searchClasses: level !== 'Method' ? searchClasses : false, // only Method cannot search classes
+            searchMethods: level !== 'Package' ? searchMethods : false, // only Package cannot search methods
+
+            // only the specific level can check its own inner details
+            searchAttributes: level === 'Class' ? searchAttributes : false,
+            searchParameters: level === 'Method' ? searchParameters : false,
+            searchReturnType: level === 'Method' ? searchReturnType : false,
+            searchConnections: searchConnections,
+        };
+        // Use fetch to send the search query to backend API
+        try {
+            const response = await fetch('/api/searchGraph', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(searchQuery),
+            });
+            const data = await response.json();
+            document.getElementById("printSearch").innerHTML = data.string;
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    const clearSearch = async () => {
+        // This sets the front end state back to its initial state, if necessary
+        setSearchValue('');
+        setSearchClasses(false);
+        setSearchMethods(false);
+        setSearchAttributes(false);
+        setSearchParameters(false);
+        setSearchReturnType(false);
+        setSearchConnections(false);
+
+        // Now, call the backend API to clear the search there as well
+        try {
+            const response = await fetch('/api/clearSearch', { method: 'GET' });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            // Optionally, process the response if it returns any data
+            const responseData = await response.json();
+            console.log(responseData);
+            // Update any state or UI as necessary
+        } catch (error) {
+            console.error("Failed to clear search: ", error);
+        }
+
+        // Optionally, clear any displayed search results in the UI
+        document.getElementById("printSearch").innerHTML = "";
+    };
+
+    <button id="clear-search" onClick={clearSearch}>Clear Search</button>
 
     useEffect(() => {
         const fetchData = async () => {
@@ -108,38 +176,18 @@ function Menu() {
                     setMilestoneValue(responseData.string);
                 });
 
-            const search = document.getElementById("searchInput");
-            search.addEventListener("search", mySearchFunction);
-            function mySearchFunction() {
-                var x = document.getElementById("searchInput");
-                document.getElementById("printSearch").innerHTML = "Searching for: " + x.value;
-                fetch('/api/searchGraph?searchValue=' + x.value)
-                    .then((response) => response.json())
-                    .then((responseData) => {
-                        document.getElementById("printSearch").innerHTML = responseData.string;
-                    });
-            }
-
-            const detailedSearch = document.getElementById("detailedSearchInput");
-            detailedSearch.addEventListener("search", myDetailedSearchFunction);
-            function myDetailedSearchFunction() {
-                var x = document.getElementById("detailedSearchInput");
-                document.getElementById("printSearch").innerHTML = "Searching for: " + x.value;
-                fetch('/api/searchGraph?detailed=true&searchValue=' + x.value)
-                    .then((response) => response.json())
-                    .then((responseData) => {
-                        document.getElementById("printSearch").innerHTML = responseData.string;
-                    });
-            }
+            // TODO remove enter trigger until it can be fixed
+            //const search = document.getElementById("searchInput");
+            //search.addEventListener("search", mySearchFunction);
 
             // TODO fix this
             // const repoUrlInputElement = document.getElementById("viewRepoInput");
             // repoUrlInputElement.addEventListener("search", handleSubmit);
 
         };
-
         fetchData();
-    }, []);
+
+    }, [level]);
 
     return (
         <div className='menu'>
@@ -161,34 +209,87 @@ function Menu() {
                 </table>
             </div>
 
-            {/*TODO - add submit button?*/}
-            {/*TODO - remove duplicate search bars and use dropdown instead - either simple or detailed search*/}
             <div id="menu-controls">
                 <h3>Search</h3>
                 <table className="center">
                     <tbody>
-                    <tr><td>
-                        <div className="help-display">
-                            <input type="search" id="searchInput" placeholder="Simple Search..."/>
-                            <img src="/info-icon.png" alt='icon' className="info--icon" />
-                            <p className='tooltip'>Search for specific node names</p>
-                        </div>
-                    </td></tr>
-                    <tr><td>
-                        <div className="help-display">
-                            <input type="search" id="detailedSearchInput" placeholder="Detailed Search..."/>
-                            <img src="/info-icon.png" alt='icon' className="info--icon" />
-                            <p className='tooltip'>Search for node names, connections, arguments/return types, etc</p>
-                        </div>
-                    </td></tr>
-                    <tr><td>
-                        <div className="center">
-                            <label htmlFor="clear-search"></label><button id="clear-search">Clear Search</button>
-                        </div>
-                    </td></tr>
+                    <tr>
+                        <td>
+                            <div className="help-display">
+                                <input
+                                    type="search"
+                                    id="searchInput"
+                                    placeholder="Enter a search term"
+                                />
+                                <img src="/info-icon.png" alt='icon' className="info--icon" />
+                                <p className='tooltip'>Search for specific node names</p>
+                            </div>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
-                <p id="printSearch"></p>
+                {/* ... */}
+                <p>
+                </p>
+
+        {/* Conditional rendering based on 'level' */}
+            {level === 'Package' && (
+                <>
+                    <label>
+                        <input type="checkbox" checked={searchClasses} onChange={(e) => setSearchClasses(e.target.checked)} />
+                        Classes
+                    </label>
+                    <label>
+                        <input type="checkbox" checked={searchConnections} onChange={(e) => setSearchConnections(e.target.checked)} />
+                        Connections
+                    </label>
+                </>
+            )}
+            {level === 'Class' && (
+                <>
+                    <label>
+                        <input type="checkbox" checked={searchMethods} onChange={(e) => setSearchMethods(e.target.checked)} />
+                        Methods
+                    </label>
+                    <label>
+                        <input type="checkbox" checked={searchAttributes} onChange={(e) => setSearchAttributes(e.target.checked)} />
+                        Attributes
+                    </label>
+                    <label>
+                        <input type="checkbox" checked={searchConnections} onChange={(e) => setSearchConnections(e.target.checked)} />
+                        Connections
+                    </label>
+                </>
+            )}
+            {level === 'Method' && (
+                <>
+                    <label>
+                        <input type="checkbox" checked={searchParameters} onChange={(e) => setSearchParameters(e.target.checked)} />
+                        Parameters
+                    </label>
+                    <label>
+                        <input type="checkbox" checked={searchReturnType} onChange={(e) => setSearchReturnType(e.target.checked)} />
+                        Return Type
+                    </label>
+                    <label>
+                        <input type="checkbox" checked={searchConnections} onChange={(e) => setSearchConnections(e.target.checked)} />
+                        Connections
+                    </label>
+                </>
+            )}
+            <p>
+            </p>
+            <table className="center">
+            <td>
+                <button onClick={mySearchFunction}>Search</button>
+            </td>
+            <td>
+                <button id="clear-search" onClick={() => { /* Implement clear search logic */ }}>Clear Search</button>
+            </td>
+            <p id="printSearch"></p>
+            </table>
+
+
             </div>
 
             <div id="menu-controls">

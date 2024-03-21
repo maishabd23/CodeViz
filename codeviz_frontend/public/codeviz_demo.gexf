@@ -2,23 +2,2572 @@
 <gexf xmlns="http://gexf.net/1.3" version="1.3">
 	<graph mode="static" defaultedgetype="directed">
 		<nodes>
-			<node id="1_codeViz" label="codeViz" >
-				<size value="1.0"></size>
-				 <position x="8.195293" y="10.4110985" z="0.0"></position>
-				<color r="199" g="167" b="215"></color>
+			<node id="1_App.main" label="main" >
+				<size value="4.0"></size>
+				 <position x="10924.189" y="35066.098" z="0.0"></position>
+				<color r="198" g="198" b="249"></color>
 			</node>
-			<node id="2_codeViz.entity" label="entity" >
+			<node id="2_App.demoInventory" label="demoInventory" >
+				<size value="68.0"></size>
+				 <position x="47791.957" y="18766.371" z="0.0"></position>
+				<color r="198" g="198" b="249"></color>
+			</node>
+			<node id="3_Author.getId" label="getId" >
+				<size value="4.0"></size>
+				 <position x="40813.14" y="7443.3193" z="0.0"></position>
+				<color r="238" g="241" b="224"></color>
+			</node>
+			<node id="4_Author.setId" label="setId" >
+				<size value="4.0"></size>
+				 <position x="724.7162" y="10040.025" z="0.0"></position>
+				<color r="238" g="241" b="224"></color>
+			</node>
+			<node id="5_Author.getFirstName" label="getFirstName" >
+				<size value="4.0"></size>
+				 <position x="8501.964" y="2197.2195" z="0.0"></position>
+				<color r="238" g="241" b="224"></color>
+			</node>
+			<node id="6_Author.setFirstName" label="setFirstName" >
+				<size value="4.0"></size>
+				 <position x="53203.03" y="25847.438" z="0.0"></position>
+				<color r="238" g="241" b="224"></color>
+			</node>
+			<node id="7_Author.getLastName" label="getLastName" >
+				<size value="4.0"></size>
+				 <position x="52296.023" y="28977.697" z="0.0"></position>
+				<color r="238" g="241" b="224"></color>
+			</node>
+			<node id="8_Author.setLastName" label="setLastName" >
+				<size value="4.0"></size>
+				 <position x="10948.592" y="13428.563" z="0.0"></position>
+				<color r="238" g="241" b="224"></color>
+			</node>
+			<node id="9_Author.getFullName" label="getFullName" >
+				<size value="4.0"></size>
+				 <position x="43338.58" y="44751.164" z="0.0"></position>
+				<color r="238" g="241" b="224"></color>
+			</node>
+			<node id="10_Author.getBibliography" label="getBibliography" >
+				<size value="4.0"></size>
+				 <position x="7768.0737" y="9862.615" z="0.0"></position>
+				<color r="238" g="241" b="224"></color>
+			</node>
+			<node id="11_Author.addBook" label="addBook" >
+				<size value="4.0"></size>
+				 <position x="50035.543" y="44769.938" z="0.0"></position>
+				<color r="238" g="241" b="224"></color>
+			</node>
+			<node id="12_Author.removeBook" label="removeBook" >
+				<size value="4.0"></size>
+				 <position x="5630.2827" y="14795.189" z="0.0"></position>
+				<color r="238" g="241" b="224"></color>
+			</node>
+			<node id="13_AuthorRepository.findByFirstName" label="findByFirstName" >
+				<size value="6.0"></size>
+				 <position x="47249.78" y="37369.766" z="0.0"></position>
+				<color r="195" g="201" b="213"></color>
+			</node>
+			<node id="14_AuthorRepository.findByLastName" label="findByLastName" >
+				<size value="6.0"></size>
+				 <position x="43241.723" y="3692.8486" z="0.0"></position>
+				<color r="195" g="201" b="213"></color>
+			</node>
+			<node id="15_AuthorRepository.findById" label="findById" >
+				<size value="6.0"></size>
+				 <position x="5354.642" y="1240.3326" z="0.0"></position>
+				<color r="195" g="201" b="213"></color>
+			</node>
+			<node id="16_AuthorRepository.findByFirstNameAndLastName" label="findByFirstNameAndLastName" >
+				<size value="8.0"></size>
+				 <position x="29049.258" y="723.44403" z="0.0"></position>
+				<color r="195" g="201" b="213"></color>
+			</node>
+			<node id="17_Book.getIsbn" label="getIsbn" >
+				<size value="4.0"></size>
+				 <position x="38571.305" y="52344.12" z="0.0"></position>
+				<color r="156" g="144" b="161"></color>
+			</node>
+			<node id="18_Book.setIsbn" label="setIsbn" >
+				<size value="4.0"></size>
+				 <position x="54665.395" y="19759.154" z="0.0"></position>
+				<color r="156" g="144" b="161"></color>
+			</node>
+			<node id="19_Book.getTitle" label="getTitle" >
+				<size value="4.0"></size>
+				 <position x="26211.12" y="6231.9565" z="0.0"></position>
+				<color r="156" g="144" b="161"></color>
+			</node>
+			<node id="20_Book.setTitle" label="setTitle" >
+				<size value="4.0"></size>
+				 <position x="6211.933" y="20875.607" z="0.0"></position>
+				<color r="156" g="144" b="161"></color>
+			</node>
+			<node id="21_Book.getCover" label="getCover" >
+				<size value="4.0"></size>
+				 <position x="46138.426" y="638.4658" z="0.0"></position>
+				<color r="156" g="144" b="161"></color>
+			</node>
+			<node id="22_Book.setCover" label="setCover" >
+				<size value="4.0"></size>
+				 <position x="33981.18" y="34128.207" z="0.0"></position>
+				<color r="156" g="144" b="161"></color>
+			</node>
+			<node id="23_Book.getAuthor" label="getAuthor" >
+				<size value="4.0"></size>
+				 <position x="28898.9" y="30979.648" z="0.0"></position>
+				<color r="156" g="144" b="161"></color>
+			</node>
+			<node id="24_Book.setAuthor" label="setAuthor" >
+				<size value="4.0"></size>
+				 <position x="29178.123" y="2612.9988" z="0.0"></position>
+				<color r="156" g="144" b="161"></color>
+			</node>
+			<node id="25_Book.getPublisher" label="getPublisher" >
+				<size value="4.0"></size>
+				 <position x="24696.986" y="22144.89" z="0.0"></position>
+				<color r="156" g="144" b="161"></color>
+			</node>
+			<node id="26_Book.setPublisher" label="setPublisher" >
+				<size value="4.0"></size>
+				 <position x="10298.956" y="34084.84" z="0.0"></position>
+				<color r="156" g="144" b="161"></color>
+			</node>
+			<node id="27_Book.getDate" label="getDate" >
+				<size value="4.0"></size>
+				 <position x="11188.226" y="32006.828" z="0.0"></position>
+				<color r="156" g="144" b="161"></color>
+			</node>
+			<node id="28_Book.setDate" label="setDate" >
+				<size value="4.0"></size>
+				 <position x="37416.793" y="47725.02" z="0.0"></position>
+				<color r="156" g="144" b="161"></color>
+			</node>
+			<node id="29_Book.getGenre" label="getGenre" >
+				<size value="4.0"></size>
+				 <position x="40349.695" y="28258.576" z="0.0"></position>
+				<color r="156" g="144" b="161"></color>
+			</node>
+			<node id="30_Book.setGenre" label="setGenre" >
+				<size value="4.0"></size>
+				 <position x="46808.34" y="56731.934" z="0.0"></position>
+				<color r="156" g="144" b="161"></color>
+			</node>
+			<node id="31_Book.getPrice" label="getPrice" >
+				<size value="4.0"></size>
+				 <position x="32356.266" y="49027.117" z="0.0"></position>
+				<color r="156" g="144" b="161"></color>
+			</node>
+			<node id="32_Book.getFormattedPrice" label="getFormattedPrice" >
+				<size value="4.0"></size>
+				 <position x="11098.849" y="1034.5219" z="0.0"></position>
+				<color r="156" g="144" b="161"></color>
+			</node>
+			<node id="33_Book.setPrice" label="setPrice" >
+				<size value="4.0"></size>
+				 <position x="37911.53" y="20884.65" z="0.0"></position>
+				<color r="156" g="144" b="161"></color>
+			</node>
+			<node id="34_Book.getDescription" label="getDescription" >
+				<size value="4.0"></size>
+				 <position x="23868.889" y="18354.143" z="0.0"></position>
+				<color r="156" g="144" b="161"></color>
+			</node>
+			<node id="35_Book.setDescription" label="setDescription" >
+				<size value="4.0"></size>
+				 <position x="24368.605" y="34712.92" z="0.0"></position>
+				<color r="156" g="144" b="161"></color>
+			</node>
+			<node id="36_Book.getAllAuthorNames" label="getAllAuthorNames" >
+				<size value="4.0"></size>
+				 <position x="3025.434" y="40936.625" z="0.0"></position>
+				<color r="156" g="144" b="161"></color>
+			</node>
+			<node id="37_BookController.showUploadForm" label="showUploadForm" >
+				<size value="12.0"></size>
+				 <position x="17015.525" y="4996.7744" z="0.0"></position>
+				<color r="224" g="221" b="219"></color>
+			</node>
+			<node id="38_BookController.handleUploadForm" label="handleUploadForm" >
+				<size value="34.0"></size>
+				 <position x="19431.219" y="49385.28" z="0.0"></position>
+				<color r="224" g="221" b="219"></color>
+			</node>
+			<node id="39_BookController.showEditForm" label="showEditForm" >
+				<size value="22.0"></size>
+				 <position x="22378.041" y="24485.87" z="0.0"></position>
+				<color r="224" g="221" b="219"></color>
+			</node>
+			<node id="40_BookController.handleEditForm" label="handleEditForm" >
+				<size value="32.0"></size>
+				 <position x="8918.036" y="34305.254" z="0.0"></position>
+				<color r="224" g="221" b="219"></color>
+			</node>
+			<node id="41_BookFiltering.createBookList" label="createBookList" >
+				<size value="6.0"></size>
+				 <position x="3514.9734" y="3744.0723" z="0.0"></position>
+				<color r="221" g="205" b="220"></color>
+			</node>
+			<node id="42_BookFiltering.getItemsMatchingFilters" label="getItemsMatchingFilters" >
+				<size value="14.0"></size>
+				 <position x="7398.5083" y="16889.87" z="0.0"></position>
+				<color r="221" g="205" b="220"></color>
+			</node>
+			<node id="43_BookFiltering.getAllAuthors" label="getAllAuthors" >
+				<size value="6.0"></size>
+				 <position x="39230.887" y="40804.273" z="0.0"></position>
+				<color r="221" g="205" b="220"></color>
+			</node>
+			<node id="44_BookFiltering.getAllGenres" label="getAllGenres" >
+				<size value="6.0"></size>
+				 <position x="40742.418" y="39466.3" z="0.0"></position>
+				<color r="221" g="205" b="220"></color>
+			</node>
+			<node id="45_BookFiltering.getAllPublishers" label="getAllPublishers" >
+				<size value="6.0"></size>
+				 <position x="12770.764" y="50726.906" z="0.0"></position>
+				<color r="221" g="205" b="220"></color>
+			</node>
+			<node id="46_BookFiltering.getBookWithLowestPrice" label="getBookWithLowestPrice" >
+				<size value="6.0"></size>
+				 <position x="24552.273" y="33108.0" z="0.0"></position>
+				<color r="221" g="205" b="220"></color>
+			</node>
+			<node id="47_BookFiltering.getBookWithHighestPrice" label="getBookWithHighestPrice" >
+				<size value="6.0"></size>
+				 <position x="13652.129" y="11250.481" z="0.0"></position>
+				<color r="221" g="205" b="220"></color>
+			</node>
+			<node id="48_BookRepository.findByIsbn" label="findByIsbn" >
+				<size value="6.0"></size>
+				 <position x="13841.347" y="47728.33" z="0.0"></position>
+				<color r="209" g="196" b="136"></color>
+			</node>
+			<node id="49_BookRepository.findByTitle" label="findByTitle" >
+				<size value="6.0"></size>
+				 <position x="22752.217" y="23273.662" z="0.0"></position>
+				<color r="209" g="196" b="136"></color>
+			</node>
+			<node id="50_BookRepository.findByGenre" label="findByGenre" >
+				<size value="6.0"></size>
+				 <position x="57717.855" y="41938.223" z="0.0"></position>
+				<color r="209" g="196" b="136"></color>
+			</node>
+			<node id="51_BookRepository.findByAuthorIn" label="findByAuthorIn" >
+				<size value="6.0"></size>
+				 <position x="44259.43" y="13216.265" z="0.0"></position>
+				<color r="209" g="196" b="136"></color>
+			</node>
+			<node id="52_CheckoutController.listAvailableBooks" label="listAvailableBooks" >
+				<size value="42.0"></size>
+				 <position x="20071.67" y="21481.508" z="0.0"></position>
+				<color r="185" g="129" b="252"></color>
+			</node>
+			<node id="53_CheckoutController.viewBook" label="viewBook" >
 				<size value="20.0"></size>
-				 <position x="4.068742" y="20.989538" z="0.0"></position>
-				<color r="248" g="179" b="169"></color>
+				 <position x="22157.41" y="24709.484" z="0.0"></position>
+				<color r="185" g="129" b="252"></color>
+			</node>
+			<node id="54_CheckoutController.addToCartForm" label="addToCartForm" >
+				<size value="14.0"></size>
+				 <position x="20614.611" y="42526.76" z="0.0"></position>
+				<color r="185" g="129" b="252"></color>
+			</node>
+			<node id="55_CheckoutController.addToCart" label="addToCart" >
+				<size value="28.0"></size>
+				 <position x="2092.2146" y="50947.01" z="0.0"></position>
+				<color r="185" g="129" b="252"></color>
+			</node>
+			<node id="56_CheckoutController.getTotalInCart" label="getTotalInCart" >
+				<size value="12.0"></size>
+				 <position x="13559.298" y="4962.3716" z="0.0"></position>
+				<color r="185" g="129" b="252"></color>
+			</node>
+			<node id="57_CheckoutController.removeFromCartForm" label="removeFromCartForm" >
+				<size value="12.0"></size>
+				 <position x="9253.822" y="20954.55" z="0.0"></position>
+				<color r="185" g="129" b="252"></color>
+			</node>
+			<node id="58_CheckoutController.removeFromCart" label="removeFromCart" >
+				<size value="30.0"></size>
+				 <position x="44162.46" y="20712.098" z="0.0"></position>
+				<color r="185" g="129" b="252"></color>
+			</node>
+			<node id="59_CheckoutController.viewCart" label="viewCart" >
+				<size value="20.0"></size>
+				 <position x="46615.63" y="24895.889" z="0.0"></position>
+				<color r="185" g="129" b="252"></color>
+			</node>
+			<node id="60_CheckoutController.confirmOrder" label="confirmOrder" >
+				<size value="16.0"></size>
+				 <position x="14141.32" y="47236.81" z="0.0"></position>
+				<color r="185" g="129" b="252"></color>
+			</node>
+			<node id="61_CheckoutController.recommendBooks" label="recommendBooks" >
+				<size value="28.0"></size>
+				 <position x="27092.512" y="48683.387" z="0.0"></position>
+				<color r="185" g="129" b="252"></color>
+			</node>
+			<node id="62_CheckoutController.getBooksInCartByUserId" label="getBooksInCartByUserId" >
+				<size value="14.0"></size>
+				 <position x="10580.712" y="47742.316" z="0.0"></position>
+				<color r="185" g="129" b="252"></color>
+			</node>
+			<node id="63_Inventory.addItemToInventory" label="addItemToInventory" >
+				<size value="8.0"></size>
+				 <position x="10570.508" y="57236.742" z="0.0"></position>
+				<color r="192" g="195" b="240"></color>
+			</node>
+			<node id="64_Inventory.reduceFromInventory" label="reduceFromInventory" >
+				<size value="10.0"></size>
+				 <position x="1177.3256" y="18175.658" z="0.0"></position>
+				<color r="192" g="195" b="240"></color>
+			</node>
+			<node id="65_Inventory.putBackIntoInventory" label="putBackIntoInventory" >
+				<size value="10.0"></size>
+				 <position x="4719.079" y="52958.195" z="0.0"></position>
+				<color r="192" g="195" b="240"></color>
+			</node>
+			<node id="66_Inventory.findAvailableBook" label="findAvailableBook" >
+				<size value="8.0"></size>
+				 <position x="26017.006" y="24718.588" z="0.0"></position>
+				<color r="192" g="195" b="240"></color>
+			</node>
+			<node id="67_Inventory.getAvailableBooks" label="getAvailableBooks" >
+				<size value="4.0"></size>
+				 <position x="7028.9194" y="47789.81" z="0.0"></position>
+				<color r="192" g="195" b="240"></color>
+			</node>
+			<node id="68_Inventory.getBooksMatchingSearch" label="getBooksMatchingSearch" >
+				<size value="18.0"></size>
+				 <position x="15022.741" y="1506.9303" z="0.0"></position>
+				<color r="192" g="195" b="240"></color>
+			</node>
+			<node id="69_Inventory.setId" label="setId" >
+				<size value="4.0"></size>
+				 <position x="9351.939" y="15558.205" z="0.0"></position>
+				<color r="192" g="195" b="240"></color>
+			</node>
+			<node id="70_Inventory.getId" label="getId" >
+				<size value="4.0"></size>
+				 <position x="53163.4" y="1341.3246" z="0.0"></position>
+				<color r="192" g="195" b="240"></color>
+			</node>
+			<node id="71_InventoryItem.getInventory" label="getInventory" >
+				<size value="4.0"></size>
+				 <position x="461.30743" y="52247.008" z="0.0"></position>
+				<color r="128" g="196" b="250"></color>
+			</node>
+			<node id="72_InventoryItem.setInventory" label="setInventory" >
+				<size value="4.0"></size>
+				 <position x="52424.94" y="38105.832" z="0.0"></position>
+				<color r="128" g="196" b="250"></color>
+			</node>
+			<node id="73_InventoryItemRepository.findById" label="findById" >
+				<size value="6.0"></size>
+				 <position x="30823.514" y="23083.479" z="0.0"></position>
+				<color r="141" g="162" b="229"></color>
+			</node>
+			<node id="74_InventoryItemRepository.findByBook" label="findByBook" >
+				<size value="6.0"></size>
+				 <position x="54833.484" y="36906.625" z="0.0"></position>
+				<color r="141" g="162" b="229"></color>
+			</node>
+			<node id="75_InventoryItemRepository.sortByTitleAsc" label="sortByTitleAsc" >
+				<size value="4.0"></size>
+				 <position x="55884.652" y="24483.842" z="0.0"></position>
+				<color r="141" g="162" b="229"></color>
+			</node>
+			<node id="76_InventoryItemRepository.sortByPriceAsc" label="sortByPriceAsc" >
+				<size value="4.0"></size>
+				 <position x="10708.433" y="45608.33" z="0.0"></position>
+				<color r="141" g="162" b="229"></color>
+			</node>
+			<node id="77_InventoryItemRepository.sortByPriceDesc" label="sortByPriceDesc" >
+				<size value="4.0"></size>
+				 <position x="53842.195" y="55915.66" z="0.0"></position>
+				<color r="141" g="162" b="229"></color>
+			</node>
+			<node id="78_InventoryRepository.findById" label="findById" >
+				<size value="6.0"></size>
+				 <position x="48108.69" y="25238.783" z="0.0"></position>
+				<color r="164" g="246" b="143"></color>
+			</node>
+			<node id="79_Item.setId" label="setId" >
+				<size value="4.0"></size>
+				 <position x="35122.484" y="41392.64" z="0.0"></position>
+				<color r="196" g="191" b="226"></color>
+			</node>
+			<node id="80_Item.getId" label="getId" >
+				<size value="4.0"></size>
+				 <position x="5938.5405" y="47766.062" z="0.0"></position>
+				<color r="196" g="191" b="226"></color>
+			</node>
+			<node id="81_Item.getBook" label="getBook" >
+				<size value="4.0"></size>
+				 <position x="26153.041" y="34709.56" z="0.0"></position>
+				<color r="196" g="191" b="226"></color>
+			</node>
+			<node id="82_Item.setBook" label="setBook" >
+				<size value="4.0"></size>
+				 <position x="13453.699" y="30470.662" z="0.0"></position>
+				<color r="196" g="191" b="226"></color>
+			</node>
+			<node id="83_Item.getQuantity" label="getQuantity" >
+				<size value="4.0"></size>
+				 <position x="24626.021" y="36547.176" z="0.0"></position>
+				<color r="196" g="191" b="226"></color>
+			</node>
+			<node id="84_Item.setQuantity" label="setQuantity" >
+				<size value="4.0"></size>
+				 <position x="52533.45" y="11500.18" z="0.0"></position>
+				<color r="196" g="191" b="226"></color>
+			</node>
+			<node id="85_ShoppingCart.addToCart" label="addToCart" >
+				<size value="16.0"></size>
+				 <position x="28652.438" y="15868.531" z="0.0"></position>
+				<color r="173" g="234" b="191"></color>
+			</node>
+			<node id="86_ShoppingCart.removeFromCart" label="removeFromCart" >
+				<size value="14.0"></size>
+				 <position x="41350.285" y="14576.972" z="0.0"></position>
+				<color r="173" g="234" b="191"></color>
+			</node>
+			<node id="87_ShoppingCart.updateTotalPrice" label="updateTotalPrice" >
+				<size value="4.0"></size>
+				 <position x="54782.137" y="41951.348" z="0.0"></position>
+				<color r="173" g="234" b="191"></color>
+			</node>
+			<node id="88_ShoppingCart.getTotalPrice" label="getTotalPrice" >
+				<size value="4.0"></size>
+				 <position x="31072.629" y="40638.57" z="0.0"></position>
+				<color r="173" g="234" b="191"></color>
+			</node>
+			<node id="89_ShoppingCart.getBooksInCart" label="getBooksInCart" >
+				<size value="4.0"></size>
+				 <position x="26546.932" y="942.9967" z="0.0"></position>
+				<color r="173" g="234" b="191"></color>
+			</node>
+			<node id="90_ShoppingCart.getBooksForRecommendations" label="getBooksForRecommendations" >
+				<size value="4.0"></size>
+				 <position x="42345.617" y="48646.4" z="0.0"></position>
+				<color r="173" g="234" b="191"></color>
+			</node>
+			<node id="91_ShoppingCart.checkout" label="checkout" >
+				<size value="6.0"></size>
+				 <position x="1687.2363" y="51054.84" z="0.0"></position>
+				<color r="173" g="234" b="191"></color>
+			</node>
+			<node id="92_ShoppingCart.getInventory" label="getInventory" >
+				<size value="4.0"></size>
+				 <position x="14125.093" y="33715.734" z="0.0"></position>
+				<color r="173" g="234" b="191"></color>
+			</node>
+			<node id="93_ShoppingCart.setInventory" label="setInventory" >
+				<size value="4.0"></size>
+				 <position x="19698.94" y="5245.5586" z="0.0"></position>
+				<color r="173" g="234" b="191"></color>
+			</node>
+			<node id="94_ShoppingCart.setId" label="setId" >
+				<size value="4.0"></size>
+				 <position x="17275.293" y="32606.916" z="0.0"></position>
+				<color r="173" g="234" b="191"></color>
+			</node>
+			<node id="95_ShoppingCart.getId" label="getId" >
+				<size value="4.0"></size>
+				 <position x="24917.594" y="43296.582" z="0.0"></position>
+				<color r="173" g="234" b="191"></color>
+			</node>
+			<node id="96_ShoppingCart.getTotalQuantityOfCart" label="getTotalQuantityOfCart" >
+				<size value="8.0"></size>
+				 <position x="27434.123" y="4096.5684" z="0.0"></position>
+				<color r="173" g="234" b="191"></color>
+			</node>
+			<node id="97_ShoppingCartItem.getShoppingCart" label="getShoppingCart" >
+				<size value="4.0"></size>
+				 <position x="9771.79" y="757.516" z="0.0"></position>
+				<color r="244" g="132" b="205"></color>
+			</node>
+			<node id="98_ShoppingCartItem.setShoppingCart" label="setShoppingCart" >
+				<size value="4.0"></size>
+				 <position x="36083.418" y="47134.42" z="0.0"></position>
+				<color r="244" g="132" b="205"></color>
+			</node>
+			<node id="99_ShoppingCartItemRepository.findById" label="findById" >
+				<size value="6.0"></size>
+				 <position x="50555.13" y="13701.777" z="0.0"></position>
+				<color r="129" g="202" b="227"></color>
+			</node>
+			<node id="100_ShoppingCartItemRepository.findByQuantity" label="findByQuantity" >
+				<size value="6.0"></size>
+				 <position x="29905.494" y="44294.99" z="0.0"></position>
+				<color r="129" g="202" b="227"></color>
+			</node>
+			<node id="101_ShoppingCartRepository.findById" label="findById" >
+				<size value="6.0"></size>
+				 <position x="51594.152" y="40730.7" z="0.0"></position>
+				<color r="228" g="182" b="163"></color>
+			</node>
+			<node id="102_BookUser.getId" label="getId" >
+				<size value="4.0"></size>
+				 <position x="10680.963" y="50778.22" z="0.0"></position>
+				<color r="135" g="128" b="182"></color>
+			</node>
+			<node id="103_BookUser.setId" label="setId" >
+				<size value="4.0"></size>
+				 <position x="20033.922" y="38191.27" z="0.0"></position>
+				<color r="135" g="128" b="182"></color>
+			</node>
+			<node id="104_BookUser.getUsername" label="getUsername" >
+				<size value="4.0"></size>
+				 <position x="37114.418" y="27575.387" z="0.0"></position>
+				<color r="135" g="128" b="182"></color>
+			</node>
+			<node id="105_BookUser.setUsername" label="setUsername" >
+				<size value="4.0"></size>
+				 <position x="54548.74" y="49224.89" z="0.0"></position>
+				<color r="135" g="128" b="182"></color>
+			</node>
+			<node id="106_BookUser.getPassword" label="getPassword" >
+				<size value="4.0"></size>
+				 <position x="4140.8315" y="27167.746" z="0.0"></position>
+				<color r="135" g="128" b="182"></color>
+			</node>
+			<node id="107_BookUser.setPassword" label="setPassword" >
+				<size value="4.0"></size>
+				 <position x="18336.38" y="30262.084" z="0.0"></position>
+				<color r="135" g="128" b="182"></color>
+			</node>
+			<node id="108_BookUser.getUserType" label="getUserType" >
+				<size value="4.0"></size>
+				 <position x="12831.841" y="50509.566" z="0.0"></position>
+				<color r="135" g="128" b="182"></color>
+			</node>
+			<node id="109_BookUser.setUserType" label="setUserType" >
+				<size value="6.0"></size>
+				 <position x="12272.548" y="4245.2363" z="0.0"></position>
+				<color r="135" g="128" b="182"></color>
+			</node>
+			<node id="110_BookUser.setShoppingCart" label="setShoppingCart" >
+				<size value="4.0"></size>
+				 <position x="55142.055" y="32003.27" z="0.0"></position>
+				<color r="135" g="128" b="182"></color>
+			</node>
+			<node id="111_BookUser.getShoppingCart" label="getShoppingCart" >
+				<size value="4.0"></size>
+				 <position x="50569.16" y="47645.816" z="0.0"></position>
+				<color r="135" g="128" b="182"></color>
+			</node>
+			<node id="112_OwnerRepository.findByUsername" label="findByUsername" >
+				<size value="6.0"></size>
+				 <position x="47613.918" y="33233.86" z="0.0"></position>
+				<color r="216" g="214" b="156"></color>
+			</node>
+			<node id="113_OwnerRepository.findById" label="findById" >
+				<size value="6.0"></size>
+				 <position x="32415.98" y="46635.383" z="0.0"></position>
+				<color r="216" g="214" b="156"></color>
+			</node>
+			<node id="114_UserController.getUserAccess" label="getUserAccess" >
+				<size value="4.0"></size>
+				 <position x="39107.473" y="18419.168" z="0.0"></position>
+				<color r="249" g="149" b="206"></color>
+			</node>
+			<node id="115_UserController.createAccountForm" label="createAccountForm" >
+				<size value="14.0"></size>
+				 <position x="30627.57" y="45566.7" z="0.0"></position>
+				<color r="249" g="149" b="206"></color>
+			</node>
+			<node id="116_UserController.saveUser" label="saveUser" >
+				<size value="8.0"></size>
+				 <position x="20238.88" y="6270.81" z="0.0"></position>
+				<color r="249" g="149" b="206"></color>
+			</node>
+			<node id="117_UserController.createAccountSubmit" label="createAccountSubmit" >
+				<size value="10.0"></size>
+				 <position x="19285.432" y="52361.164" z="0.0"></position>
+				<color r="249" g="149" b="206"></color>
+			</node>
+			<node id="118_UserController.accountForm" label="accountForm" >
+				<size value="12.0"></size>
+				 <position x="19528.572" y="39201.74" z="0.0"></position>
+				<color r="249" g="149" b="206"></color>
+			</node>
+			<node id="119_UserController.handleUserLogin" label="handleUserLogin" >
+				<size value="18.0"></size>
+				 <position x="33513.46" y="18463.934" z="0.0"></position>
+				<color r="249" g="149" b="206"></color>
+			</node>
+			<node id="120_UserController.getLoggedInUser" label="getLoggedInUser" >
+				<size value="12.0"></size>
+				 <position x="7193.708" y="29466.844" z="0.0"></position>
+				<color r="249" g="149" b="206"></color>
+			</node>
+			<node id="121_UserController.retreiveCookie" label="retreiveCookie" >
+				<size value="10.0"></size>
+				 <position x="31928.947" y="49526.145" z="0.0"></position>
+				<color r="249" g="149" b="206"></color>
+			</node>
+			<node id="122_UserController.handleUserLogout" label="handleUserLogout" >
+				<size value="14.0"></size>
+				 <position x="38057.867" y="5964.373" z="0.0"></position>
+				<color r="249" g="149" b="206"></color>
+			</node>
+			<node id="123_UserController.registerLogin" label="registerLogin" >
+				<size value="12.0"></size>
+				 <position x="27185.174" y="5313.144" z="0.0"></position>
+				<color r="249" g="149" b="206"></color>
+			</node>
+			<node id="124_UserController.calculateJaccardDistance" label="calculateJaccardDistance" >
+				<size value="12.0"></size>
+				 <position x="12068.426" y="11291.986" z="0.0"></position>
+				<color r="249" g="149" b="206"></color>
+			</node>
+			<node id="125_UserRepository.findByUsername" label="findByUsername" >
+				<size value="6.0"></size>
+				 <position x="34136.98" y="7474.2197" z="0.0"></position>
+				<color r="136" g="138" b="244"></color>
+			</node>
+			<node id="126_UserRepository.findById" label="findById" >
+				<size value="6.0"></size>
+				 <position x="35113.535" y="7851.28" z="0.0"></position>
+				<color r="136" g="138" b="244"></color>
+			</node>
+			<node id="127_AuthorTest.testAuthorCreation" label="testAuthorCreation" >
+				<size value="4.0"></size>
+				 <position x="32589.303" y="7619.5537" z="0.0"></position>
+				<color r="240" g="190" b="130"></color>
+			</node>
+			<node id="128_AuthorTest.testBibliography" label="testBibliography" >
+				<size value="8.0"></size>
+				 <position x="21249.043" y="9049.832" z="0.0"></position>
+				<color r="240" g="190" b="130"></color>
+			</node>
+			<node id="129_BookControllerTest.setUp" label="setUp" >
+				<size value="2.0"></size>
+				 <position x="10680.177" y="37816.066" z="0.0"></position>
+				<color r="138" g="130" b="244"></color>
+			</node>
+			<node id="130_BookControllerTest.testShowUploadForm" label="testShowUploadForm" >
+				<size value="8.0"></size>
+				 <position x="31342.877" y="25656.744" z="0.0"></position>
+				<color r="138" g="130" b="244"></color>
+			</node>
+			<node id="131_BookControllerTest.testShowEditForm" label="testShowEditForm" >
+				<size value="18.0"></size>
+				 <position x="4232.8047" y="54480.574" z="0.0"></position>
+				<color r="138" g="130" b="244"></color>
+			</node>
+			<node id="132_BookControllerTest.testCanOnlyUploadEditAsOwner" label="testCanOnlyUploadEditAsOwner" >
+				<size value="14.0"></size>
+				 <position x="47350.523" y="24855.51" z="0.0"></position>
+				<color r="138" g="130" b="244"></color>
+			</node>
+			<node id="133_BookControllerTest.testCannotUploadEditAsUser" label="testCannotUploadEditAsUser" >
+				<size value="14.0"></size>
+				 <position x="32613.54" y="35525.133" z="0.0"></position>
+				<color r="138" g="130" b="244"></color>
+			</node>
+			<node id="134_BookControllerTest.testHandleUploadForm_WithInvalidAuthorFormat" label="testHandleUploadForm_WithInvalidAuthorFormat" >
+				<size value="10.0"></size>
+				 <position x="32250.42" y="50370.42" z="0.0"></position>
+				<color r="138" g="130" b="244"></color>
+			</node>
+			<node id="135_BookControllerTest.testHandleEditForm_Success" label="testHandleEditForm_Success" >
+				<size value="12.0"></size>
+				 <position x="40700.0" y="40948.473" z="0.0"></position>
+				<color r="138" g="130" b="244"></color>
+			</node>
+			<node id="136_BookTest.testBookCreation" label="testBookCreation" >
+				<size value="12.0"></size>
+				 <position x="18679.387" y="16316.568" z="0.0"></position>
+				<color r="166" g="243" b="138"></color>
+			</node>
+			<node id="137_CheckoutControllerTest.setUp" label="setUp" >
+				<size value="20.0"></size>
+				 <position x="19241.19" y="44065.46" z="0.0"></position>
+				<color r="237" g="130" b="158"></color>
+			</node>
+			<node id="138_CheckoutControllerTest.contextLoads" label="contextLoads" >
+				<size value="2.0"></size>
+				 <position x="20973.168" y="30489.797" z="0.0"></position>
+				<color r="237" g="130" b="158"></color>
+			</node>
+			<node id="139_CheckoutControllerTest.testConfirmOrder" label="testConfirmOrder" >
+				<size value="12.0"></size>
+				 <position x="40902.793" y="51383.773" z="0.0"></position>
+				<color r="237" g="130" b="158"></color>
+			</node>
+			<node id="140_CheckoutControllerTest.testViewCartWithoutAccess" label="testViewCartWithoutAccess" >
+				<size value="12.0"></size>
+				 <position x="12700.989" y="30696.22" z="0.0"></position>
+				<color r="237" g="130" b="158"></color>
+			</node>
+			<node id="141_CheckoutControllerTest.testViewCartWithAccess" label="testViewCartWithAccess" >
+				<size value="14.0"></size>
+				 <position x="29118.55" y="13117.396" z="0.0"></position>
+				<color r="237" g="130" b="158"></color>
+			</node>
+			<node id="142_CheckoutControllerTest.testAddToCart" label="testAddToCart" >
+				<size value="18.0"></size>
+				 <position x="43420.098" y="34539.547" z="0.0"></position>
+				<color r="237" g="130" b="158"></color>
+			</node>
+			<node id="143_CheckoutControllerTest.testRemoveFromCart" label="testRemoveFromCart" >
+				<size value="18.0"></size>
+				 <position x="37813.645" y="31377.984" z="0.0"></position>
+				<color r="237" g="130" b="158"></color>
+			</node>
+			<node id="144_CheckoutControllerTest.testGetRecommendedBooks" label="testGetRecommendedBooks" >
+				<size value="16.0"></size>
+				 <position x="42569.613" y="54630.652" z="0.0"></position>
+				<color r="237" g="130" b="158"></color>
+			</node>
+			<node id="145_CheckoutControllerTest.testGetBooksByUserId" label="testGetBooksByUserId" >
+				<size value="16.0"></size>
+				 <position x="41988.438" y="21499.055" z="0.0"></position>
+				<color r="237" g="130" b="158"></color>
+			</node>
+			<node id="146_InventoryItemTest.setUp" label="setUp" >
+				<size value="12.0"></size>
+				 <position x="38264.43" y="12583.184" z="0.0"></position>
+				<color r="255" g="228" b="189"></color>
+			</node>
+			<node id="147_InventoryItemTest.testInventoryItemCreation" label="testInventoryItemCreation" >
+				<size value="2.0"></size>
+				 <position x="11529.308" y="4459.3423" z="0.0"></position>
+				<color r="255" g="228" b="189"></color>
+			</node>
+			<node id="148_InventoryItemTest.testSetBook" label="testSetBook" >
+				<size value="2.0"></size>
+				 <position x="15460.005" y="42291.51" z="0.0"></position>
+				<color r="255" g="228" b="189"></color>
+			</node>
+			<node id="149_InventoryItemTest.testSetQuantity" label="testSetQuantity" >
+				<size value="2.0"></size>
+				 <position x="19405.172" y="33420.047" z="0.0"></position>
+				<color r="255" g="228" b="189"></color>
+			</node>
+			<node id="150_InventorySearchTest.setUp" label="setUp" >
+				<size value="14.0"></size>
+				 <position x="51906.797" y="26785.895" z="0.0"></position>
+				<color r="139" g="132" b="240"></color>
+			</node>
+			<node id="151_InventorySearchTest.testEmptySearchBook" label="testEmptySearchBook" >
+				<size value="8.0"></size>
+				 <position x="30789.76" y="40698.035" z="0.0"></position>
+				<color r="139" g="132" b="240"></color>
+			</node>
+			<node id="152_InventorySearchTest.testSearchBookNoResults" label="testSearchBookNoResults" >
+				<size value="8.0"></size>
+				 <position x="20357.146" y="40432.0" z="0.0"></position>
+				<color r="139" g="132" b="240"></color>
+			</node>
+			<node id="153_InventorySearchTest.testSearchBookByTitle" label="testSearchBookByTitle" >
+				<size value="8.0"></size>
+				 <position x="18075.652" y="56530.71" z="0.0"></position>
+				<color r="139" g="132" b="240"></color>
+			</node>
+			<node id="154_InventorySearchTest.testSearchBookByAuthor" label="testSearchBookByAuthor" >
+				<size value="8.0"></size>
+				 <position x="45914.062" y="12288.206" z="0.0"></position>
+				<color r="139" g="132" b="240"></color>
+			</node>
+			<node id="155_InventorySearchTest.testSearchBookByDescription" label="testSearchBookByDescription" >
+				<size value="8.0"></size>
+				 <position x="56770.26" y="45657.664" z="0.0"></position>
+				<color r="139" g="132" b="240"></color>
+			</node>
+			<node id="156_InventorySearchTest.testSearchBookOrder1" label="testSearchBookOrder1" >
+				<size value="8.0"></size>
+				 <position x="43596.434" y="46389.406" z="0.0"></position>
+				<color r="139" g="132" b="240"></color>
+			</node>
+			<node id="157_InventorySearchTest.testSearchBookOrder2" label="testSearchBookOrder2" >
+				<size value="8.0"></size>
+				 <position x="36238.793" y="3183.955" z="0.0"></position>
+				<color r="139" g="132" b="240"></color>
+			</node>
+			<node id="158_InventoryTest.setUp" label="setUp" >
+				<size value="14.0"></size>
+				 <position x="30702.877" y="24418.574" z="0.0"></position>
+				<color r="153" g="150" b="202"></color>
+			</node>
+			<node id="159_InventoryTest.InventoryCreation" label="InventoryCreation" >
+				<size value="6.0"></size>
+				 <position x="27475.707" y="26537.314" z="0.0"></position>
+				<color r="153" g="150" b="202"></color>
+			</node>
+			<node id="160_InventoryTest.testAddToInventory" label="testAddToInventory" >
+				<size value="6.0"></size>
+				 <position x="23199.65" y="24599.207" z="0.0"></position>
+				<color r="153" g="150" b="202"></color>
+			</node>
+			<node id="161_InventoryTest.testReduceFromInventory" label="testReduceFromInventory" >
+				<size value="6.0"></size>
+				 <position x="41874.613" y="42148.324" z="0.0"></position>
+				<color r="153" g="150" b="202"></color>
+			</node>
+			<node id="162_InventoryTest.testPutBackIntoInventory" label="testPutBackIntoInventory" >
+				<size value="6.0"></size>
+				 <position x="18218.95" y="7408.782" z="0.0"></position>
+				<color r="153" g="150" b="202"></color>
+			</node>
+			<node id="163_ShoppingCartTest.setUp" label="setUp" >
+				<size value="26.0"></size>
+				 <position x="8995.116" y="14773.987" z="0.0"></position>
+				<color r="241" g="132" b="215"></color>
+			</node>
+			<node id="164_ShoppingCartTest.shoppingCartCreation" label="shoppingCartCreation" >
+				<size value="4.0"></size>
+				 <position x="53922.562" y="54905.367" z="0.0"></position>
+				<color r="241" g="132" b="215"></color>
+			</node>
+			<node id="165_ShoppingCartTest.testAddToCart" label="testAddToCart" >
+				<size value="4.0"></size>
+				 <position x="6421.7017" y="57259.94" z="0.0"></position>
+				<color r="241" g="132" b="215"></color>
+			</node>
+			<node id="166_ShoppingCartTest.testRemoveFromCart" label="testRemoveFromCart" >
+				<size value="4.0"></size>
+				 <position x="20942.074" y="18159.455" z="0.0"></position>
+				<color r="241" g="132" b="215"></color>
+			</node>
+			<node id="167_ShoppingCartTest.testCheckout" label="testCheckout" >
+				<size value="4.0"></size>
+				 <position x="27540.205" y="23707.725" z="0.0"></position>
+				<color r="241" g="132" b="215"></color>
+			</node>
+			<node id="168_SortFilterTest.setUp" label="setUp" >
+				<size value="18.0"></size>
+				 <position x="14318.007" y="48728.59" z="0.0"></position>
+				<color r="166" g="246" b="230"></color>
+			</node>
+			<node id="169_SortFilterTest.getDefaultFilterValues" label="getDefaultFilterValues" >
+				<size value="12.0"></size>
+				 <position x="4746.715" y="25217.322" z="0.0"></position>
+				<color r="166" g="246" b="230"></color>
+			</node>
+			<node id="170_SortFilterTest.testViewAvailableBooksWithSort" label="testViewAvailableBooksWithSort" >
+				<size value="16.0"></size>
+				 <position x="27044.094" y="37033.773" z="0.0"></position>
+				<color r="166" g="246" b="230"></color>
+			</node>
+			<node id="171_SortFilterTest.testViewAvailableBooksWithFilter" label="testViewAvailableBooksWithFilter" >
+				<size value="26.0"></size>
+				 <position x="30635.826" y="15992.132" z="0.0"></position>
+				<color r="166" g="246" b="230"></color>
+			</node>
+			<node id="172_SortFilterTest.testViewAvailableBooksWithSortFilter" label="testViewAvailableBooksWithSortFilter" >
+				<size value="22.0"></size>
+				 <position x="45103.984" y="44898.9" z="0.0"></position>
+				<color r="166" g="246" b="230"></color>
+			</node>
+			<node id="173_SortFilterTest.testViewAvailableBooksRestrictive" label="testViewAvailableBooksRestrictive" >
+				<size value="24.0"></size>
+				 <position x="37512.004" y="3227.2595" z="0.0"></position>
+				<color r="166" g="246" b="230"></color>
+			</node>
+			<node id="174_ViewInventoryControllerTest.setUp" label="setUp" >
+				<size value="20.0"></size>
+				 <position x="55780.906" y="52615.926" z="0.0"></position>
+				<color r="146" g="160" b="199"></color>
+			</node>
+			<node id="175_ViewInventoryControllerTest.contextLoads" label="contextLoads" >
+				<size value="2.0"></size>
+				 <position x="11290.99" y="46180.652" z="0.0"></position>
+				<color r="146" g="160" b="199"></color>
+			</node>
+			<node id="176_ViewInventoryControllerTest.getDefaultFilterValues" label="getDefaultFilterValues" >
+				<size value="12.0"></size>
+				 <position x="9269.219" y="1671.0328" z="0.0"></position>
+				<color r="146" g="160" b="199"></color>
+			</node>
+			<node id="177_ViewInventoryControllerTest.testViewAvailableBooks" label="testViewAvailableBooks" >
+				<size value="16.0"></size>
+				 <position x="36707.32" y="25941.21" z="0.0"></position>
+				<color r="146" g="160" b="199"></color>
+			</node>
+			<node id="178_ViewInventoryControllerTest.testViewAvailableBooksWithoutAccess" label="testViewAvailableBooksWithoutAccess" >
+				<size value="14.0"></size>
+				 <position x="2091.7249" y="3496.6394" z="0.0"></position>
+				<color r="146" g="160" b="199"></color>
+			</node>
+			<node id="179_ViewInventoryControllerTest.testViewAvailableBooksWithVagueSearch" label="testViewAvailableBooksWithVagueSearch" >
+				<size value="16.0"></size>
+				 <position x="53618.086" y="25494.197" z="0.0"></position>
+				<color r="146" g="160" b="199"></color>
+			</node>
+			<node id="180_ViewInventoryControllerTest.testViewAvailableBooksWithTitleSearch" label="testViewAvailableBooksWithTitleSearch" >
+				<size value="16.0"></size>
+				 <position x="33449.227" y="43520.785" z="0.0"></position>
+				<color r="146" g="160" b="199"></color>
+			</node>
+			<node id="181_MockHttpServletRequest.getAuthType" label="getAuthType" >
+				<size value="4.0"></size>
+				 <position x="41829.047" y="14160.826" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="182_MockHttpServletRequest.getCookies" label="getCookies" >
+				<size value="4.0"></size>
+				 <position x="39307.914" y="24641.453" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="183_MockHttpServletRequest.getDateHeader" label="getDateHeader" >
+				<size value="6.0"></size>
+				 <position x="37863.938" y="51538.5" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="184_MockHttpServletRequest.getHeader" label="getHeader" >
+				<size value="6.0"></size>
+				 <position x="23884.002" y="29647.408" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="185_MockHttpServletRequest.getHeaders" label="getHeaders" >
+				<size value="6.0"></size>
+				 <position x="55485.277" y="50897.6" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="186_MockHttpServletRequest.getHeaderNames" label="getHeaderNames" >
+				<size value="4.0"></size>
+				 <position x="5280.5894" y="56438.38" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="187_MockHttpServletRequest.getIntHeader" label="getIntHeader" >
+				<size value="6.0"></size>
+				 <position x="18290.068" y="56009.76" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="188_MockHttpServletRequest.getMethod" label="getMethod" >
+				<size value="4.0"></size>
+				 <position x="37443.938" y="50881.984" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="189_MockHttpServletRequest.getPathInfo" label="getPathInfo" >
+				<size value="4.0"></size>
+				 <position x="49077.504" y="1305.6565" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="190_MockHttpServletRequest.getPathTranslated" label="getPathTranslated" >
+				<size value="4.0"></size>
+				 <position x="51560.457" y="15109.829" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="191_MockHttpServletRequest.getContextPath" label="getContextPath" >
+				<size value="4.0"></size>
+				 <position x="230.72612" y="35004.89" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="192_MockHttpServletRequest.getQueryString" label="getQueryString" >
+				<size value="4.0"></size>
+				 <position x="9823.683" y="43323.633" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="193_MockHttpServletRequest.getRemoteUser" label="getRemoteUser" >
+				<size value="4.0"></size>
+				 <position x="41819.617" y="52248.176" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="194_MockHttpServletRequest.isUserInRole" label="isUserInRole" >
+				<size value="6.0"></size>
+				 <position x="22625.156" y="48129.605" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="195_MockHttpServletRequest.getUserPrincipal" label="getUserPrincipal" >
+				<size value="4.0"></size>
+				 <position x="32725.842" y="27197.957" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="196_MockHttpServletRequest.getRequestedSessionId" label="getRequestedSessionId" >
+				<size value="4.0"></size>
+				 <position x="17934.172" y="28815.064" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="197_MockHttpServletRequest.getRequestURI" label="getRequestURI" >
+				<size value="4.0"></size>
+				 <position x="28422.283" y="29286.941" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="198_MockHttpServletRequest.getRequestURL" label="getRequestURL" >
+				<size value="4.0"></size>
+				 <position x="3508.7056" y="55369.12" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="199_MockHttpServletRequest.getServletPath" label="getServletPath" >
+				<size value="4.0"></size>
+				 <position x="44932.316" y="45417.01" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="200_MockHttpServletRequest.getSession" label="getSession" >
+				<size value="8.0"></size>
+				 <position x="50011.094" y="3046.2158" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="201_MockHttpServletRequest.changeSessionId" label="changeSessionId" >
+				<size value="4.0"></size>
+				 <position x="13655.76" y="5060.9814" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="202_MockHttpServletRequest.isRequestedSessionIdValid" label="isRequestedSessionIdValid" >
+				<size value="4.0"></size>
+				 <position x="26664.352" y="34067.82" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="203_MockHttpServletRequest.isRequestedSessionIdFromCookie" label="isRequestedSessionIdFromCookie" >
+				<size value="4.0"></size>
+				 <position x="50460.68" y="9055.94" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="204_MockHttpServletRequest.isRequestedSessionIdFromURL" label="isRequestedSessionIdFromURL" >
+				<size value="4.0"></size>
+				 <position x="24523.604" y="24439.094" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="205_MockHttpServletRequest.authenticate" label="authenticate" >
+				<size value="6.0"></size>
+				 <position x="21866.55" y="44304.207" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="206_MockHttpServletRequest.login" label="login" >
+				<size value="6.0"></size>
+				 <position x="9606.567" y="37141.207" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="207_MockHttpServletRequest.logout" label="logout" >
+				<size value="2.0"></size>
+				 <position x="18265.36" y="45643.5" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="208_MockHttpServletRequest.getParts" label="getParts" >
+				<size value="4.0"></size>
+				 <position x="1690.2218" y="17259.275" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="209_MockHttpServletRequest.getPart" label="getPart" >
+				<size value="6.0"></size>
+				 <position x="16683.334" y="57783.555" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="210_MockHttpServletRequest.upgrade" label="upgrade" >
+				<size value="6.0"></size>
+				 <position x="35829.566" y="47725.69" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="211_MockHttpServletRequest.getAttribute" label="getAttribute" >
+				<size value="6.0"></size>
+				 <position x="9495.397" y="16167.08" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="212_MockHttpServletRequest.getAttributeNames" label="getAttributeNames" >
+				<size value="4.0"></size>
+				 <position x="3449.2427" y="49179.01" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="213_MockHttpServletRequest.getCharacterEncoding" label="getCharacterEncoding" >
+				<size value="4.0"></size>
+				 <position x="17084.896" y="34377.98" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="214_MockHttpServletRequest.setCharacterEncoding" label="setCharacterEncoding" >
+				<size value="4.0"></size>
+				 <position x="25809.184" y="26372.828" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="215_MockHttpServletRequest.getContentLength" label="getContentLength" >
+				<size value="4.0"></size>
+				 <position x="16868.77" y="17131.361" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="216_MockHttpServletRequest.getContentLengthLong" label="getContentLengthLong" >
+				<size value="4.0"></size>
+				 <position x="45089.21" y="55503.965" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="217_MockHttpServletRequest.getContentType" label="getContentType" >
+				<size value="4.0"></size>
+				 <position x="397.80734" y="31285.246" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="218_MockHttpServletRequest.getInputStream" label="getInputStream" >
+				<size value="4.0"></size>
+				 <position x="27281.588" y="53426.4" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="219_MockHttpServletRequest.getParameter" label="getParameter" >
+				<size value="6.0"></size>
+				 <position x="1706.9458" y="48902.406" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="220_MockHttpServletRequest.getParameterNames" label="getParameterNames" >
+				<size value="4.0"></size>
+				 <position x="9140.416" y="42430.35" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="221_MockHttpServletRequest.getParameterValues" label="getParameterValues" >
+				<size value="6.0"></size>
+				 <position x="43443.98" y="19977.393" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="222_MockHttpServletRequest.getParameterMap" label="getParameterMap" >
+				<size value="4.0"></size>
+				 <position x="33896.742" y="41364.16" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="223_MockHttpServletRequest.getProtocol" label="getProtocol" >
+				<size value="4.0"></size>
+				 <position x="28477.66" y="28645.277" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="224_MockHttpServletRequest.getScheme" label="getScheme" >
+				<size value="4.0"></size>
+				 <position x="24041.477" y="17301.209" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="225_MockHttpServletRequest.getServerName" label="getServerName" >
+				<size value="4.0"></size>
+				 <position x="41728.145" y="43467.234" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="226_MockHttpServletRequest.getServerPort" label="getServerPort" >
+				<size value="4.0"></size>
+				 <position x="36926.195" y="12501.884" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="227_MockHttpServletRequest.getReader" label="getReader" >
+				<size value="4.0"></size>
+				 <position x="56262.457" y="51028.69" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="228_MockHttpServletRequest.getRemoteAddr" label="getRemoteAddr" >
+				<size value="4.0"></size>
+				 <position x="14445.662" y="32160.242" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="229_MockHttpServletRequest.getRemoteHost" label="getRemoteHost" >
+				<size value="4.0"></size>
+				 <position x="6122.756" y="39737.23" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="230_MockHttpServletRequest.setAttribute" label="setAttribute" >
+				<size value="6.0"></size>
+				 <position x="43004.227" y="47320.758" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="231_MockHttpServletRequest.removeAttribute" label="removeAttribute" >
+				<size value="4.0"></size>
+				 <position x="17791.762" y="3722.8215" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="232_MockHttpServletRequest.getLocale" label="getLocale" >
+				<size value="4.0"></size>
+				 <position x="48739.547" y="45078.734" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="233_MockHttpServletRequest.getLocales" label="getLocales" >
+				<size value="4.0"></size>
+				 <position x="4572.6694" y="2098.644" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="234_MockHttpServletRequest.isSecure" label="isSecure" >
+				<size value="4.0"></size>
+				 <position x="42858.004" y="12349.993" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="235_MockHttpServletRequest.getRequestDispatcher" label="getRequestDispatcher" >
+				<size value="6.0"></size>
+				 <position x="2693.8813" y="46036.645" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="236_MockHttpServletRequest.getRemotePort" label="getRemotePort" >
+				<size value="4.0"></size>
+				 <position x="32812.24" y="40795.68" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="237_MockHttpServletRequest.getLocalName" label="getLocalName" >
+				<size value="4.0"></size>
+				 <position x="2344.4912" y="21232.719" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="238_MockHttpServletRequest.getLocalAddr" label="getLocalAddr" >
+				<size value="4.0"></size>
+				 <position x="3476.854" y="8494.879" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="239_MockHttpServletRequest.getLocalPort" label="getLocalPort" >
+				<size value="4.0"></size>
+				 <position x="33825.582" y="34788.992" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="240_MockHttpServletRequest.getServletContext" label="getServletContext" >
+				<size value="4.0"></size>
+				 <position x="44536.418" y="483.30615" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="241_MockHttpServletRequest.startAsync" label="startAsync" >
+				<size value="10.0"></size>
+				 <position x="51645.277" y="3157.223" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="242_MockHttpServletRequest.isAsyncStarted" label="isAsyncStarted" >
+				<size value="4.0"></size>
+				 <position x="52702.402" y="17586.44" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="243_MockHttpServletRequest.isAsyncSupported" label="isAsyncSupported" >
+				<size value="4.0"></size>
+				 <position x="9430.439" y="34882.62" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="244_MockHttpServletRequest.getAsyncContext" label="getAsyncContext" >
+				<size value="4.0"></size>
+				 <position x="7682.9473" y="51129.953" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="245_MockHttpServletRequest.getDispatcherType" label="getDispatcherType" >
+				<size value="4.0"></size>
+				 <position x="27312.768" y="19640.676" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="246_MockHttpServletRequest.getRequestId" label="getRequestId" >
+				<size value="4.0"></size>
+				 <position x="31830.842" y="27062.07" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="247_MockHttpServletRequest.getProtocolRequestId" label="getProtocolRequestId" >
+				<size value="4.0"></size>
+				 <position x="45247.47" y="24093.46" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="248_MockHttpServletRequest.getServletConnection" label="getServletConnection" >
+				<size value="4.0"></size>
+				 <position x="51808.99" y="45559.098" z="0.0"></position>
+				<color r="224" g="130" b="219"></color>
+			</node>
+			<node id="249_MockHttpServletResponse.addCookie" label="addCookie" >
+				<size value="4.0"></size>
+				 <position x="26934.27" y="42492.977" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="250_MockHttpServletResponse.containsHeader" label="containsHeader" >
+				<size value="6.0"></size>
+				 <position x="20025.094" y="31587.535" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="251_MockHttpServletResponse.encodeURL" label="encodeURL" >
+				<size value="6.0"></size>
+				 <position x="36606.09" y="4217.3013" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="252_MockHttpServletResponse.encodeRedirectURL" label="encodeRedirectURL" >
+				<size value="6.0"></size>
+				 <position x="37794.895" y="14398.234" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="253_MockHttpServletResponse.sendError" label="sendError" >
+				<size value="8.0"></size>
+				 <position x="16303.65" y="49095.273" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="254_MockHttpServletResponse.sendRedirect" label="sendRedirect" >
+				<size value="4.0"></size>
+				 <position x="29739.223" y="33939.0" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="255_MockHttpServletResponse.setDateHeader" label="setDateHeader" >
+				<size value="6.0"></size>
+				 <position x="34434.754" y="48894.04" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="256_MockHttpServletResponse.addDateHeader" label="addDateHeader" >
+				<size value="6.0"></size>
+				 <position x="30838.387" y="4573.1763" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="257_MockHttpServletResponse.setHeader" label="setHeader" >
+				<size value="6.0"></size>
+				 <position x="21695.916" y="8053.2363" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="258_MockHttpServletResponse.addHeader" label="addHeader" >
+				<size value="6.0"></size>
+				 <position x="39199.062" y="25179.592" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="259_MockHttpServletResponse.setIntHeader" label="setIntHeader" >
+				<size value="6.0"></size>
+				 <position x="42499.152" y="3754.7734" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="260_MockHttpServletResponse.addIntHeader" label="addIntHeader" >
+				<size value="6.0"></size>
+				 <position x="17684.998" y="12813.142" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="261_MockHttpServletResponse.setStatus" label="setStatus" >
+				<size value="4.0"></size>
+				 <position x="27026.205" y="18487.018" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="262_MockHttpServletResponse.getStatus" label="getStatus" >
+				<size value="4.0"></size>
+				 <position x="50182.36" y="15048.445" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="263_MockHttpServletResponse.getHeader" label="getHeader" >
+				<size value="6.0"></size>
+				 <position x="27832.158" y="28609.746" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="264_MockHttpServletResponse.getHeaders" label="getHeaders" >
+				<size value="6.0"></size>
+				 <position x="22361.766" y="55288.953" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="265_MockHttpServletResponse.getHeaderNames" label="getHeaderNames" >
+				<size value="4.0"></size>
+				 <position x="55524.977" y="8927.6" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="266_MockHttpServletResponse.getCharacterEncoding" label="getCharacterEncoding" >
+				<size value="4.0"></size>
+				 <position x="10098.605" y="44810.965" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="267_MockHttpServletResponse.getContentType" label="getContentType" >
+				<size value="4.0"></size>
+				 <position x="21101.303" y="34535.473" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="268_MockHttpServletResponse.getOutputStream" label="getOutputStream" >
+				<size value="4.0"></size>
+				 <position x="42926.805" y="9231.372" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="269_MockHttpServletResponse.getWriter" label="getWriter" >
+				<size value="4.0"></size>
+				 <position x="33783.57" y="8713.235" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="270_MockHttpServletResponse.setCharacterEncoding" label="setCharacterEncoding" >
+				<size value="4.0"></size>
+				 <position x="2042.894" y="35797.383" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="271_MockHttpServletResponse.setContentLength" label="setContentLength" >
+				<size value="4.0"></size>
+				 <position x="43860.7" y="4606.962" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="272_MockHttpServletResponse.setContentLengthLong" label="setContentLengthLong" >
+				<size value="4.0"></size>
+				 <position x="25070.334" y="49508.676" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="273_MockHttpServletResponse.setContentType" label="setContentType" >
+				<size value="4.0"></size>
+				 <position x="57544.34" y="12971.142" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="274_MockHttpServletResponse.setBufferSize" label="setBufferSize" >
+				<size value="4.0"></size>
+				 <position x="2850.0994" y="1562.6838" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="275_MockHttpServletResponse.getBufferSize" label="getBufferSize" >
+				<size value="4.0"></size>
+				 <position x="3893.1606" y="24856.383" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="276_MockHttpServletResponse.flushBuffer" label="flushBuffer" >
+				<size value="2.0"></size>
+				 <position x="52083.37" y="19242.217" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="277_MockHttpServletResponse.resetBuffer" label="resetBuffer" >
+				<size value="2.0"></size>
+				 <position x="34066.742" y="43888.637" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="278_MockHttpServletResponse.isCommitted" label="isCommitted" >
+				<size value="4.0"></size>
+				 <position x="17364.777" y="35074.11" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="279_MockHttpServletResponse.reset" label="reset" >
+				<size value="2.0"></size>
+				 <position x="11924.212" y="44142.05" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="280_MockHttpServletResponse.setLocale" label="setLocale" >
+				<size value="4.0"></size>
+				 <position x="6908.2695" y="40605.742" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="281_MockHttpServletResponse.getLocale" label="getLocale" >
+				<size value="4.0"></size>
+				 <position x="16896.03" y="34984.38" z="0.0"></position>
+				<color r="230" g="171" b="171"></color>
+			</node>
+			<node id="282_BookOwnerTest.testCreateBookOwner" label="testCreateBookOwner" >
+				<size value="4.0"></size>
+				 <position x="22369.213" y="44973.562" z="0.0"></position>
+				<color r="148" g="198" b="145"></color>
+			</node>
+			<node id="283_BookUserTest.testCreateBookUser" label="testCreateBookUser" >
+				<size value="4.0"></size>
+				 <position x="57683.58" y="11581.972" z="0.0"></position>
+				<color r="155" g="199" b="226"></color>
+			</node>
+			<node id="284_UserControllerOwnerTest.allowAddNewOwnerDirectly" label="allowAddNewOwnerDirectly" >
+				<size value="10.0"></size>
+				 <position x="25980.896" y="51588.97" z="0.0"></position>
+				<color r="130" g="128" b="148"></color>
+			</node>
+			<node id="285_UserControllerOwnerTest.allowAddNewOwnerViaEnum" label="allowAddNewOwnerViaEnum" >
+				<size value="10.0"></size>
+				 <position x="25873.285" y="27324.293" z="0.0"></position>
+				<color r="130" g="128" b="148"></color>
+			</node>
+			<node id="286_UserControllerOwnerTest.successfulLogin" label="successfulLogin" >
+				<size value="12.0"></size>
+				 <position x="43636.09" y="10770.351" z="0.0"></position>
+				<color r="130" g="128" b="148"></color>
+			</node>
+			<node id="287_UserControllerTest.contextLoads" label="contextLoads" >
+				<size value="2.0"></size>
+				 <position x="19720.729" y="9083.945" z="0.0"></position>
+				<color r="181" g="177" b="253"></color>
+			</node>
+			<node id="288_UserControllerTest.allowAddNewUser" label="allowAddNewUser" >
+				<size value="8.0"></size>
+				 <position x="18767.223" y="40867.9" z="0.0"></position>
+				<color r="181" g="177" b="253"></color>
+			</node>
+			<node id="289_UserControllerTest.rejectCreateDuplicateUsername" label="rejectCreateDuplicateUsername" >
+				<size value="10.0"></size>
+				 <position x="12655.675" y="49648.39" z="0.0"></position>
+				<color r="181" g="177" b="253"></color>
+			</node>
+			<node id="290_UserControllerTest.rejectCreateNullValues" label="rejectCreateNullValues" >
+				<size value="12.0"></size>
+				 <position x="26954.266" y="10835.7705" z="0.0"></position>
+				<color r="181" g="177" b="253"></color>
+			</node>
+			<node id="291_UserControllerTest.displayLoginForm" label="displayLoginForm" >
+				<size value="10.0"></size>
+				 <position x="35629.88" y="22769.268" z="0.0"></position>
+				<color r="181" g="177" b="253"></color>
+			</node>
+			<node id="292_UserControllerTest.successfulLogin" label="successfulLogin" >
+				<size value="12.0"></size>
+				 <position x="54967.75" y="44894.105" z="0.0"></position>
+				<color r="181" g="177" b="253"></color>
+			</node>
+			<node id="293_UserControllerTest.failedLoginIncorrectPassword" label="failedLoginIncorrectPassword" >
+				<size value="16.0"></size>
+				 <position x="6903.15" y="6983.505" z="0.0"></position>
+				<color r="181" g="177" b="253"></color>
+			</node>
+			<node id="294_UserControllerTest.failedLoginNonExistentUsername" label="failedLoginNonExistentUsername" >
+				<size value="14.0"></size>
+				 <position x="14235.324" y="18654.268" z="0.0"></position>
+				<color r="181" g="177" b="253"></color>
+			</node>
+			<node id="295_UserControllerTest.displayRegisterLoginPage" label="displayRegisterLoginPage" >
+				<size value="10.0"></size>
+				 <position x="45885.88" y="22900.098" z="0.0"></position>
+				<color r="181" g="177" b="253"></color>
+			</node>
+			<node id="296_UserControllerTest.rejectLoginEmptyFields" label="rejectLoginEmptyFields" >
+				<size value="24.0"></size>
+				 <position x="46591.074" y="53612.17" z="0.0"></position>
+				<color r="181" g="177" b="253"></color>
+			</node>
+			<node id="297_UserControllerTest.handleLoginException" label="handleLoginException" >
+				<size value="14.0"></size>
+				 <position x="21272.701" y="32513.566" z="0.0"></position>
+				<color r="181" g="177" b="253"></color>
+			</node>
+			<node id="298_UserControllerTest.invalidLoginAttempt" label="invalidLoginAttempt" >
+				<size value="18.0"></size>
+				 <position x="28545.363" y="32656.781" z="0.0"></position>
+				<color r="181" g="177" b="253"></color>
+			</node>
+			<node id="299_UserControllerTest.loginWithMultipleUsers" label="loginWithMultipleUsers" >
+				<size value="14.0"></size>
+				 <position x="9816.229" y="39600.523" z="0.0"></position>
+				<color r="181" g="177" b="253"></color>
+			</node>
+			<node id="300_UserControllerTest.successfulLogout" label="successfulLogout" >
+				<size value="10.0"></size>
+				 <position x="4163.6475" y="43119.24" z="0.0"></position>
+				<color r="181" g="177" b="253"></color>
+			</node>
+			<node id="301_UserControllerTest.ensureCorrectRedirectAfterLogout" label="ensureCorrectRedirectAfterLogout" >
+				<size value="10.0"></size>
+				 <position x="45563.79" y="24143.02" z="0.0"></position>
+				<color r="181" g="177" b="253"></color>
+			</node>
+			<node id="302_UserControllerTest.testLogoutWhenUserIsLoggedIn" label="testLogoutWhenUserIsLoggedIn" >
+				<size value="10.0"></size>
+				 <position x="55920.848" y="57120.336" z="0.0"></position>
+				<color r="181" g="177" b="253"></color>
+			</node>
+			<node id="303_UserControllerTest.testLogoutAndImmediateLogin" label="testLogoutAndImmediateLogin" >
+				<size value="12.0"></size>
+				 <position x="26815.51" y="54569.242" z="0.0"></position>
+				<color r="181" g="177" b="253"></color>
+			</node>
+			<node id="304_UserControllerTest.setupUserAsLoggedIn" label="setupUserAsLoggedIn" >
+				<size value="4.0"></size>
+				 <position x="4285.6553" y="51332.562" z="0.0"></position>
+				<color r="181" g="177" b="253"></color>
+			</node>
+			<node id="305_UserControllerTest.testLogoutDuringOngoingShoppingCartTransaction" label="testLogoutDuringOngoingShoppingCartTransaction" >
+				<size value="14.0"></size>
+				 <position x="50338.402" y="26240.377" z="0.0"></position>
+				<color r="181" g="177" b="253"></color>
+			</node>
+			<node id="306_UserControllerTest.testCalculateJaccardDistance" label="testCalculateJaccardDistance" >
+				<size value="24.0"></size>
+				 <position x="1039.0795" y="25103.637" z="0.0"></position>
+				<color r="181" g="177" b="253"></color>
 			</node>
 		</nodes>
 		<edges>
-			<edge source="2_codeViz.entity" target="1_codeViz" weight="1.0" >
+			<edge source="2_App.demoInventory" target="11_Author.addBook" weight="1.0" >
 				<size value="1.0"></size>
 			</edge>
-			<edge source="2_codeViz.entity" target="2_codeViz.entity" weight="13.0" >
-				<size value="13.0"></size>
+			<edge source="2_App.demoInventory" target="63_Inventory.addItemToInventory" weight="4.0" >
+				<size value="4.0"></size>
+			</edge>
+			<edge source="2_App.demoInventory" target="110_BookUser.setShoppingCart" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="37_BookController.showUploadForm" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="37_BookController.showUploadForm" target="108_BookUser.getUserType" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="38_BookController.handleUploadForm" target="17_Book.getIsbn" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="38_BookController.handleUploadForm" target="48_BookRepository.findByIsbn" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="38_BookController.handleUploadForm" target="19_Book.getTitle" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="38_BookController.handleUploadForm" target="16_AuthorRepository.findByFirstNameAndLastName" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="38_BookController.handleUploadForm" target="24_Book.setAuthor" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="38_BookController.handleUploadForm" target="78_InventoryRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="38_BookController.handleUploadForm" target="63_Inventory.addItemToInventory" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="39_BookController.showEditForm" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="39_BookController.showEditForm" target="108_BookUser.getUserType" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="39_BookController.showEditForm" target="48_BookRepository.findByIsbn" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="39_BookController.showEditForm" target="23_Book.getAuthor" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="39_BookController.showEditForm" target="74_InventoryItemRepository.findByBook" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="40_BookController.handleEditForm" target="16_AuthorRepository.findByFirstNameAndLastName" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="40_BookController.handleEditForm" target="24_Book.setAuthor" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="40_BookController.handleEditForm" target="74_InventoryItemRepository.findByBook" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="40_BookController.handleEditForm" target="17_Book.getIsbn" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="52_CheckoutController.listAvailableBooks" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="52_CheckoutController.listAvailableBooks" target="78_InventoryRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="52_CheckoutController.listAvailableBooks" target="68_Inventory.getBooksMatchingSearch" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="52_CheckoutController.listAvailableBooks" target="67_Inventory.getAvailableBooks" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="52_CheckoutController.listAvailableBooks" target="102_BookUser.getId" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="52_CheckoutController.listAvailableBooks" target="61_CheckoutController.recommendBooks" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="53_CheckoutController.viewBook" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="53_CheckoutController.viewBook" target="48_BookRepository.findByIsbn" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="53_CheckoutController.viewBook" target="23_Book.getAuthor" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="53_CheckoutController.viewBook" target="108_BookUser.getUserType" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="54_CheckoutController.addToCartForm" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="54_CheckoutController.addToCartForm" target="102_BookUser.getId" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="54_CheckoutController.addToCartForm" target="61_CheckoutController.recommendBooks" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="55_CheckoutController.addToCart" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="55_CheckoutController.addToCart" target="111_BookUser.getShoppingCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="55_CheckoutController.addToCart" target="73_InventoryItemRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="55_CheckoutController.addToCart" target="85_ShoppingCart.addToCart" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="55_CheckoutController.addToCart" target="96_ShoppingCart.getTotalQuantityOfCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="55_CheckoutController.addToCart" target="99_ShoppingCartItemRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="55_CheckoutController.addToCart" target="89_ShoppingCart.getBooksInCart" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="55_CheckoutController.addToCart" target="78_InventoryRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="56_CheckoutController.getTotalInCart" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="56_CheckoutController.getTotalInCart" target="111_BookUser.getShoppingCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="56_CheckoutController.getTotalInCart" target="96_ShoppingCart.getTotalQuantityOfCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="57_CheckoutController.removeFromCartForm" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="58_CheckoutController.removeFromCart" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="58_CheckoutController.removeFromCart" target="111_BookUser.getShoppingCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="58_CheckoutController.removeFromCart" target="73_InventoryItemRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="58_CheckoutController.removeFromCart" target="86_ShoppingCart.removeFromCart" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="58_CheckoutController.removeFromCart" target="100_ShoppingCartItemRepository.findByQuantity" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="58_CheckoutController.removeFromCart" target="96_ShoppingCart.getTotalQuantityOfCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="58_CheckoutController.removeFromCart" target="99_ShoppingCartItemRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="58_CheckoutController.removeFromCart" target="89_ShoppingCart.getBooksInCart" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="58_CheckoutController.removeFromCart" target="78_InventoryRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="59_CheckoutController.viewCart" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="59_CheckoutController.viewCart" target="111_BookUser.getShoppingCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="59_CheckoutController.viewCart" target="89_ShoppingCart.getBooksInCart" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="60_CheckoutController.confirmOrder" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="60_CheckoutController.confirmOrder" target="111_BookUser.getShoppingCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="60_CheckoutController.confirmOrder" target="91_ShoppingCart.checkout" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="60_CheckoutController.confirmOrder" target="78_InventoryRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="61_CheckoutController.recommendBooks" target="62_CheckoutController.getBooksInCartByUserId" weight="3.0" >
+				<size value="3.0"></size>
+			</edge>
+			<edge source="61_CheckoutController.recommendBooks" target="102_BookUser.getId" weight="3.0" >
+				<size value="3.0"></size>
+			</edge>
+			<edge source="61_CheckoutController.recommendBooks" target="124_UserController.calculateJaccardDistance" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="62_CheckoutController.getBooksInCartByUserId" target="126_UserRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="62_CheckoutController.getBooksInCartByUserId" target="111_BookUser.getShoppingCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="62_CheckoutController.getBooksInCartByUserId" target="90_ShoppingCart.getBooksForRecommendations" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="64_Inventory.reduceFromInventory" target="17_Book.getIsbn" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="65_Inventory.putBackIntoInventory" target="17_Book.getIsbn" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="68_Inventory.getBooksMatchingSearch" target="19_Book.getTitle" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="68_Inventory.getBooksMatchingSearch" target="29_Book.getGenre" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="68_Inventory.getBooksMatchingSearch" target="25_Book.getPublisher" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="68_Inventory.getBooksMatchingSearch" target="9_Author.getFullName" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="68_Inventory.getBooksMatchingSearch" target="23_Book.getAuthor" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="68_Inventory.getBooksMatchingSearch" target="34_Book.getDescription" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="85_ShoppingCart.addToCart" target="17_Book.getIsbn" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="85_ShoppingCart.addToCart" target="66_Inventory.findAvailableBook" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="85_ShoppingCart.addToCart" target="64_Inventory.reduceFromInventory" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="85_ShoppingCart.addToCart" target="87_ShoppingCart.updateTotalPrice" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="86_ShoppingCart.removeFromCart" target="17_Book.getIsbn" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="86_ShoppingCart.removeFromCart" target="66_Inventory.findAvailableBook" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="86_ShoppingCart.removeFromCart" target="65_Inventory.putBackIntoInventory" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="86_ShoppingCart.removeFromCart" target="87_ShoppingCart.updateTotalPrice" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="115_UserController.createAccountForm" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="116_UserController.saveUser" target="108_BookUser.getUserType" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="116_UserController.saveUser" target="102_BookUser.getId" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="116_UserController.saveUser" target="104_BookUser.getUsername" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="116_UserController.saveUser" target="106_BookUser.getPassword" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="116_UserController.saveUser" target="111_BookUser.getShoppingCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="116_UserController.saveUser" target="78_InventoryRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="116_UserController.saveUser" target="110_BookUser.setShoppingCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="117_UserController.createAccountSubmit" target="104_BookUser.getUsername" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="117_UserController.createAccountSubmit" target="125_UserRepository.findByUsername" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="117_UserController.createAccountSubmit" target="106_BookUser.getPassword" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="117_UserController.createAccountSubmit" target="116_UserController.saveUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="118_UserController.accountForm" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="119_UserController.handleUserLogin" target="104_BookUser.getUsername" weight="4.0" >
+				<size value="4.0"></size>
+			</edge>
+			<edge source="119_UserController.handleUserLogin" target="125_UserRepository.findByUsername" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="119_UserController.handleUserLogin" target="106_BookUser.getPassword" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="120_UserController.getLoggedInUser" target="121_UserController.retreiveCookie" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="120_UserController.getLoggedInUser" target="125_UserRepository.findByUsername" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="120_UserController.getLoggedInUser" target="104_BookUser.getUsername" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="123_UserController.registerLogin" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="127_AuthorTest.testAuthorCreation" target="5_Author.getFirstName" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="127_AuthorTest.testAuthorCreation" target="7_Author.getLastName" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="128_AuthorTest.testBibliography" target="10_Author.getBibliography" weight="3.0" >
+				<size value="3.0"></size>
+			</edge>
+			<edge source="128_AuthorTest.testBibliography" target="11_Author.addBook" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="128_AuthorTest.testBibliography" target="12_Author.removeBook" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="129_BookControllerTest.setUp" target="69_Inventory.setId" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="129_BookControllerTest.setUp" target="18_Book.setIsbn" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="129_BookControllerTest.setUp" target="20_Book.setTitle" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="129_BookControllerTest.setUp" target="78_InventoryRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="130_BookControllerTest.testShowUploadForm" target="109_BookUser.setUserType" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="130_BookControllerTest.testShowUploadForm" target="125_UserRepository.findByUsername" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="130_BookControllerTest.testShowUploadForm" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="130_BookControllerTest.testShowUploadForm" target="37_BookController.showUploadForm" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="131_BookControllerTest.testShowEditForm" target="109_BookUser.setUserType" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="131_BookControllerTest.testShowEditForm" target="125_UserRepository.findByUsername" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="131_BookControllerTest.testShowEditForm" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="131_BookControllerTest.testShowEditForm" target="48_BookRepository.findByIsbn" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="131_BookControllerTest.testShowEditForm" target="74_InventoryItemRepository.findByBook" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="131_BookControllerTest.testShowEditForm" target="39_BookController.showEditForm" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="131_BookControllerTest.testShowEditForm" target="36_Book.getAllAuthorNames" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="132_BookControllerTest.testCanOnlyUploadEditAsOwner" target="105_BookUser.setUsername" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="132_BookControllerTest.testCanOnlyUploadEditAsOwner" target="109_BookUser.setUserType" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="132_BookControllerTest.testCanOnlyUploadEditAsOwner" target="18_Book.setIsbn" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="132_BookControllerTest.testCanOnlyUploadEditAsOwner" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="132_BookControllerTest.testCanOnlyUploadEditAsOwner" target="17_Book.getIsbn" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="132_BookControllerTest.testCanOnlyUploadEditAsOwner" target="48_BookRepository.findByIsbn" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="132_BookControllerTest.testCanOnlyUploadEditAsOwner" target="37_BookController.showUploadForm" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="132_BookControllerTest.testCanOnlyUploadEditAsOwner" target="39_BookController.showEditForm" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="133_BookControllerTest.testCannotUploadEditAsUser" target="105_BookUser.setUsername" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="133_BookControllerTest.testCannotUploadEditAsUser" target="18_Book.setIsbn" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="133_BookControllerTest.testCannotUploadEditAsUser" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="133_BookControllerTest.testCannotUploadEditAsUser" target="17_Book.getIsbn" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="133_BookControllerTest.testCannotUploadEditAsUser" target="48_BookRepository.findByIsbn" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="133_BookControllerTest.testCannotUploadEditAsUser" target="37_BookController.showUploadForm" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="133_BookControllerTest.testCannotUploadEditAsUser" target="39_BookController.showEditForm" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="134_BookControllerTest.testHandleUploadForm_WithInvalidAuthorFormat" target="18_Book.setIsbn" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="134_BookControllerTest.testHandleUploadForm_WithInvalidAuthorFormat" target="20_Book.setTitle" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="134_BookControllerTest.testHandleUploadForm_WithInvalidAuthorFormat" target="48_BookRepository.findByIsbn" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="134_BookControllerTest.testHandleUploadForm_WithInvalidAuthorFormat" target="78_InventoryRepository.findById" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="134_BookControllerTest.testHandleUploadForm_WithInvalidAuthorFormat" target="38_BookController.handleUploadForm" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="135_BookControllerTest.testHandleEditForm_Success" target="48_BookRepository.findByIsbn" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="135_BookControllerTest.testHandleEditForm_Success" target="16_AuthorRepository.findByFirstNameAndLastName" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="135_BookControllerTest.testHandleEditForm_Success" target="74_InventoryItemRepository.findByBook" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="135_BookControllerTest.testHandleEditForm_Success" target="40_BookController.handleEditForm" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="135_BookControllerTest.testHandleEditForm_Success" target="23_Book.getAuthor" weight="3.0" >
+				<size value="3.0"></size>
+			</edge>
+			<edge source="136_BookTest.testBookCreation" target="17_Book.getIsbn" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="136_BookTest.testBookCreation" target="19_Book.getTitle" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="136_BookTest.testBookCreation" target="21_Book.getCover" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="136_BookTest.testBookCreation" target="23_Book.getAuthor" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="136_BookTest.testBookCreation" target="5_Author.getFirstName" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="136_BookTest.testBookCreation" target="7_Author.getLastName" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="136_BookTest.testBookCreation" target="25_Book.getPublisher" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="136_BookTest.testBookCreation" target="29_Book.getGenre" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="136_BookTest.testBookCreation" target="31_Book.getPrice" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="136_BookTest.testBookCreation" target="34_Book.getDescription" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="137_CheckoutControllerTest.setUp" target="63_Inventory.addItemToInventory" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="139_CheckoutControllerTest.testConfirmOrder" target="110_BookUser.setShoppingCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="139_CheckoutControllerTest.testConfirmOrder" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="139_CheckoutControllerTest.testConfirmOrder" target="60_CheckoutController.confirmOrder" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="139_CheckoutControllerTest.testConfirmOrder" target="78_InventoryRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="140_CheckoutControllerTest.testViewCartWithoutAccess" target="114_UserController.getUserAccess" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="140_CheckoutControllerTest.testViewCartWithoutAccess" target="85_ShoppingCart.addToCart" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="140_CheckoutControllerTest.testViewCartWithoutAccess" target="59_CheckoutController.viewCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="140_CheckoutControllerTest.testViewCartWithoutAccess" target="89_ShoppingCart.getBooksInCart" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="141_CheckoutControllerTest.testViewCartWithAccess" target="114_UserController.getUserAccess" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="141_CheckoutControllerTest.testViewCartWithAccess" target="85_ShoppingCart.addToCart" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="141_CheckoutControllerTest.testViewCartWithAccess" target="110_BookUser.setShoppingCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="141_CheckoutControllerTest.testViewCartWithAccess" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="141_CheckoutControllerTest.testViewCartWithAccess" target="59_CheckoutController.viewCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="141_CheckoutControllerTest.testViewCartWithAccess" target="89_ShoppingCart.getBooksInCart" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="142_CheckoutControllerTest.testAddToCart" target="114_UserController.getUserAccess" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="142_CheckoutControllerTest.testAddToCart" target="78_InventoryRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="142_CheckoutControllerTest.testAddToCart" target="85_ShoppingCart.addToCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="142_CheckoutControllerTest.testAddToCart" target="110_BookUser.setShoppingCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="142_CheckoutControllerTest.testAddToCart" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="142_CheckoutControllerTest.testAddToCart" target="73_InventoryItemRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="142_CheckoutControllerTest.testAddToCart" target="55_CheckoutController.addToCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="142_CheckoutControllerTest.testAddToCart" target="89_ShoppingCart.getBooksInCart" weight="3.0" >
+				<size value="3.0"></size>
+			</edge>
+			<edge source="142_CheckoutControllerTest.testAddToCart" target="66_Inventory.findAvailableBook" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="143_CheckoutControllerTest.testRemoveFromCart" target="114_UserController.getUserAccess" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="143_CheckoutControllerTest.testRemoveFromCart" target="78_InventoryRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="143_CheckoutControllerTest.testRemoveFromCart" target="85_ShoppingCart.addToCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="143_CheckoutControllerTest.testRemoveFromCart" target="86_ShoppingCart.removeFromCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="143_CheckoutControllerTest.testRemoveFromCart" target="110_BookUser.setShoppingCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="143_CheckoutControllerTest.testRemoveFromCart" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="143_CheckoutControllerTest.testRemoveFromCart" target="73_InventoryItemRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="143_CheckoutControllerTest.testRemoveFromCart" target="58_CheckoutController.removeFromCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="143_CheckoutControllerTest.testRemoveFromCart" target="89_ShoppingCart.getBooksInCart" weight="3.0" >
+				<size value="3.0"></size>
+			</edge>
+			<edge source="143_CheckoutControllerTest.testRemoveFromCart" target="66_Inventory.findAvailableBook" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="144_CheckoutControllerTest.testGetRecommendedBooks" target="85_ShoppingCart.addToCart" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="144_CheckoutControllerTest.testGetRecommendedBooks" target="103_BookUser.setId" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="144_CheckoutControllerTest.testGetRecommendedBooks" target="110_BookUser.setShoppingCart" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="144_CheckoutControllerTest.testGetRecommendedBooks" target="126_UserRepository.findById" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="144_CheckoutControllerTest.testGetRecommendedBooks" target="111_BookUser.getShoppingCart" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="144_CheckoutControllerTest.testGetRecommendedBooks" target="61_CheckoutController.recommendBooks" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="145_CheckoutControllerTest.testGetBooksByUserId" target="85_ShoppingCart.addToCart" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="145_CheckoutControllerTest.testGetBooksByUserId" target="103_BookUser.setId" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="145_CheckoutControllerTest.testGetBooksByUserId" target="110_BookUser.setShoppingCart" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="145_CheckoutControllerTest.testGetBooksByUserId" target="126_UserRepository.findById" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="145_CheckoutControllerTest.testGetBooksByUserId" target="111_BookUser.getShoppingCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="145_CheckoutControllerTest.testGetBooksByUserId" target="62_CheckoutController.getBooksInCartByUserId" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="151_InventorySearchTest.testEmptySearchBook" target="68_Inventory.getBooksMatchingSearch" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="151_InventorySearchTest.testEmptySearchBook" target="67_Inventory.getAvailableBooks" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="152_InventorySearchTest.testSearchBookNoResults" target="68_Inventory.getBooksMatchingSearch" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="153_InventorySearchTest.testSearchBookByTitle" target="68_Inventory.getBooksMatchingSearch" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="154_InventorySearchTest.testSearchBookByAuthor" target="68_Inventory.getBooksMatchingSearch" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="155_InventorySearchTest.testSearchBookByDescription" target="68_Inventory.getBooksMatchingSearch" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="156_InventorySearchTest.testSearchBookOrder1" target="68_Inventory.getBooksMatchingSearch" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="157_InventorySearchTest.testSearchBookOrder2" target="68_Inventory.getBooksMatchingSearch" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="159_InventoryTest.InventoryCreation" target="67_Inventory.getAvailableBooks" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="160_InventoryTest.testAddToInventory" target="63_Inventory.addItemToInventory" weight="4.0" >
+				<size value="4.0"></size>
+			</edge>
+			<edge source="160_InventoryTest.testAddToInventory" target="67_Inventory.getAvailableBooks" weight="6.0" >
+				<size value="6.0"></size>
+			</edge>
+			<edge source="161_InventoryTest.testReduceFromInventory" target="64_Inventory.reduceFromInventory" weight="5.0" >
+				<size value="5.0"></size>
+			</edge>
+			<edge source="161_InventoryTest.testReduceFromInventory" target="67_Inventory.getAvailableBooks" weight="6.0" >
+				<size value="6.0"></size>
+			</edge>
+			<edge source="161_InventoryTest.testReduceFromInventory" target="63_Inventory.addItemToInventory" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="162_InventoryTest.testPutBackIntoInventory" target="67_Inventory.getAvailableBooks" weight="3.0" >
+				<size value="3.0"></size>
+			</edge>
+			<edge source="162_InventoryTest.testPutBackIntoInventory" target="63_Inventory.addItemToInventory" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="162_InventoryTest.testPutBackIntoInventory" target="65_Inventory.putBackIntoInventory" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="163_ShoppingCartTest.setUp" target="63_Inventory.addItemToInventory" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="164_ShoppingCartTest.shoppingCartCreation" target="88_ShoppingCart.getTotalPrice" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="165_ShoppingCartTest.testAddToCart" target="85_ShoppingCart.addToCart" weight="6.0" >
+				<size value="6.0"></size>
+			</edge>
+			<edge source="165_ShoppingCartTest.testAddToCart" target="89_ShoppingCart.getBooksInCart" weight="11.0" >
+				<size value="11.0"></size>
+			</edge>
+			<edge source="165_ShoppingCartTest.testAddToCart" target="88_ShoppingCart.getTotalPrice" weight="4.0" >
+				<size value="4.0"></size>
+			</edge>
+			<edge source="166_ShoppingCartTest.testRemoveFromCart" target="86_ShoppingCart.removeFromCart" weight="6.0" >
+				<size value="6.0"></size>
+			</edge>
+			<edge source="166_ShoppingCartTest.testRemoveFromCart" target="89_ShoppingCart.getBooksInCart" weight="7.0" >
+				<size value="7.0"></size>
+			</edge>
+			<edge source="166_ShoppingCartTest.testRemoveFromCart" target="85_ShoppingCart.addToCart" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="166_ShoppingCartTest.testRemoveFromCart" target="88_ShoppingCart.getTotalPrice" weight="4.0" >
+				<size value="4.0"></size>
+			</edge>
+			<edge source="167_ShoppingCartTest.testCheckout" target="85_ShoppingCart.addToCart" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="167_ShoppingCartTest.testCheckout" target="89_ShoppingCart.getBooksInCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="167_ShoppingCartTest.testCheckout" target="91_ShoppingCart.checkout" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="167_ShoppingCartTest.testCheckout" target="96_ShoppingCart.getTotalQuantityOfCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="168_SortFilterTest.setUp" target="63_Inventory.addItemToInventory" weight="3.0" >
+				<size value="3.0"></size>
+			</edge>
+			<edge source="169_SortFilterTest.getDefaultFilterValues" target="23_Book.getAuthor" weight="3.0" >
+				<size value="3.0"></size>
+			</edge>
+			<edge source="169_SortFilterTest.getDefaultFilterValues" target="29_Book.getGenre" weight="3.0" >
+				<size value="3.0"></size>
+			</edge>
+			<edge source="169_SortFilterTest.getDefaultFilterValues" target="25_Book.getPublisher" weight="3.0" >
+				<size value="3.0"></size>
+			</edge>
+			<edge source="170_SortFilterTest.testViewAvailableBooksWithSort" target="169_SortFilterTest.getDefaultFilterValues" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="170_SortFilterTest.testViewAvailableBooksWithSort" target="114_UserController.getUserAccess" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="170_SortFilterTest.testViewAvailableBooksWithSort" target="78_InventoryRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="170_SortFilterTest.testViewAvailableBooksWithSort" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="170_SortFilterTest.testViewAvailableBooksWithSort" target="52_CheckoutController.listAvailableBooks" weight="3.0" >
+				<size value="3.0"></size>
+			</edge>
+			<edge source="170_SortFilterTest.testViewAvailableBooksWithSort" target="67_Inventory.getAvailableBooks" weight="3.0" >
+				<size value="3.0"></size>
+			</edge>
+			<edge source="171_SortFilterTest.testViewAvailableBooksWithFilter" target="169_SortFilterTest.getDefaultFilterValues" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="171_SortFilterTest.testViewAvailableBooksWithFilter" target="114_UserController.getUserAccess" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="171_SortFilterTest.testViewAvailableBooksWithFilter" target="78_InventoryRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="171_SortFilterTest.testViewAvailableBooksWithFilter" target="23_Book.getAuthor" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="171_SortFilterTest.testViewAvailableBooksWithFilter" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="171_SortFilterTest.testViewAvailableBooksWithFilter" target="52_CheckoutController.listAvailableBooks" weight="4.0" >
+				<size value="4.0"></size>
+			</edge>
+			<edge source="171_SortFilterTest.testViewAvailableBooksWithFilter" target="29_Book.getGenre" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="171_SortFilterTest.testViewAvailableBooksWithFilter" target="25_Book.getPublisher" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="171_SortFilterTest.testViewAvailableBooksWithFilter" target="31_Book.getPrice" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="172_SortFilterTest.testViewAvailableBooksWithSortFilter" target="169_SortFilterTest.getDefaultFilterValues" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="172_SortFilterTest.testViewAvailableBooksWithSortFilter" target="29_Book.getGenre" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="172_SortFilterTest.testViewAvailableBooksWithSortFilter" target="31_Book.getPrice" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="172_SortFilterTest.testViewAvailableBooksWithSortFilter" target="114_UserController.getUserAccess" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="172_SortFilterTest.testViewAvailableBooksWithSortFilter" target="78_InventoryRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="172_SortFilterTest.testViewAvailableBooksWithSortFilter" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="172_SortFilterTest.testViewAvailableBooksWithSortFilter" target="52_CheckoutController.listAvailableBooks" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="173_SortFilterTest.testViewAvailableBooksRestrictive" target="169_SortFilterTest.getDefaultFilterValues" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="173_SortFilterTest.testViewAvailableBooksRestrictive" target="29_Book.getGenre" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="173_SortFilterTest.testViewAvailableBooksRestrictive" target="31_Book.getPrice" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="173_SortFilterTest.testViewAvailableBooksRestrictive" target="114_UserController.getUserAccess" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="173_SortFilterTest.testViewAvailableBooksRestrictive" target="78_InventoryRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="173_SortFilterTest.testViewAvailableBooksRestrictive" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="173_SortFilterTest.testViewAvailableBooksRestrictive" target="52_CheckoutController.listAvailableBooks" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="174_ViewInventoryControllerTest.setUp" target="63_Inventory.addItemToInventory" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="176_ViewInventoryControllerTest.getDefaultFilterValues" target="23_Book.getAuthor" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="176_ViewInventoryControllerTest.getDefaultFilterValues" target="29_Book.getGenre" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="176_ViewInventoryControllerTest.getDefaultFilterValues" target="25_Book.getPublisher" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="177_ViewInventoryControllerTest.testViewAvailableBooks" target="176_ViewInventoryControllerTest.getDefaultFilterValues" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="177_ViewInventoryControllerTest.testViewAvailableBooks" target="114_UserController.getUserAccess" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="177_ViewInventoryControllerTest.testViewAvailableBooks" target="78_InventoryRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="177_ViewInventoryControllerTest.testViewAvailableBooks" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="177_ViewInventoryControllerTest.testViewAvailableBooks" target="52_CheckoutController.listAvailableBooks" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="177_ViewInventoryControllerTest.testViewAvailableBooks" target="67_Inventory.getAvailableBooks" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="178_ViewInventoryControllerTest.testViewAvailableBooksWithoutAccess" target="176_ViewInventoryControllerTest.getDefaultFilterValues" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="178_ViewInventoryControllerTest.testViewAvailableBooksWithoutAccess" target="114_UserController.getUserAccess" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="178_ViewInventoryControllerTest.testViewAvailableBooksWithoutAccess" target="78_InventoryRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="178_ViewInventoryControllerTest.testViewAvailableBooksWithoutAccess" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="178_ViewInventoryControllerTest.testViewAvailableBooksWithoutAccess" target="52_CheckoutController.listAvailableBooks" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="179_ViewInventoryControllerTest.testViewAvailableBooksWithVagueSearch" target="176_ViewInventoryControllerTest.getDefaultFilterValues" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="179_ViewInventoryControllerTest.testViewAvailableBooksWithVagueSearch" target="114_UserController.getUserAccess" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="179_ViewInventoryControllerTest.testViewAvailableBooksWithVagueSearch" target="78_InventoryRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="179_ViewInventoryControllerTest.testViewAvailableBooksWithVagueSearch" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="179_ViewInventoryControllerTest.testViewAvailableBooksWithVagueSearch" target="52_CheckoutController.listAvailableBooks" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="179_ViewInventoryControllerTest.testViewAvailableBooksWithVagueSearch" target="67_Inventory.getAvailableBooks" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="180_ViewInventoryControllerTest.testViewAvailableBooksWithTitleSearch" target="176_ViewInventoryControllerTest.getDefaultFilterValues" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="180_ViewInventoryControllerTest.testViewAvailableBooksWithTitleSearch" target="114_UserController.getUserAccess" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="180_ViewInventoryControllerTest.testViewAvailableBooksWithTitleSearch" target="78_InventoryRepository.findById" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="180_ViewInventoryControllerTest.testViewAvailableBooksWithTitleSearch" target="120_UserController.getLoggedInUser" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="180_ViewInventoryControllerTest.testViewAvailableBooksWithTitleSearch" target="52_CheckoutController.listAvailableBooks" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="180_ViewInventoryControllerTest.testViewAvailableBooksWithTitleSearch" target="67_Inventory.getAvailableBooks" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="283_BookUserTest.testCreateBookUser" target="108_BookUser.getUserType" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="283_BookUserTest.testCreateBookUser" target="104_BookUser.getUsername" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="283_BookUserTest.testCreateBookUser" target="106_BookUser.getPassword" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="284_UserControllerOwnerTest.allowAddNewOwnerDirectly" target="117_UserController.createAccountSubmit" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="284_UserControllerOwnerTest.allowAddNewOwnerDirectly" target="104_BookUser.getUsername" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="284_UserControllerOwnerTest.allowAddNewOwnerDirectly" target="106_BookUser.getPassword" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="284_UserControllerOwnerTest.allowAddNewOwnerDirectly" target="108_BookUser.getUserType" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="284_UserControllerOwnerTest.allowAddNewOwnerDirectly" target="111_BookUser.getShoppingCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="285_UserControllerOwnerTest.allowAddNewOwnerViaEnum" target="109_BookUser.setUserType" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="285_UserControllerOwnerTest.allowAddNewOwnerViaEnum" target="117_UserController.createAccountSubmit" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="285_UserControllerOwnerTest.allowAddNewOwnerViaEnum" target="104_BookUser.getUsername" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="285_UserControllerOwnerTest.allowAddNewOwnerViaEnum" target="106_BookUser.getPassword" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="285_UserControllerOwnerTest.allowAddNewOwnerViaEnum" target="108_BookUser.getUserType" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="285_UserControllerOwnerTest.allowAddNewOwnerViaEnum" target="111_BookUser.getShoppingCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="286_UserControllerOwnerTest.successfulLogin" target="110_BookUser.setShoppingCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="286_UserControllerOwnerTest.successfulLogin" target="125_UserRepository.findByUsername" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="286_UserControllerOwnerTest.successfulLogin" target="119_UserController.handleUserLogin" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="288_UserControllerTest.allowAddNewUser" target="117_UserController.createAccountSubmit" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="289_UserControllerTest.rejectCreateDuplicateUsername" target="125_UserRepository.findByUsername" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="289_UserControllerTest.rejectCreateDuplicateUsername" target="117_UserController.createAccountSubmit" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="290_UserControllerTest.rejectCreateNullValues" target="117_UserController.createAccountSubmit" weight="3.0" >
+				<size value="3.0"></size>
+			</edge>
+			<edge source="291_UserControllerTest.displayLoginForm" target="118_UserController.accountForm" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="292_UserControllerTest.successfulLogin" target="110_BookUser.setShoppingCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="292_UserControllerTest.successfulLogin" target="125_UserRepository.findByUsername" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="292_UserControllerTest.successfulLogin" target="119_UserController.handleUserLogin" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="293_UserControllerTest.failedLoginIncorrectPassword" target="125_UserRepository.findByUsername" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="293_UserControllerTest.failedLoginIncorrectPassword" target="119_UserController.handleUserLogin" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="294_UserControllerTest.failedLoginNonExistentUsername" target="119_UserController.handleUserLogin" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="295_UserControllerTest.displayRegisterLoginPage" target="123_UserController.registerLogin" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="296_UserControllerTest.rejectLoginEmptyFields" target="119_UserController.handleUserLogin" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="297_UserControllerTest.handleLoginException" target="125_UserRepository.findByUsername" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="297_UserControllerTest.handleLoginException" target="119_UserController.handleUserLogin" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="298_UserControllerTest.invalidLoginAttempt" target="125_UserRepository.findByUsername" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="298_UserControllerTest.invalidLoginAttempt" target="119_UserController.handleUserLogin" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="299_UserControllerTest.loginWithMultipleUsers" target="110_BookUser.setShoppingCart" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="299_UserControllerTest.loginWithMultipleUsers" target="125_UserRepository.findByUsername" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="299_UserControllerTest.loginWithMultipleUsers" target="119_UserController.handleUserLogin" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="300_UserControllerTest.successfulLogout" target="122_UserController.handleUserLogout" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="300_UserControllerTest.successfulLogout" target="114_UserController.getUserAccess" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="301_UserControllerTest.ensureCorrectRedirectAfterLogout" target="122_UserController.handleUserLogout" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="302_UserControllerTest.testLogoutWhenUserIsLoggedIn" target="122_UserController.handleUserLogout" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="302_UserControllerTest.testLogoutWhenUserIsLoggedIn" target="114_UserController.getUserAccess" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="303_UserControllerTest.testLogoutAndImmediateLogin" target="122_UserController.handleUserLogout" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="303_UserControllerTest.testLogoutAndImmediateLogin" target="114_UserController.getUserAccess" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="303_UserControllerTest.testLogoutAndImmediateLogin" target="125_UserRepository.findByUsername" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="303_UserControllerTest.testLogoutAndImmediateLogin" target="119_UserController.handleUserLogin" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="305_UserControllerTest.testLogoutDuringOngoingShoppingCartTransaction" target="85_ShoppingCart.addToCart" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="305_UserControllerTest.testLogoutDuringOngoingShoppingCartTransaction" target="122_UserController.handleUserLogout" weight="2.0" >
+				<size value="2.0"></size>
+			</edge>
+			<edge source="305_UserControllerTest.testLogoutDuringOngoingShoppingCartTransaction" target="114_UserController.getUserAccess" weight="1.0" >
+				<size value="1.0"></size>
+			</edge>
+			<edge source="306_UserControllerTest.testCalculateJaccardDistance" target="124_UserController.calculateJaccardDistance" weight="1.0" >
+				<size value="1.0"></size>
 			</edge>
 		</edges>
 	</graph>
