@@ -30,20 +30,58 @@ public class CodeVizInterface {
      * @author Thanuja Sivaananthan
      * @author Maisha Abdullah
      */
-    public void generateEntitiesAndConnections(String repoURL, int maxNumCommits) {
+    public boolean generateEntitiesAndConnections(String repoURL, int maxNumCommits) {
         //String repoURl = "https://github.com/martinmimigames/little-music-player";
         System.out.println("THE REPO URL WAS SENT TO BACKEND IN CODE VIZ INTERFACE " + repoURL);
         graphGenerator.clearEntities(); //  making a new graph, clear all entities
-        gitHubRepoController.analyzeCodebase(gitHubRepoController.retrieveGitHubCodebase(repoURL));
-        gitHubRepoController.generateEntitiesAndConnections();
-        String tokenPassword = ""; // empty string for public repos
-        gitCommitReader.extractCommitHistory(repoURL, tokenPassword, maxNumCommits);
+        boolean success = gitHubRepoController.analyzeCodebase(gitHubRepoController.retrieveGitHubCodebase(repoURL));
+        if (success) {
+            gitHubRepoController.generateEntitiesAndConnections();
+            String tokenPassword = ""; // empty string for public repos
+            gitCommitReader.extractCommitHistory(repoURL, tokenPassword, maxNumCommits);
+        }
+        return success;
+    }
+
+    public String isValidRepoUrl(String repoURL){
+        String errorMessage = "";
+        if (!repoURL.contains("github.com")) {
+            errorMessage = "ERROR, must use github.com";
+        } else if (repoURL.endsWith(".git")){
+            errorMessage = "ERROR, do not use the .git URL";
+        } else {
+            // check the repo URL, if it's public, contains .Java files, etc
+
+            if (!gitHubRepoController.isRepoUrlReachable(repoURL)){
+                // this seems to be hit for some public repos if they're not Java
+                // ex. https://github.com/jassics/learning-python
+                errorMessage = "ERROR, only public Java projects are supported";
+            }
+        }
+
+        return errorMessage;
+    }
+
+    public String modifyRepoUrl(String repoURL) {
+        if (repoURL.endsWith(".git")){
+            repoURL = repoURL.replace(".git", "");
+        }
+        return repoURL;
     }
 
 
+    /*
     public void performSearch(String searchValue, boolean isDetailedSearch) {
         if (success) {
             graphGenerator.performSearch(searchValue, isDetailedSearch);
+        }
+    }
+*/
+    public void performSearch(String searchValue, boolean searchClasses, boolean searchMethods, boolean searchAttributes,
+                              boolean searchParameters, boolean searchReturnType, boolean searchConnections, EntityType currentLevel) {
+        if (success) {
+            graphGenerator.performSearch(searchValue, searchClasses, searchMethods, searchAttributes,
+                    searchParameters, searchReturnType, searchConnections, currentLevel);
         }
     }
 

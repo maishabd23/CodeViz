@@ -37,15 +37,30 @@ public class CodeVizController {
     public Map<String, String> initController(@RequestBody Map<String, String> requestBody) {
         String repoURL = requestBody.get("repoURL");
         Map<String, String> responseBody = new HashMap<>();
-        responseBody.put("isSuccessful", "true");
+        responseBody.put("ok", "true");
 
         System.out.println("THE REPO URL WAS SENT TO BACKEND " + repoURL);
 
-        // Call generateEntitiesAndConnections method with repoURL
-        codeVizInterface.generateEntitiesAndConnections(repoURL, 50);
-        codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory);
+        repoURL = codeVizInterface.modifyRepoUrl(repoURL);
 
-        this.isDisplayingGraph = true;
+        // Call generateEntitiesAndConnections method with repoURL
+        String repoUrlError = codeVizInterface.isValidRepoUrl(repoURL);
+        if (repoUrlError.isEmpty()) {
+            if (codeVizInterface.generateEntitiesAndConnections(repoURL, 50)) {
+                codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory);
+
+                this.isDisplayingGraph = true;
+            } else {
+                repoUrlError = "ERROR, not a valid Java project";
+            }
+        }
+
+        if (!repoUrlError.isEmpty()){
+            repoUrlError = TextAnnotate.javaToHtml(repoUrlError);
+            responseBody.put("ok", "false");
+            responseBody.put("error", repoUrlError);
+        }
+
         return responseBody;
     }
 
@@ -120,25 +135,37 @@ public class CodeVizController {
      * Search at the current level of the graph
      * Updates the displayed code graph
      * @param searchValue       the search value
-     * @param detailed          whether the search is detailed or not
      * @return                  string response, message of the search result
      */
     @CrossOrigin
-    @GetMapping("/api/searchGraph")
-    public Map<String, String> searchGraph(@RequestParam(name = "searchValue", required = false, defaultValue = "") String searchValue,
-                                              @RequestParam(name = "detailed", required = false, defaultValue = "false") boolean detailed)
-    {
+    @PostMapping("/api/searchGraph")
+    public Map<String, String> searchGraph(@RequestBody Map<String, String> requestBody
+    ) {
+        String searchValue;
+        boolean searchClasses, searchMethods, searchAttributes, searchParameters, searchReturnType, searchConnections;
+
+        searchValue = requestBody.getOrDefault("value", "");
+        searchClasses = Boolean.parseBoolean(requestBody.getOrDefault("searchClasses", "false"));
+        searchMethods = Boolean.parseBoolean(requestBody.getOrDefault("searchMethods", "false"));
+        searchAttributes = Boolean.parseBoolean(requestBody.getOrDefault("searchAttributes", "false"));
+        searchParameters = Boolean.parseBoolean(requestBody.getOrDefault("searchParameters", "false"));
+        searchReturnType = Boolean.parseBoolean(requestBody.getOrDefault("searchReturnType", "false"));
+        searchConnections = Boolean.parseBoolean(requestBody.getOrDefault("searchConnections", "false"));
+
         Map<String, String> response = new HashMap<>();
 
         if (success) {
             if (!searchValue.isEmpty()) {
                 System.out.println("SEARCHING FOR " + searchValue);
-                codeVizInterface.performSearch(searchValue, detailed);
+                codeVizInterface.performSearch(searchValue, searchClasses, searchMethods, searchAttributes,
+                        searchParameters, searchReturnType, searchConnections, currentLevel);
             }
             codeVizInterface.generateGraph(currentLevel, GEXF_FILE, this.gitHistory);
         }
 
         String result = codeVizInterface.getSearchResult(currentLevel);
+        System.out.println("Search Result: " + result);
+
         result = TextAnnotate.javaToHtml(result);
         response.put("string", result);
         return response;
