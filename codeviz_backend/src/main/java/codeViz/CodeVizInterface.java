@@ -120,7 +120,7 @@ public class CodeVizInterface {
 
     public String getSelectedNodeToString() {
         if (selectedNode != null) {
-            return selectedNode.getKey();
+            return selectedNode.getName();
         } else {
             return "";
         }
