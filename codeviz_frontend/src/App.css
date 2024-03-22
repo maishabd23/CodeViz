@@ -118,7 +118,7 @@ canvas {
 #nodeDetailsDisplay {
   resize: both;
   position: absolute;
-  top: 70%;
+  top: 60%;
   text-align: left;
   padding: 20px; 
   background-color: white;
