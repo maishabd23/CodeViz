@@ -65,6 +65,12 @@ function Menu() {
         console.log(isSuccessful)
     };
 
+    const handleKeyPress = (event, buttonId) => {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent the default form submission
+            document.getElementById(buttonId).click(); // Trigger click event on the button
+        }
+    };
 
     const handleM1Change = () => {
         fetch('/api/annotateGraph?gitHistory=false');
@@ -176,14 +182,6 @@ function Menu() {
                     setMilestoneValue(responseData.string);
                 });
 
-            // TODO remove enter trigger until it can be fixed
-            //const search = document.getElementById("searchInput");
-            //search.addEventListener("search", mySearchFunction);
-
-            // TODO fix this
-            // const repoUrlInputElement = document.getElementById("viewRepoInput");
-            // repoUrlInputElement.addEventListener("search", handleSubmit);
-
         };
         fetchData();
 
@@ -198,8 +196,11 @@ function Menu() {
                     <tr>
                         <td>
                         <div className="chooseRepo">
-                            <input type="search" id="viewRepoInput" value={repoURL} onChange={handleRepoURLChange} placeholder="Enter Repository URL" />
-                            <button type="submit" onClick={handleSubmit} disabled={loading}>Submit</button>
+                            <input type="search" id="viewRepoInput" value={repoURL}
+                                   onChange={handleRepoURLChange}
+                                   onKeyDown={(event) => handleKeyPress(event, 'viewRepoButton')}
+                                   placeholder="Enter Repository URL" />
+                            <button id="viewRepoButton" type="submit" onClick={handleSubmit} disabled={loading}>Submit</button>
                             {error && <p className="error">{error}</p>}
                             {loading && <p>Loading...</p>}
                         </div>
@@ -220,6 +221,7 @@ function Menu() {
                                     type="search"
                                     id="searchInput"
                                     placeholder="Enter a search term"
+                                    onKeyDown={(event) => handleKeyPress(event, 'searchButton')}
                                 />
                                 <img src="/info-icon.png" alt='icon' className="info--icon" />
                                 <p className='tooltip'>Search for specific node names</p>
@@ -281,7 +283,7 @@ function Menu() {
             </p>
             <table className="center">
             <td>
-                <button onClick={mySearchFunction}>Search</button>
+                <button id="searchButton" onClick={mySearchFunction}>Search</button>
             </td>
             <td>
                 <button id="clear-search" onClick={() => { /* Implement clear search logic */ }}>Clear Search</button>
