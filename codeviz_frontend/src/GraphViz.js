@@ -22,8 +22,7 @@ export var labelsThresholdRange, thresholdLabel = null;
 // Load external GEXF file:
 function GraphViz() {
   const [data, setData] = useState(null);
-  const initialNodeMessage = "Right-click on a node to view more options." +
-      "<br/>If the 'Git History' graph is displayed, hover over an edge to view its git history details."
+  const initialNodeMessage = "Click on a node to view more options. If the 'Git History' graph is displayed, hover over an edge to view its git history details."
   let hoveredEdge = null;
   const [popUpMenu, setPopUpMenu] = React.useState(false);
 
@@ -38,9 +37,7 @@ function GraphViz() {
 
   useEffect(() => {
       const fetchData = async () => {
-        try {
-        const response = await fetch("/codeviz_demo.gexf"); //needs to be in 'public' folder // TODO - don't hardcode here
-        if (response.ok) {
+        const response = await fetch("codeviz_demo.gexf"); //needs to be in 'public' folder // TODO - don't hardcode here
         const gexf = await response.text();
   
         // Parse GEXF string:
@@ -54,6 +51,7 @@ function GraphViz() {
 
         labelsThresholdRange = document.getElementById("labels-threshold");
         thresholdLabel = document.getElementById("thresholdLabel");
+        var labelSize = document.getElementById("label-size");
 
         const settings = forceAtlas2.inferSettings(graph);
         forceAtlas2.assign(graph, { settings, iterations: 600 });
@@ -77,6 +75,8 @@ function GraphViz() {
         // when clicking (not dragging) elsewhere, reset the details
         renderer.on("clickStage", () => {
           document.getElementById("nodeDetails").innerHTML = initialNodeMessage;
+          hoveredEdge = null;
+          setHoveredNeighbours(graph, renderer);
         });
 
         renderer.on("enterEdge", (e) => {
@@ -115,12 +115,12 @@ function GraphViz() {
         // Set proper range initial value:
         labelsThresholdRange.value = renderer.getSetting("labelRenderedSizeThreshold") + "";
 
-        setHoveredNeighbours(graph, renderer);
+        labelSize.addEventListener("input", () => {
+          renderer.setSetting("labelSize", +labelSize.value);
+          thresholdLabel.innerHTML = "Label Size: " + labelSize.value;
+        });
 
-            }
-          } catch (error) {
-          console.error('Error fetching or parsing GEXF file:', error);
-        }
+        setHoveredNeighbours(graph, renderer);
       };
 
       function setHoveredNeighbours(graph, renderer){
@@ -134,6 +134,8 @@ function GraphViz() {
         renderer.on("enterNode", ({ node }) => {
           setHoveredNode(node);
           hoveredNodeString = node;
+          hoveredEdge = null;
+          // document.getElementById("nodeDetails").innerHTML = initialNodeMessage; // remove any edge details
         });
         renderer.on("leaveNode", () => {
           setHoveredNode(undefined);
@@ -189,7 +191,11 @@ function GraphViz() {
           <div className="input"><label htmlFor="zoom-out">Zoom out </label><button id="zoom-out">-</button></div>
           <div className="input"><label htmlFor="zoom-reset">Reset zoom </label><button id="zoom-reset">⊙</button></div>
           <div className="input">
-            <label htmlFor="labels-threshold">Threshold </label>
+            <label htmlFor="label-size">Label Size </label>
+            <input id="label-size" type="range" min="15" max="30" step="0.5" defaultValue={"15"}/>
+          <div className="input">
+          </div>
+            <label htmlFor="labels-threshold">Label Threshold </label>
             <input id="labels-threshold" type="range" min="0" max="15" step="0.5" />
             <p id="thresholdLabel"></p>
             <button onClick={() => setPopUpMenu(true)}>Modify Threshold Settings</button>

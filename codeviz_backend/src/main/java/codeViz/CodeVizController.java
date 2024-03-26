@@ -1,5 +1,7 @@
 package codeViz;
 import codeViz.entity.EntityType;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.*;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.http.*;
@@ -102,6 +104,39 @@ public class CodeVizController {
         // Note: This is a basic parsing example. You should handle error cases and parse the response according to GitHub's documentation.
         String accessToken = response.getBody().split("&")[0].split("=")[1];
         System.out.println("DEBUG: Access token: " + accessToken);
+
+        // Make request to GitHub API to get user's repositories
+        String repoUrl = "https://api.github.com/user/repos";
+        HttpHeaders authHeaders = new HttpHeaders();
+        authHeaders.setBearerAuth(accessToken);
+        HttpEntity<String> repoRequestEntity = new HttpEntity<>(null, authHeaders);
+        ResponseEntity<String> repoResponse = restTemplate.exchange(repoUrl, HttpMethod.GET, repoRequestEntity, String.class);
+
+// Print out private repositories
+        if (repoResponse.getStatusCode() == HttpStatus.OK) {
+            String repoData = repoResponse.getBody();
+            System.out.println("User's Private Repositories:");
+
+            // Parse JSON response to extract repository details
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                JsonNode rootNode = mapper.readTree(repoData);
+                for (JsonNode repoNode : rootNode) {
+                    boolean isPrivate = repoNode.get("private").asBoolean();
+                    if (isPrivate) {
+                        String repoName = repoNode.get("name").asText();
+                        System.out.println(repoName);
+                        // You can print more details if needed
+                        // For example: System.out.println(repoNode);
+                    }
+                    System.out.println(repoNode.get("name").asText());
+                }
+            } catch (IOException e) {
+                System.err.println("Error parsing repository data: " + e.getMessage());
+            }
+        } else {
+            System.err.println("Failed to retrieve user's repositories. Status code: " + repoResponse.getStatusCodeValue());
+        }
 
         return accessToken;
     }
