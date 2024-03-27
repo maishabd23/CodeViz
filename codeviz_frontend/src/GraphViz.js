@@ -72,7 +72,7 @@ function GraphViz() {
         const camera = renderer.getCamera();
         renderer.refresh(); // to make sure graph appears right away
 
-        // when clicking (not dragging) elsewhere, reset the details
+        // only reset details when clicking (not dragging) elsewhere
         renderer.on("clickStage", () => {
           document.getElementById("nodeDetails").innerHTML = initialNodeMessage;
           hoveredEdge = null;
@@ -90,10 +90,6 @@ function GraphViz() {
                 }
               });
         });
-
-        // renderer.on("leaveEdge", () => { // TODO FIX Git Graph
-        //   document.getElementById("nodeDetails").innerHTML = initialNodeMessage;
-        // });
   
         // Bind zoom manipulation buttons
         zoomInBtn.addEventListener("click", () => {
@@ -135,7 +131,6 @@ function GraphViz() {
           setHoveredNode(node);
           hoveredNodeString = node;
           hoveredEdge = null;
-          document.getElementById("nodeDetails").innerHTML = initialNodeMessage; // remove any edge details
         });
         renderer.on("leaveNode", () => {
           setHoveredNode(undefined);

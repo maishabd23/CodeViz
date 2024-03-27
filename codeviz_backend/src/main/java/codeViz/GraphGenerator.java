@@ -395,10 +395,10 @@ public class GraphGenerator {
 
         // Start the search based on entity levels and their attributes
         if (searchClasses || searchAttributes) {
-            performSearchOnEntities(searchValue, classEntities, searchAttributes, false, false);
+            performSearchOnEntities(searchValue, classEntities, searchAttributes, false, false, currentLevel);
         }
         if (searchMethods || searchParameters || searchReturnType) {
-            performSearchOnEntities(searchValue, methodEntities, false, searchParameters, searchReturnType);
+            performSearchOnEntities(searchValue, methodEntities, false, searchParameters, searchReturnType, currentLevel);
         }
         if (searchConnections) {
             checkConnections(searchValue, getEntities(currentLevel));
@@ -425,7 +425,7 @@ public class GraphGenerator {
      * A helper method to perform search on a collection of entities
      */
     private void performSearchOnEntities(String searchValue, LinkedHashMap<String, Entity> entities,
-                                         boolean searchAttributes, boolean searchParameters, boolean searchReturnType) {
+                                         boolean searchAttributes, boolean searchParameters, boolean searchReturnType, EntityType currentLevel) {
         for (Entity entity : entities.values()) {
             boolean isHighlighted = entity.nameContains(searchValue); // Simplified the condition
 
@@ -450,14 +450,16 @@ public class GraphGenerator {
                 entity.setHighlighed(isHighlighted);
 
                 // in case the parent type is performing the search, set the parent's highlight as well
-                if (entity instanceof ClassEntity){
-                    ClassEntity classEntity = (ClassEntity) entity;
-                    if (classEntity.getPackageEntity() != null){
-                        classEntity.getPackageEntity().setHighlighed(isHighlighted);
+                if (entity.getEntityType().equals(currentLevel)) {
+                    if (entity instanceof ClassEntity) {
+                        ClassEntity classEntity = (ClassEntity) entity;
+                        if (classEntity.getPackageEntity() != null) {
+                            classEntity.getPackageEntity().setHighlighed(isHighlighted);
+                        }
+                    } else if (entity instanceof MethodEntity) {
+                        MethodEntity methodEntity = (MethodEntity) entity;
+                        methodEntity.getClassEntity().setHighlighed(isHighlighted);
                     }
-                } else if (entity instanceof MethodEntity) {
-                    MethodEntity methodEntity = (MethodEntity) entity;
-                    methodEntity.getClassEntity().setHighlighed(isHighlighted);
                 }
 
             }

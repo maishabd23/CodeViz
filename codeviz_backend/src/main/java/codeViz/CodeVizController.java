@@ -41,21 +41,11 @@ public class CodeVizController {
 
         System.out.println("THE REPO URL WAS SENT TO BACKEND " + repoURL);
 
-        repoURL = codeVizInterface.modifyRepoUrl(repoURL);
-
         // Call generateEntitiesAndConnections method with repoURL
-        String repoUrlError = codeVizInterface.isValidRepoUrl(repoURL);
+        String repoUrlError = codeVizInterface.generateEntitiesAndConnections(repoURL, 50);
         if (repoUrlError.isEmpty()) {
-            if (codeVizInterface.generateEntitiesAndConnections(repoURL, 50)) {
-                codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory);
-
-                this.isDisplayingGraph = true;
-            } else {
-                repoUrlError = "ERROR, not a valid Java project";
-            }
-        }
-
-        if (!repoUrlError.isEmpty()){
+            codeVizInterface.generateGraph(currentLevel, GEXF_FILE, gitHistory);
+        } else {
             repoUrlError = TextAnnotate.javaToHtml(repoUrlError);
             responseBody.put("ok", "false");
             responseBody.put("error", repoUrlError);
@@ -134,7 +124,8 @@ public class CodeVizController {
     /**
      * Search at the current level of the graph
      * Updates the displayed code graph
-     * @param searchValue       the search value
+     * @author Sabah Samwatin
+     * @param requestBody       the search value and search components
      * @return                  string response, message of the search result
      */
     @CrossOrigin
