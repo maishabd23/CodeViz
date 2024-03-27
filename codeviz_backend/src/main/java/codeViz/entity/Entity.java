@@ -21,7 +21,7 @@ public abstract class Entity {
     private static final int SIZE_INCREMENT = 2;
 
     private final Color colour;
-    private static final Color HIGHLIGHED_COLOUR = new Color(255,255,50);
+    private static final Color HIGHLIGHTED_COLOUR = new Color(255,255,50);
     private boolean isHighlighed;
 
     private Node gephiNode;
@@ -137,16 +137,16 @@ public abstract class Entity {
      * @author Thanuja Sivaananthan
      * @return  colour
      */
-    public static Color getHighlighedColour() {
-        return HIGHLIGHED_COLOUR;
+    public static Color getHighlightedColour() {
+        return HIGHLIGHTED_COLOUR;
     }
 
-    public boolean isHighlighed() {
+    public boolean isHighlighted() {
         return isHighlighed;
     }
 
-    public void setHighlighed(boolean highlighed) {
-        isHighlighed = highlighed;
+    public void setHighlighted(boolean highlighted) {
+        isHighlighed = highlighted;
     }
 
     /**

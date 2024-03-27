@@ -139,29 +139,29 @@ public class GraphGeneratorTest {
 
         // searching a class name will only highlight that class - not it's methods
         graphGenerator.performSearch("Person", isDetailed, isDetailed, isDetailed, isDetailed, isDetailed, isDetailed, EntityType.CLASS);
-        assertTrue(person.isHighlighed());
-        assertFalse(student.isHighlighed());
-        assertFalse(professor.isHighlighed());
-        assertFalse(address.isHighlighed());
-        assertFalse(personInit.isHighlighed());
-        assertFalse(getName.isHighlighed());
-        assertFalse(getAge.isHighlighed());
+        assertTrue(person.isHighlighted());
+        assertFalse(student.isHighlighted());
+        assertFalse(professor.isHighlighted());
+        assertFalse(address.isHighlighted());
+        assertFalse(personInit.isHighlighted());
+        assertFalse(getName.isHighlighted());
+        assertFalse(getAge.isHighlighted());
 
         // searching a method name will only highlight the methods - not the classes they are in
         graphGenerator.performSearch("getName", isDetailed, isDetailed, isDetailed, isDetailed, isDetailed, isDetailed, EntityType.METHOD);
-        assertFalse(person.isHighlighed());
-        assertTrue(getName.isHighlighed());
+        assertFalse(person.isHighlighted());
+        assertTrue(getName.isHighlighted());
 
         graphGenerator.performSearch("toString", isDetailed, isDetailed, isDetailed, isDetailed, isDetailed, isDetailed, EntityType.METHOD);
-        assertFalse(person.isHighlighed());
-        assertFalse(student.isHighlighed());
-        assertFalse(professor.isHighlighed());
-        assertFalse(address.isHighlighed());
+        assertFalse(person.isHighlighted());
+        assertFalse(student.isHighlighted());
+        assertFalse(professor.isHighlighted());
+        assertFalse(address.isHighlighted());
 
-        assertTrue(personToString.isHighlighed());
-        assertTrue(studentToString.isHighlighed());
-        assertTrue(professorToString.isHighlighed());
-        assertTrue(addressToString.isHighlighed());
+        assertTrue(personToString.isHighlighted());
+        assertTrue(studentToString.isHighlighted());
+        assertTrue(professorToString.isHighlighted());
+        assertTrue(addressToString.isHighlighted());
 
     }
 
@@ -175,33 +175,33 @@ public class GraphGeneratorTest {
 
         // searching a class name will highlight the other classes that reference it
         graphGenerator.performSearch("Person", isDetailed, isDetailed, isDetailed, isDetailed, isDetailed, isDetailed, EntityType.CLASS);
-        assertTrue(person.isHighlighed());
-        assertTrue(student.isHighlighed());
-        assertTrue(professor.isHighlighed());
-        assertFalse(address.isHighlighed());
+        assertTrue(person.isHighlighted());
+        assertTrue(student.isHighlighted());
+        assertTrue(professor.isHighlighted());
+        assertFalse(address.isHighlighted());
         //assertTrue(personInit.isHighlighed()); FIXME used to be highlighted with old search
 
         graphGenerator.performSearch("Address", isDetailed, isDetailed, isDetailed, isDetailed, isDetailed, isDetailed, EntityType.CLASS);
-        assertTrue(person.isHighlighed());
-        assertFalse(student.isHighlighed());
-        assertFalse(professor.isHighlighed());
-        assertTrue(address.isHighlighed());
+        assertTrue(person.isHighlighted());
+        assertFalse(student.isHighlighted());
+        assertFalse(professor.isHighlighted());
+        assertTrue(address.isHighlighted());
 
         // searching a method name will highlight the methods and the classes they're in
         graphGenerator.performSearch("getName", isDetailed, isDetailed, isDetailed, isDetailed, isDetailed, isDetailed, EntityType.METHOD);
-        assertTrue(person.isHighlighed());
-        assertTrue(getName.isHighlighed());
+        assertTrue(person.isHighlighted());
+        assertTrue(getName.isHighlighted());
 
         graphGenerator.performSearch("toString", isDetailed, isDetailed, isDetailed, isDetailed, isDetailed, isDetailed, EntityType.METHOD);
-        assertTrue(person.isHighlighed());
-        assertTrue(student.isHighlighed());
-        assertTrue(professor.isHighlighed());
-        assertTrue(address.isHighlighed());
+        assertTrue(person.isHighlighted());
+        assertTrue(student.isHighlighted());
+        assertTrue(professor.isHighlighted());
+        assertTrue(address.isHighlighted());
 
-        assertTrue(personToString.isHighlighed());
-        assertTrue(studentToString.isHighlighed());
-        assertTrue(professorToString.isHighlighed());
-        assertTrue(addressToString.isHighlighed());
+        assertTrue(personToString.isHighlighted());
+        assertTrue(studentToString.isHighlighted());
+        assertTrue(professorToString.isHighlighted());
+        assertTrue(addressToString.isHighlighted());
     }
 
     @Test

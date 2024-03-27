@@ -408,7 +408,7 @@ public class GraphGenerator {
     private void checkAllNames(String searchValue, LinkedHashMap<String, Entity> entities){
         for (Entity entity : entities.values()) {
             if (entity.nameContains(searchValue)){ // Simplified the condition
-                entity.setHighlighed(true);
+                entity.setHighlighted(true);
             }
         }
     }
@@ -416,7 +416,7 @@ public class GraphGenerator {
     private void checkConnections(String searchValue, LinkedHashMap<String, Entity> entities){
         for (Entity entity : entities.values()) {
             if (entity.containsSearchValue(searchValue)){ // calling the superclass containsSearchValue will just check the connections
-                entity.setHighlighed(true);
+                entity.setHighlighted(true);
             }
         }
     }
@@ -447,18 +447,18 @@ public class GraphGenerator {
             }
 
             if (isHighlighted) { // only set highlighted true (they are all false initially)
-                entity.setHighlighed(isHighlighted);
+                entity.setHighlighted(isHighlighted);
 
                 // in case the parent type is performing the search, set the parent's highlight as well
                 if (entity.getEntityType().equals(currentLevel)) {
                     if (entity instanceof ClassEntity) {
                         ClassEntity classEntity = (ClassEntity) entity;
                         if (classEntity.getPackageEntity() != null) {
-                            classEntity.getPackageEntity().setHighlighed(isHighlighted);
+                            classEntity.getPackageEntity().setHighlighted(isHighlighted);
                         }
                     } else if (entity instanceof MethodEntity) {
                         MethodEntity methodEntity = (MethodEntity) entity;
-                        methodEntity.getClassEntity().setHighlighed(isHighlighted);
+                        methodEntity.getClassEntity().setHighlighted(isHighlighted);
                     }
                 }
 
@@ -477,7 +477,7 @@ public class GraphGenerator {
     private void clearSearch(LinkedHashMap<String, Entity> entities){
         for (String entityKey : entities.keySet()) {
             Entity entity = entities.get(entityKey);
-            entity.setHighlighed(false);
+            entity.setHighlighted(false);
         }
 
     }
@@ -613,7 +613,7 @@ public class GraphGenerator {
         boolean isFound = false;
 
         for (Entity entity : entities.values()){
-            if (entity.isHighlighed()) {
+            if (entity.isHighlighted()) {
                 isFound = true;
                 break;
             }

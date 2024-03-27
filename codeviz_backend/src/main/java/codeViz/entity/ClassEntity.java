@@ -97,8 +97,8 @@ public class ClassEntity extends Entity {
      * @return  parent colour
      */
     public Color getParentColour() {
-        if (isHighlighed()){ // being highlighted takes precedence over the parent
-            return getHighlighedColour();
+        if (isHighlighted()){ // being highlighted takes precedence over the parent
+            return getHighlightedColour();
         } else if (packageEntity != null){
             return packageEntity.getColour();
         } else {

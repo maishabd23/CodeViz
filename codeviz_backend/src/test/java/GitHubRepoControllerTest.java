@@ -296,17 +296,17 @@ public class GitHubRepoControllerTest {
         LinkedHashMap<String, Entity> classEntities = graphGenerator.getClassEntities();
         LinkedHashMap<String, Entity> methodEntities = graphGenerator.getMethodEntities();
 
-        assertNotEquals(Entity.getHighlighedColour(), packageEntities.get("codeViz.entity").getParentColour());
-        assertNotEquals(Entity.getHighlighedColour(), classEntities.get("PackageEntity").getParentColour());
-        assertEquals(Entity.getHighlighedColour(), classEntities.get("MethodEntity").getParentColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("ClassEntity.addMethod").getParentColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("ClassEntity.getMethods").getParentColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("ClassEntity.getMethod").getParentColour());
+        assertNotEquals(Entity.getHighlightedColour(), packageEntities.get("codeViz.entity").getParentColour());
+        assertNotEquals(Entity.getHighlightedColour(), classEntities.get("PackageEntity").getParentColour());
+        assertEquals(Entity.getHighlightedColour(), classEntities.get("MethodEntity").getParentColour());
+        assertEquals(Entity.getHighlightedColour(), methodEntities.get("ClassEntity.addMethod").getParentColour());
+        assertEquals(Entity.getHighlightedColour(), methodEntities.get("ClassEntity.getMethods").getParentColour());
+        assertEquals(Entity.getHighlightedColour(), methodEntities.get("ClassEntity.getMethod").getParentColour());
 
         // methods in MethodEntity class don't contain "Method" in their name
         //FIXME assertNotEquals(Entity.getHighlighedColour(), methodEntities.get("MethodEntity.MethodEntity").getParentColour());
-        assertNotEquals(Entity.getHighlighedColour(), methodEntities.get("MethodEntity.getClassEntity").getParentColour());
-        assertNotEquals(Entity.getHighlighedColour(), methodEntities.get("MethodEntity.addConnectedEntity").getParentColour());
+        assertNotEquals(Entity.getHighlightedColour(), methodEntities.get("MethodEntity.getClassEntity").getParentColour());
+        assertNotEquals(Entity.getHighlightedColour(), methodEntities.get("MethodEntity.addConnectedEntity").getParentColour());
     }
 
     /**
@@ -321,10 +321,10 @@ public class GitHubRepoControllerTest {
 
         LinkedHashMap<String, Entity> methodEntities = graphGenerator.getMethodEntities();
 
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("Entity.addConnectedEntity").getParentColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("PackageEntity.addConnectedEntity").getParentColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("ClassEntity.addConnectedEntity").getParentColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("MethodEntity.addConnectedEntity").getParentColour());
+        assertEquals(Entity.getHighlightedColour(), methodEntities.get("Entity.addConnectedEntity").getParentColour());
+        assertEquals(Entity.getHighlightedColour(), methodEntities.get("PackageEntity.addConnectedEntity").getParentColour());
+        assertEquals(Entity.getHighlightedColour(), methodEntities.get("ClassEntity.addConnectedEntity").getParentColour());
+        assertEquals(Entity.getHighlightedColour(), methodEntities.get("MethodEntity.addConnectedEntity").getParentColour());
     }
 
     /**
@@ -339,27 +339,27 @@ public class GitHubRepoControllerTest {
         graphGenerator.performSearch("addMethod", isDetailed, isDetailed, isDetailed, isDetailed, isDetailed, isDetailed, EntityType.CLASS);
         methodEntities = graphGenerator.getMethodEntities();
         classEntities = graphGenerator.getClassEntities();
-        assertNotEquals(Entity.getHighlighedColour(), classEntities.get("PackageEntity").getParentColour());
-        assertEquals(Entity.getHighlighedColour(), classEntities.get("ClassEntity").getParentColour()); // class that contains addMethod
-        assertEquals(Entity.getHighlighedColour(), classEntities.get("MethodEntity").getParentColour()); // class that calls addMethod
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("ClassEntity.addMethod").getParentColour());
+        assertNotEquals(Entity.getHighlightedColour(), classEntities.get("PackageEntity").getParentColour());
+        assertEquals(Entity.getHighlightedColour(), classEntities.get("ClassEntity").getParentColour()); // class that contains addMethod
+        assertEquals(Entity.getHighlightedColour(), classEntities.get("MethodEntity").getParentColour()); // class that calls addMethod
+        assertEquals(Entity.getHighlightedColour(), methodEntities.get("ClassEntity.addMethod").getParentColour());
         //FIXME assertEquals(Entity.getHighlighedColour(), methodEntities.get("MethodEntity.MethodEntity").getParentColour()); // calls addMethod
 
         graphGenerator.performSearch("MethodEntity", isDetailed, isDetailed, isDetailed, isDetailed, isDetailed, isDetailed, EntityType.CLASS);
         packageEntities = graphGenerator.getPackageEntities();
         classEntities = graphGenerator.getClassEntities();
-        assertEquals(Entity.getHighlighedColour(), packageEntities.get("codeViz.entity").getParentColour()); // package that contains the class
-        assertNotEquals(Entity.getHighlighedColour(), classEntities.get("PackageEntity").getParentColour());
-        assertEquals(Entity.getHighlighedColour(), classEntities.get("ClassEntity").getParentColour());
-        assertEquals(Entity.getHighlighedColour(), classEntities.get("MethodEntity").getParentColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("ClassEntity.addMethod").getParentColour()); // MethodEntity argument
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("ClassEntity.getMethod").getParentColour()); // MethodEntity return type
-        //assertEquals(Entity.getHighlighedColour(), methodEntities.get("ClassEntity.getMethods").getParentColour()); // TODO - MethodEntity list return type
+        assertEquals(Entity.getHighlightedColour(), packageEntities.get("codeViz.entity").getParentColour()); // package that contains the class
+        assertNotEquals(Entity.getHighlightedColour(), classEntities.get("PackageEntity").getParentColour());
+        assertEquals(Entity.getHighlightedColour(), classEntities.get("ClassEntity").getParentColour());
+        assertEquals(Entity.getHighlightedColour(), classEntities.get("MethodEntity").getParentColour());
+        assertEquals(Entity.getHighlightedColour(), methodEntities.get("ClassEntity.addMethod").getParentColour()); // MethodEntity argument
+        assertEquals(Entity.getHighlightedColour(), methodEntities.get("ClassEntity.getMethod").getParentColour()); // MethodEntity return type
+        //assertEquals(Entity.getHighlightedColour(), methodEntities.get("ClassEntity.getMethods").getParentColour()); // TODO - MethodEntity list return type
 
         // methods in MethodEntity class are highlighted for detailed search
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("MethodEntity.MethodEntity").getParentColour());
-        //FIXME assertEquals(Entity.getHighlighedColour(), methodEntities.get("MethodEntity.getClassEntity").getParentColour());
-        assertEquals(Entity.getHighlighedColour(), methodEntities.get("MethodEntity.addConnectedEntity").getParentColour());
+        assertEquals(Entity.getHighlightedColour(), methodEntities.get("MethodEntity.MethodEntity").getParentColour());
+        //FIXME assertEquals(Entity.getHighlightedColour(), methodEntities.get("MethodEntity.getClassEntity").getParentColour());
+        assertEquals(Entity.getHighlightedColour(), methodEntities.get("MethodEntity.addConnectedEntity").getParentColour());
     }
 
 }
