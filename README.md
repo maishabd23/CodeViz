@@ -2,8 +2,11 @@
 
 ## Setup
 
-To clone the repo (note that if the default folder name "CodeViz" is used, IntelliJ may not recognize `codeviz_frontend` as a module properly):
+To clone the whole repo into IntelliJ (note that if the default folder name "CodeViz" is used, IntelliJ may not recognize `codeviz_frontend` as a module properly):
+
 ```git clone https://github.com/maishabd23/CodeViz.git CodeVizFolder```
+
+Otherwise, the `codeviz_backend` folder can be accessed through IntelliJ, and the `codeviz_frontend` folder can be accessed though another IDE such as VS Code.
 
 ## Running the Application in Development Mode (locally)
 
