@@ -5,7 +5,6 @@ import codeViz.codeComplexity.ComplexityDetails;
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 
 /**
  * Method entity
@@ -51,8 +50,8 @@ public class MethodEntity extends Entity {
      * @return  parent colour
      */
     public Color getParentColour() {
-        if (isHighlighed()){ // being highlighted takes precedence over the parent
-            return getHighlighedColour();
+        if (isHighlighted()){ // being highlighted takes precedence over the parent
+            return getHighlightedColour();
         }
         return classEntity.getColour();
     }

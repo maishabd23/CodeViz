@@ -54,8 +54,8 @@ public class PackageEntity extends Entity {
      * @return  parent colour
      */
     public Color getParentColour() {
-        if (isHighlighed()){
-            return getHighlighedColour();
+        if (isHighlighted()){
+            return getHighlightedColour();
         }
         return getColour();
     }

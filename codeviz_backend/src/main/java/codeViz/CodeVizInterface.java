@@ -29,40 +29,32 @@ public class CodeVizInterface {
      * Generate the entities and connections between them AND annotate with local git history
      * @author Thanuja Sivaananthan
      * @author Maisha Abdullah
+     * @return boolean, whether entities/connections were created
      */
-    public boolean generateEntitiesAndConnections(String repoURL, int maxNumCommits) {
+    public String generateEntitiesAndConnections(String repoURL, int maxNumCommits) {
+
+        repoURL = modifyRepoUrl(repoURL);
+
+        // initial error checking, before generating entities/connections
+        String errorMessage = gitHubRepoController.isValidRepoUrl(repoURL);
+        if (!errorMessage.isEmpty()){
+            return errorMessage;
+        }
+
         //String repoURl = "https://github.com/martinmimigames/little-music-player";
         System.out.println("THE REPO URL WAS SENT TO BACKEND IN CODE VIZ INTERFACE " + repoURL);
         graphGenerator.clearEntities(); //  making a new graph, clear all entities
-        boolean success = gitHubRepoController.analyzeCodebase(gitHubRepoController.retrieveGitHubCodebase(repoURL));
+        boolean success = gitHubRepoController.analyzeCodebase(repoURL);
         if (success) {
-            gitHubRepoController.generateEntitiesAndConnections();
             String tokenPassword = ""; // empty string for public repos
             gitCommitReader.extractCommitHistory(repoURL, tokenPassword, maxNumCommits);
-        }
-        return success;
-    }
-
-    public String isValidRepoUrl(String repoURL){
-        String errorMessage = "";
-        if (!repoURL.contains("github.com")) {
-            errorMessage = "ERROR, must use github.com";
-        } else if (repoURL.endsWith(".git")){
-            errorMessage = "ERROR, do not use the .git URL";
+            return "";
         } else {
-            // check the repo URL, if it's public, contains .Java files, etc
-
-            if (!gitHubRepoController.isRepoUrlReachable(repoURL)){
-                // this seems to be hit for some public repos if they're not Java
-                // ex. https://github.com/jassics/learning-python
-                errorMessage = "ERROR, only public Java projects are supported";
-            }
+            return "ERROR, not a valid Java project";
         }
-
-        return errorMessage;
     }
 
-    public String modifyRepoUrl(String repoURL) {
+    private String modifyRepoUrl(String repoURL) {
         if (repoURL.endsWith(".git")){
             repoURL = repoURL.replace(".git", "");
         }
