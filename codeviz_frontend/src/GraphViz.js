@@ -14,6 +14,7 @@ import forceAtlas2 from "graphology-layout-forceatlas2";
 
 import RightContext from './RightContext';
 import PopUpThreshold from "./PopUpThreshold";
+import Legend from "./Legend";
 
 // create shared variable here, so it can edit it
 export var hoveredNodeString = null;
@@ -198,6 +199,7 @@ function GraphViz() {
             </PopUpThreshold>
           </div>
         </div>
+        <Legend />
         <div id="nodeDetailsDisplay">
           <div className="node-help">
             <h2 className="h2">Node/Edge Details:</h2>

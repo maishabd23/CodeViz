@@ -102,6 +102,7 @@ canvas {
   padding: 10px 10px;
   background-color: lightgrey;
   border-radius: 10px;
+  width: 250px;
 }
 
 #menu-controls {
@@ -126,7 +127,7 @@ canvas {
   text-align: left;
   padding: 20px; 
   background-color: rgba(255,255,255,0.9);
-  width: calc(100% - 1em);
+  width: calc(100% - 1.5em);
   height: 25%;
   overflow: auto; 
   box-sizing: border-box;

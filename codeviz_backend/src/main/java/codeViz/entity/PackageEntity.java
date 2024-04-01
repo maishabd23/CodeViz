@@ -4,7 +4,6 @@ import codeViz.codeComplexity.ComplexityDetails;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.awt.Color;
 
 /**
  * Package entity
@@ -14,15 +13,15 @@ import java.awt.Color;
 public class PackageEntity extends Entity {
 
     private final Set<ClassEntity> classes;
-    private final PackageEntity superpackage;
+    private final PackageEntity superPackage;
 
-    public PackageEntity(String name, PackageEntity superpackage){
-        super(name, EntityType.PACKAGE, new ComplexityDetails()); // TODO might not use complexity details
+    public PackageEntity(String name, PackageEntity superPackage){
+        super(name, EntityType.PACKAGE, new ComplexityDetails(), null); // TODO might not use complexity details
 
         this.classes = new LinkedHashSet<>();
-        this.superpackage = superpackage;
-        if (superpackage != null) {
-            superpackage.incrementSize();
+        this.superPackage = superPackage;
+        if (superPackage != null) {
+            superPackage.incrementSize();
         }
     }
 
@@ -43,24 +42,6 @@ public class PackageEntity extends Entity {
         return classes;
     }
 
-    public PackageEntity getSuperpackage() {
-        return superpackage;
-    }
-
-    /**
-     * Get parent colour
-     * Note: package doesn't have any parent, so it returns itself
-     * @author Thanuja Sivaananthan
-     * @return  parent colour
-     */
-    public Color getParentColour() {
-        if (isHighlighted()){
-            return getHighlightedColour();
-        }
-        return getColour();
-    }
-
-
     @Override
     public boolean containsSearchValue(String searchValue) {
         if (super.containsSearchValue(searchValue)){
@@ -79,11 +60,11 @@ public class PackageEntity extends Entity {
 
     @Override
     public String toString() {
-        String superpackageName = Entity.entityToString(superpackage, "Superpackage");
+        String superPackageName = Entity.entityToString(superPackage, "Superpackage");
         String classesString = classEntitySetToString(classes, "Classes");
 
         return titleToString() +
-                superpackageName +
+                superPackageName +
                 classesString
                 ;
     }
@@ -91,10 +72,10 @@ public class PackageEntity extends Entity {
     @Override
     public String getKey() {
         String name = getName();
-        if (superpackage == null){
+        if (superPackage == null){
             return getName();
         } else {
-            return superpackage.getKey() + "." + name;
+            return superPackage.getKey() + "." + name;
         }
     }
 }

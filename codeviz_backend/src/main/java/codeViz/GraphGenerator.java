@@ -34,6 +34,7 @@ public class GraphGenerator {
     // Note: can also store node details here if needed
     private ArrayList<Entity> edgeSources;
     private ArrayList<Entity> edgeDestinations;
+    private LinkedHashMap<String, Color> legendColours;
 
     /**
      * Create an EntityGraphGenerator
@@ -47,6 +48,7 @@ public class GraphGenerator {
 
         edgeSources = new ArrayList<>();
         edgeDestinations = new ArrayList<>();
+        legendColours = new LinkedHashMap<>();
     }
 
     /**
@@ -191,6 +193,7 @@ public class GraphGenerator {
 
         edgeSources = new ArrayList<>();
         edgeDestinations = new ArrayList<>();
+        legendColours = new LinkedHashMap<>();
 
         ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
         pc.newProject();
@@ -208,6 +211,10 @@ public class GraphGenerator {
             node.setLabel(nodeName);
             node.setSize(entity.getSize()); // might need to scale up node size so it appears nicely?
             node.setColor(entity.getParentColour());
+
+            if (!legendColours.containsKey(entity.getParentName())) {
+                legendColours.put(entity.getParentName(), entity.getParentColour());
+            }
 
             float pos_x = entity.getX_pos();
             float pos_y = entity.getY_pos();
@@ -325,7 +332,39 @@ public class GraphGenerator {
             throw new RuntimeException(e);
         }
 
+        generateLegend("./codeviz_frontend/src/LegendContent.js");
 
+
+    }
+
+    public void generateLegend(String filename){
+
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+
+            writer.write("const legendHtml = `\n");
+            writer.write("<div id=\"legend\">\n");
+            writer.write("\t<h3>Legend</h3>\n");
+
+            for (String parentName : legendColours.keySet()){
+                Color parentColor = legendColours.get(parentName);
+                String rgbColour = "rgb(" + parentColor.getRed() + ", " + parentColor.getGreen() + ", " + parentColor.getBlue() + ")";
+                writer.write("\t<div class=\"legend-item\" data-category=\""+ parentName + "\">\n");
+                writer.write("\t\t<span class=\"legend-color\" style=\"background-color: " + rgbColour + "\"></span>\n");
+                writer.write("\t\t<span class=\"legend-text\">" + parentName + "</span>\n");
+                writer.write("\t</div>\n");
+            }
+
+            writer.write("</div>\n");
+            writer.write("`;\n");
+
+            writer.write("export default legendHtml;");
+
+            writer.close();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
