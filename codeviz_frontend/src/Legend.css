@@ -11,7 +11,7 @@
 
     position: absolute;
     right: 1em;
-    top: 25em;
+    top: 25em; /*FIXME with label threshold string */
     text-align: left;
     width: 250px;
     height: calc(100% - 1em - 250px - 100px - 25%);

@@ -16,7 +16,7 @@ import RightContext from './RightContext';
 import PopUpThreshold from "./PopUpThreshold";
 import Legend from "./Legend";
 
-export var selectedItems, setSelectedItems;
+export var selectedColours, setSelectedColours;
 
 // create shared variable here, so it can edit it
 export var hoveredNodeString = null;
@@ -31,7 +31,7 @@ function GraphViz() {
   let graph = null;
   let renderer = null;
 
-  [selectedItems, setSelectedItems] = useState([]);
+  [selectedColours, setSelectedColours] = useState([]);
 
   useEffect(() => {
     // Make the API request when the component loads
@@ -130,6 +130,7 @@ function GraphViz() {
         // display hovered node's neighbours
         let hoveredNode = undefined;
         let hoveredNeighbors = undefined;
+        let legendNodes = new Set();
 
         // Bind graph interactions:
         // also set node in backend, so it can be used by RightContext Menu
@@ -157,12 +158,14 @@ function GraphViz() {
 
         renderer.setSetting("nodeReducer", (node, data) => {
           const res = { ...data };
-          if ((selectedItems !== null) && (selectedItems.length > 0)) {
+          if ((selectedColours !== null) && (selectedColours.length > 0)) {
 
             let rgbString = res.color.toString();
-            if (!selectedItems.includes(rgbString)){
+            if (!selectedColours.includes(rgbString)){
               res.label = "";
               res.color = "#C9CDD4"; // should be a little darker than the css colour #E6EAF1
+            } else {
+              legendNodes.add(node);
             }
           }
           if (hoveredNeighbors && !hoveredNeighbors.has(node) && hoveredNode !== node) {
@@ -174,6 +177,13 @@ function GraphViz() {
 
         renderer.setSetting("edgeReducer", (edge, data) => {
           const res = { ...data };
+          if ((selectedColours !== null) && (selectedColours.length > 0)) {
+            // only show edges if both nodes are selected
+            const [source, target] = graph.extremities(edge);
+            if (!(legendNodes.has(source) && legendNodes.has(target))) {
+              res.hidden = true; // could set as a colour instead
+            }
+          }
           if (hoveredNode && !graph.hasExtremity(edge, hoveredNode)) {
             res.hidden = true; // could set as a colour instead
           } else if (hoveredEdge && hoveredEdge === edge){
@@ -190,14 +200,13 @@ function GraphViz() {
   useEffect(() => {
     // call fetchData to ensure graph and renderer are set
     fetchData().then(r => {
-      // Add event listener when selectedItems changes
-      console.log("Selected items changed:", selectedItems);
+      console.log("Selected items changed:", selectedColours);
       if (graph !== null && renderer !== null) {
         setHoveredNeighbours(graph, renderer);
       }
     });
 
-  }, [selectedItems]); // run when selectedItems changes
+  }, [selectedColours]); // run when selectedColours changes
 
 
     return (

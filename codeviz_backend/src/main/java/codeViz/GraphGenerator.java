@@ -28,6 +28,7 @@ public class GraphGenerator {
     private LinkedHashMap<String, Entity> packageEntities;
     private LinkedHashMap<String, Entity> classEntities;
     private LinkedHashMap<String, Entity> methodEntities;
+    private EntityType currentLevel;
     private String searchValue;
 
     // details on the most recently generated graph
@@ -44,6 +45,7 @@ public class GraphGenerator {
         packageEntities = new LinkedHashMap<>();
         classEntities = new LinkedHashMap<>();
         methodEntities = new LinkedHashMap<>();
+        currentLevel = EntityType.CLASS; // default level
         searchValue = "";
 
         edgeSources = new ArrayList<>();
@@ -117,6 +119,7 @@ public class GraphGenerator {
      * @author Thanuja Sivaananthan
      */
     public DirectedGraph entitiesToNodes(EntityType entityType, boolean gitHistory) {
+        currentLevel = entityType;
         LinkedHashMap<String, Entity> entities = getEntities(entityType);
         return entitiesToNodes(entities, gitHistory);
     }
@@ -147,12 +150,14 @@ public class GraphGenerator {
         if (parentEntity != null) { // keep this check just in case
             if (parentEntity.getEntityType().equals(EntityType.PACKAGE)) {
                 if (childLevel.equals(EntityType.CLASS)) { // package - class
+                    currentLevel = EntityType.CLASS;
                     PackageEntity packageEntity = (PackageEntity) parentEntity;
                     Set<ClassEntity> classEntities1 = packageEntity.getClasses();
                     for (Entity entityInner : classEntities1) {
                         entities.put(entityInner.getName(), entityInner); // FIXME - change back to getKey when doing full name
                     }
                 } else if (childLevel.equals(EntityType.METHOD)) { // package - method
+                    currentLevel = EntityType.METHOD;
                     PackageEntity packageEntity = (PackageEntity) parentEntity;
                     Set<ClassEntity> classEntities1 = packageEntity.getClasses();
                     for (ClassEntity classEntityInner : classEntities1) {
@@ -163,6 +168,7 @@ public class GraphGenerator {
                     }
                 }
             } else if (parentEntity.getEntityType().equals(EntityType.CLASS)) { // class - method
+                currentLevel = EntityType.METHOD;
                 ClassEntity classEntity = (ClassEntity) parentEntity;
                 Set<MethodEntity> methodEntities1 = classEntity.getMethods();
                 for (Entity entityInner : methodEntities1) {
@@ -343,8 +349,18 @@ public class GraphGenerator {
 
             writer.write("const legendItems = [\n");
 
+            if (containsSearchResult()){
+                String parentName = "Search Result";
+                Color parentColor = Entity.getHighlightedColour();
+                String rgbColour = "rgb(" + parentColor.getRed() + "," + parentColor.getGreen() + "," + parentColor.getBlue() + ")";
+                writer.write("\t{ category: '"+ parentName + "', color: '" + rgbColour + "' },\n");
+            }
+
             for (String parentName : legendColours.keySet()){
                 Color parentColor = legendColours.get(parentName);
+                if (parentColor.equals(Entity.getHighlightedColour())){ // highlighted colours are grouped together
+                    continue;
+                }
                 String rgbColour = "rgb(" + parentColor.getRed() + "," + parentColor.getGreen() + "," + parentColor.getBlue() + ")";
                 writer.write("\t{ category: '"+ parentName + "', color: '" + rgbColour + "' },\n");
             }
@@ -374,50 +390,12 @@ public class GraphGenerator {
         methodEntities = new LinkedHashMap<>();
     }
 
-
-    /*
-     * Perform a search on a given entity type
-     * Note: is case-sensitive
-     *
-     * @param searchValue      the search value
-     * @param entities         the entities to search
-     * @param isDetailedSearch if the search is detailed or not
-     * @author Thanuja Sivaananthan
-
-    private void performSearch(String searchValue, LinkedHashMap<String, Entity> entities, boolean isDetailedSearch){
-        for (String entityKey : entities.keySet()) {
-            Entity entity = entities.get(entityKey);
-            if (entity.nameContains(searchValue)) { // simple search - only checks the node name, not full name
-                entity.setHighlighed(true);
-            } else if (isDetailedSearch) {
-                if (entityKey.contains(searchValue) || entity.containsSearchValue(searchValue)) {
-                    entity.setHighlighed(true);
-                }
-            }
-        }
-    }
-
-     * Perform a search
-     *
-     * @param searchValue      the search value
-     * @param isDetailedSearch if the search is detailed or not
-     * @author Thanuja Sivaananthan
-
-    public void performSearch(String searchValue, boolean isDetailedSearch) {
-        // start a fresh search
-        clearSearch();
-
-        this.searchValue = searchValue;
-        performSearch(searchValue, packageEntities, isDetailedSearch);
-        performSearch(searchValue, classEntities, isDetailedSearch);
-        performSearch(searchValue, methodEntities, isDetailedSearch);
-    }
-*/
     public void performSearch(String searchValue, boolean searchClasses, boolean searchMethods, boolean searchAttributes,
                               boolean searchParameters, boolean searchReturnType, boolean searchConnections, EntityType currentLevel) {
         clearSearch(); // Clear previous search results
 
         searchValue = searchValue.replace(" ", ""); // remove any spaces
+        this.searchValue = searchValue;
 
         // base case - check the entity names
         checkAllNames(searchValue, packageEntities);
@@ -628,18 +606,8 @@ public class GraphGenerator {
         return "ERROR, this pair doesn't share a recent commit";
     }
 
-    /**
-     * Check if search value found for certain level
-     * @param entityType        level
-     * @return                  string message
-     */
-    public String getSearchResult(EntityType entityType) {
-
-        if (searchValue.isEmpty()){
-            return "";
-        }
-
-        LinkedHashMap<String, Entity> entities = getEntities(entityType);
+    private boolean containsSearchResult(){
+        LinkedHashMap<String, Entity> entities = getEntities(currentLevel);
 
         boolean isFound = false;
 
@@ -649,6 +617,20 @@ public class GraphGenerator {
                 break;
             }
         }
+        return isFound;
+    }
+
+    /**
+     * Check if search value found for certain level
+     * @return string message
+     */
+    public String getSearchResult() {
+
+        if (searchValue.isEmpty()){
+            return "";
+        }
+
+        boolean isFound = containsSearchResult();
 
         String result = TextAnnotate.BOLD.javaText;
 

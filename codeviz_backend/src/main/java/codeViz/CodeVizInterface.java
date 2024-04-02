@@ -126,8 +126,8 @@ public class CodeVizInterface {
         return graphGenerator.getComplexityDetails(nodeName, currentLevel);
     }
 
-    public String getSearchResult(EntityType entityType) {
-        return graphGenerator.getSearchResult(entityType);
+    public String getSearchResult() {
+        return graphGenerator.getSearchResult();
     }
 
     public void clearSearch() {

@@ -2,27 +2,27 @@ import React, {useState} from 'react';
 import legendItems from './LegendItems';
 
 import './Legend.css';
-import {selectedItems, setSelectedItems} from  "./GraphViz";
+import {selectedColours, setSelectedColours} from  "./GraphViz";
 
 function Legend() {
-    const [selectAll, setSelectAll] = useState(true);
+    const [selectAll, setSelectAll] = useState(false);
 
     const handleCheckboxChange = (category) => {
-        if (selectedItems.includes(category)) {
+        if (selectedColours.includes(category)) {
             console.log(`Legend option "${category}" un-pressed`);
-            setSelectedItems(selectedItems.filter(item => item !== category));
+            setSelectedColours(selectedColours.filter(item => item !== category));
         } else {
             console.log(`Legend option "${category}" pressed`);
-            setSelectedItems([...selectedItems, category]);
+            setSelectedColours([...selectedColours, category]);
         }
     };
 
     const handleSelectAllChange = () => {
         if (selectAll) {
-            setSelectedItems([]);
+            setSelectedColours([]);
         } else {
             const allCategories = legendItems.map(item => item.color);
-            setSelectedItems(allCategories);
+            setSelectedColours(allCategories);
         }
         setSelectAll(!selectAll);
     };
@@ -42,7 +42,7 @@ function Legend() {
                 <div key={item.category} className="legend-item">
                     <input
                         type="checkbox"
-                        checked={selectedItems.includes(item.color)}
+                        checked={selectedColours.includes(item.color)}
                         onChange={() => handleCheckboxChange(item.color)}
                     />
                     <span className="legend-color" style={{ backgroundColor: item.color }}></span>
