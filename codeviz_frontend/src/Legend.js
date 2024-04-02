@@ -1,32 +1,56 @@
-import React, { useEffect } from 'react';
+import React, {useState} from 'react';
+import legendItems from './LegendItems';
 
 import './Legend.css';
-import legendHtml from './LegendContent';
+import {selectedItems, setSelectedItems} from  "./GraphViz";
 
 function Legend() {
-    const handleLegendItemClick = (category) => {
-        // Logic to handle behavior when a legend option is pressed
-        console.log(`Legend option "${category}" pressed`);
+    const [selectAll, setSelectAll] = useState(true);
+
+    const handleCheckboxChange = (category) => {
+        if (selectedItems.includes(category)) {
+            console.log(`Legend option "${category}" un-pressed`);
+            setSelectedItems(selectedItems.filter(item => item !== category));
+        } else {
+            console.log(`Legend option "${category}" pressed`);
+            setSelectedItems([...selectedItems, category]);
+        }
     };
 
-    useEffect(() => {
-        const legendItems = document.querySelectorAll('.legend-item');
-        legendItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const category = item.dataset.category;
-                handleLegendItemClick(category);
-            });
-        });
+    const handleSelectAllChange = () => {
+        if (selectAll) {
+            setSelectedItems([]);
+        } else {
+            const allCategories = legendItems.map(item => item.color);
+            setSelectedItems(allCategories);
+        }
+        setSelectAll(!selectAll);
+    };
 
-        // Clean up event listeners when component unmounts
-        return () => {
-            legendItems.forEach(item => {
-                item.removeEventListener('click', handleLegendItemClick);
-            });
-        };
-    }, []); // Run only once on component mount
-
-    return <div dangerouslySetInnerHTML={{ __html: legendHtml }} />;
+    return (
+        <div id="legend">
+            <h3>Legend</h3>
+            <div>
+                <input
+                    type="checkbox"
+                    checked={selectAll}
+                    onChange={handleSelectAllChange}
+                />
+                <label>Select/Deselect All</label>
+            </div>
+            {legendItems.map(item => (
+                <div key={item.category} className="legend-item">
+                    <input
+                        type="checkbox"
+                        checked={selectedItems.includes(item.color)}
+                        onChange={() => handleCheckboxChange(item.color)}
+                    />
+                    <span className="legend-color" style={{ backgroundColor: item.color }}></span>
+                    <span className="legend-text">{item.category}</span>
+                </div>
+            ))}
+        </div>
+    );
 
 }
 

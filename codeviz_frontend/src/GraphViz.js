@@ -16,6 +16,8 @@ import RightContext from './RightContext';
 import PopUpThreshold from "./PopUpThreshold";
 import Legend from "./Legend";
 
+export var selectedItems, setSelectedItems;
+
 // create shared variable here, so it can edit it
 export var hoveredNodeString = null;
 export var labelsThresholdRange, thresholdLabel = null;
@@ -26,6 +28,10 @@ function GraphViz() {
   const initialNodeMessage = "Click on a node to view more options. If the 'Git History' graph is displayed, hover over an edge to view its git history details."
   let hoveredEdge = null;
   const [popUpMenu, setPopUpMenu] = React.useState(false);
+  let graph = null;
+  let renderer = null;
+
+  [selectedItems, setSelectedItems] = useState([]);
 
   useEffect(() => {
     // Make the API request when the component loads
@@ -36,14 +42,13 @@ function GraphViz() {
       });
   }, []);
 
-  useEffect(() => {
       const fetchData = async () => {
         const response = await fetch("codeviz_demo.gexf"); //needs to be in 'public' folder // TODO - don't hardcode here
         const gexf = await response.text();
   
         // Parse GEXF string:
-        const graph = parse(Graph, gexf);
-  
+        graph = parse(Graph, gexf);
+
         // Retrieve some useful DOM elements:
         const container = document.getElementsByClassName("graphDisplay--image")[0];
         const zoomInBtn = document.getElementById("zoom-in");
@@ -65,7 +70,7 @@ function GraphViz() {
         rendererOld.kill();
 
         // Instantiate new sigma:
-        const renderer = new Sigma(graph, container, {
+        renderer = new Sigma(graph, container, {
           minCameraRatio: 0.1,
           maxCameraRatio: 10,
           enableEdgeEvents: true,
@@ -152,6 +157,14 @@ function GraphViz() {
 
         renderer.setSetting("nodeReducer", (node, data) => {
           const res = { ...data };
+          if ((selectedItems !== null) && (selectedItems.length > 0)) {
+
+            let rgbString = res.color.toString();
+            if (!selectedItems.includes(rgbString)){
+              res.label = "";
+              res.color = "#C9CDD4"; // should be a little darker than the css colour #E6EAF1
+            }
+          }
           if (hoveredNeighbors && !hoveredNeighbors.has(node) && hoveredNode !== node) {
             res.label = "";
             res.color = "#C9CDD4"; // should be a little darker than the css colour #E6EAF1
@@ -169,9 +182,22 @@ function GraphViz() {
           return res;
         });
       }
-  
+
+    useEffect(() => {
       fetchData();
     }, []);
+
+  useEffect(() => {
+    // call fetchData to ensure graph and renderer are set
+    fetchData().then(r => {
+      // Add event listener when selectedItems changes
+      console.log("Selected items changed:", selectedItems);
+      if (graph !== null && renderer !== null) {
+        setHoveredNeighbours(graph, renderer);
+      }
+    });
+
+  }, [selectedItems]); // run when selectedItems changes
 
 
     return (

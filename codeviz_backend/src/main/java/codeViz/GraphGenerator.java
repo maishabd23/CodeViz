@@ -332,8 +332,7 @@ public class GraphGenerator {
             throw new RuntimeException(e);
         }
 
-        generateLegend("./codeviz_frontend/src/LegendContent.js");
-
+        generateLegend("./codeviz_frontend/src/LegendItems.js");
 
     }
 
@@ -342,23 +341,16 @@ public class GraphGenerator {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
 
-            writer.write("const legendHtml = `\n");
-            writer.write("<div id=\"legend\">\n");
-            writer.write("\t<h3>Legend</h3>\n");
+            writer.write("const legendItems = [\n");
 
             for (String parentName : legendColours.keySet()){
                 Color parentColor = legendColours.get(parentName);
-                String rgbColour = "rgb(" + parentColor.getRed() + ", " + parentColor.getGreen() + ", " + parentColor.getBlue() + ")";
-                writer.write("\t<div class=\"legend-item\" data-category=\""+ parentName + "\">\n");
-                writer.write("\t\t<span class=\"legend-color\" style=\"background-color: " + rgbColour + "\"></span>\n");
-                writer.write("\t\t<span class=\"legend-text\">" + parentName + "</span>\n");
-                writer.write("\t</div>\n");
+                String rgbColour = "rgb(" + parentColor.getRed() + "," + parentColor.getGreen() + "," + parentColor.getBlue() + ")";
+                writer.write("\t{ category: '"+ parentName + "', color: '" + rgbColour + "' },\n");
             }
 
-            writer.write("</div>\n");
-            writer.write("`;\n");
-
-            writer.write("export default legendHtml;");
+            writer.write("];\n\n");
+            writer.write("export default legendItems;");
 
             writer.close();
 
