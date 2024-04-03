@@ -24,7 +24,6 @@ export var labelsThresholdRange, thresholdLabel = null;
 
 // Load external GEXF file:
 function GraphViz() {
-  const [data, setData] = useState(null);
   const initialNodeMessage = "Click on a node to view more options. If the 'Git History' graph is displayed, hover over an edge to view its git history details."
   let hoveredEdge = null;
   const [popUpMenu, setPopUpMenu] = React.useState(false);
@@ -32,15 +31,6 @@ function GraphViz() {
   let renderer = null;
 
   [selectedColours, setSelectedColours] = useState([]);
-
-  useEffect(() => {
-    // Make the API request when the component loads
-    fetch('/api/displayGraph')
-      .then((response) => response.json())
-      .then((responseData) => {
-        setData(responseData.file); //extract just the 'file' value
-      });
-  }, []);
 
       const fetchData = async () => {
         const response = await fetch("codeviz_demo.gexf"); //needs to be in 'public' folder // TODO - don't hardcode here
@@ -158,8 +148,9 @@ function GraphViz() {
 
         renderer.setSetting("nodeReducer", (node, data) => {
           const res = { ...data };
-          if ((selectedColours !== null) && (selectedColours.length > 0)) {
 
+          // legend colours
+          if (selectedColours.length > 0) {
             let rgbString = res.color.toString();
             if (!selectedColours.includes(rgbString)){
               res.label = "";
@@ -168,6 +159,8 @@ function GraphViz() {
               legendNodes.add(node);
             }
           }
+
+          // hovered node and neighbours
           if (hoveredNeighbors && !hoveredNeighbors.has(node) && hoveredNode !== node) {
             res.label = "";
             res.color = "#C9CDD4"; // should be a little darker than the css colour #E6EAF1
@@ -177,7 +170,7 @@ function GraphViz() {
 
         renderer.setSetting("edgeReducer", (edge, data) => {
           const res = { ...data };
-          if ((selectedColours !== null) && (selectedColours.length > 0)) {
+          if (selectedColours.length > 0) {
             // only show edges if both nodes are selected
             const [source, target] = graph.extremities(edge);
             if (!(legendNodes.has(source) && legendNodes.has(target))) {
@@ -198,14 +191,14 @@ function GraphViz() {
     }, []);
 
   useEffect(() => {
-    // call fetchData to ensure graph and renderer are set
+    // call fetchData to ensure graph and renderer are set with all the capabilities
+    console.log("in useEffect", selectedColours);
     fetchData().then(r => {
       console.log("Selected items changed:", selectedColours);
-      if (graph !== null && renderer !== null) {
-        setHoveredNeighbours(graph, renderer);
-      }
+      // if (graph !== null && renderer !== null) {
+      //   setHoveredNeighbours(graph, renderer); // already called in fetchData, don't need to call again
+      // }
     });
-
   }, [selectedColours]); // run when selectedColours changes
 
 

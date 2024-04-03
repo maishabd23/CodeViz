@@ -24,7 +24,7 @@ import java.awt.Color;
 public class GraphGenerator {
 
     // can look at the individual list when making that specific level's view
-    // NOTE: kept all List types as Entity to allow for code reuse, might need to specify type as PackageEntity, etc, later on
+    // NOTE: kept all List types as Entity to allow for code reuse, might need to specify type as PackageEntity, etc., later on
     private LinkedHashMap<String, Entity> packageEntities;
     private LinkedHashMap<String, Entity> classEntities;
     private LinkedHashMap<String, Entity> methodEntities;
@@ -104,9 +104,7 @@ public class GraphGenerator {
         //System.out.println("Total node size is " + totalNodeSize + " for " + entities.size() + " nodes");
         int factor = totalNodeSize/100;
         if (factor == 0) factor = 1;
-        float max_graph_size = (float) (totalNodeSize * factor);
-        //System.out.println("Setting max as " + max_graph_size);
-        return max_graph_size;
+        return (float) (totalNodeSize * factor);
     }
 
 
@@ -147,40 +145,34 @@ public class GraphGenerator {
 
         System.out.println("get entities within " + parentEntity.getKey());
         LinkedHashMap<String, Entity> entities = new LinkedHashMap<>();
-        if (parentEntity != null) { // keep this check just in case
-            if (parentEntity.getEntityType().equals(EntityType.PACKAGE)) {
-                if (childLevel.equals(EntityType.CLASS)) { // package - class
-                    currentLevel = EntityType.CLASS;
-                    PackageEntity packageEntity = (PackageEntity) parentEntity;
-                    Set<ClassEntity> classEntities1 = packageEntity.getClasses();
-                    for (Entity entityInner : classEntities1) {
-                        entities.put(entityInner.getName(), entityInner); // FIXME - change back to getKey when doing full name
-                    }
-                } else if (childLevel.equals(EntityType.METHOD)) { // package - method
-                    currentLevel = EntityType.METHOD;
-                    PackageEntity packageEntity = (PackageEntity) parentEntity;
-                    Set<ClassEntity> classEntities1 = packageEntity.getClasses();
-                    for (ClassEntity classEntityInner : classEntities1) {
-                        Set<MethodEntity> methodEntities1 = classEntityInner.getMethods();
-                        for (Entity entityInner : methodEntities1) {
-                            entities.put(parentEntity.getName() + "." + entityInner.getName(), entityInner); // FIXME - change back to getKey when doing full name
-                        }
-                    }
+        // keep this check just in case
+        if (parentEntity.getEntityType().equals(EntityType.PACKAGE)) {
+            if (childLevel.equals(EntityType.CLASS)) { // package - class
+                currentLevel = EntityType.CLASS;
+                PackageEntity packageEntity = (PackageEntity) parentEntity;
+                Set<ClassEntity> classEntities1 = packageEntity.getClasses();
+                for (Entity entityInner : classEntities1) {
+                    entities.put(entityInner.getName(), entityInner);
                 }
-            } else if (parentEntity.getEntityType().equals(EntityType.CLASS)) { // class - method
+            } else if (childLevel.equals(EntityType.METHOD)) { // package - method
                 currentLevel = EntityType.METHOD;
-                ClassEntity classEntity = (ClassEntity) parentEntity;
-                Set<MethodEntity> methodEntities1 = classEntity.getMethods();
-                for (Entity entityInner : methodEntities1) {
-                    entities.put(parentEntity.getName() + "." + entityInner.getName(), entityInner); // FIXME - change back to getKey when doing full name
+                PackageEntity packageEntity = (PackageEntity) parentEntity;
+                Set<ClassEntity> classEntities1 = packageEntity.getClasses();
+                for (ClassEntity classEntityInner : classEntities1) {
+                    Set<MethodEntity> methodEntities1 = classEntityInner.getMethods();
+                    for (Entity entityInner : methodEntities1) {
+                        entities.put(parentEntity.getName() + "." + entityInner.getName(), entityInner);
+                    }
                 }
             }
-        } else {
-            System.out.println("ERROR, parentEntity null ");
+        } else if (parentEntity.getEntityType().equals(EntityType.CLASS)) { // class - method
+            currentLevel = EntityType.METHOD;
+            ClassEntity classEntity = (ClassEntity) parentEntity;
+            Set<MethodEntity> methodEntities1 = classEntity.getMethods();
+            for (Entity entityInner : methodEntities1) {
+                entities.put(parentEntity.getName() + "." + entityInner.getName(), entityInner);
+            }
         }
-//        if (entities.isEmpty()){
-//            System.out.println("EMPTY entities list");
-//        }
         return entitiesToNodes(entities, gitHistory);
     }
 
@@ -203,7 +195,6 @@ public class GraphGenerator {
 
         ProjectController pc = Lookup.getDefault().lookup(ProjectController.class);
         pc.newProject();
-        //Workspace workspace = pc.getCurrentWorkspace();
 
         //Get a graph model - it exists because we have a workspace
         GraphModel graphModel = Lookup.getDefault().lookup(GraphController.class).getGraphModel();
@@ -215,7 +206,7 @@ public class GraphGenerator {
             String nodeName = entity.getName();
             Node node = graphModel.factory().newNode(id + "_" + entityKey); // want this as entityKey, is okay because only label is displayed
             node.setLabel(nodeName);
-            node.setSize(entity.getSize()); // might need to scale up node size so it appears nicely?
+            node.setSize(entity.getSize()); // might need to scale up node size, so it appears nicely?
             node.setColor(entity.getParentColour());
 
             if (!legendColours.containsKey(entity.getParentName())) {
@@ -338,20 +329,27 @@ public class GraphGenerator {
             throw new RuntimeException(e);
         }
 
-        generateLegend("./codeviz_frontend/src/LegendItems.js");
+        generateLegend();
 
     }
 
-    public void generateLegend(String filename){
+    /**
+     * Generate a legend as a JavaScript data file
+     */
+    private void generateLegend(){
 
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+            BufferedWriter writer = new BufferedWriter(new FileWriter("./codeviz_frontend/src/LegendItems.js"));
 
             writer.write("const legendItems = [\n");
 
             if (containsSearchResult()){
                 String parentName = "Search Result";
+                if (!currentLevel.equals(EntityType.METHOD)){ // match naming conventions with level
+                    parentName = parentName.toLowerCase();
+                }
                 Color parentColor = Entity.getHighlightedColour();
+                // rgbColour should be the same format as the frontend node colours: rgb(r,g,b)
                 String rgbColour = "rgb(" + parentColor.getRed() + "," + parentColor.getGreen() + "," + parentColor.getBlue() + ")";
                 writer.write("\t{ category: '"+ parentName + "', color: '" + rgbColour + "' },\n");
             }
@@ -438,15 +436,11 @@ public class GraphGenerator {
         for (Entity entity : entities.values()) {
             boolean isHighlighted = entity.nameContains(searchValue); // Simplified the condition
 
-            if (entity instanceof ClassEntity && searchAttributes) {
-                ClassEntity classEntity = (ClassEntity) entity;
-                if (classEntity.hasAttributeWithName(searchValue)) {
+            if (entity instanceof ClassEntity classEntity) {
+                if (searchAttributes && classEntity.hasAttributeWithName(searchValue)) {
                     isHighlighted = true;
                 }
-            }
-
-            if (entity instanceof MethodEntity) {
-                MethodEntity methodEntity = (MethodEntity) entity;
+            } else if (entity instanceof MethodEntity methodEntity) {
                 if (searchParameters && methodEntity.hasParameterWithName(searchValue)) {
                     isHighlighted = true;
                 }
@@ -456,18 +450,16 @@ public class GraphGenerator {
             }
 
             if (isHighlighted) { // only set highlighted true (they are all false initially)
-                entity.setHighlighted(isHighlighted);
+                entity.setHighlighted(true);
 
                 // in case the parent type is performing the search, set the parent's highlight as well
                 if (entity.getEntityType().equals(currentLevel)) {
-                    if (entity instanceof ClassEntity) {
-                        ClassEntity classEntity = (ClassEntity) entity;
+                    if (entity instanceof ClassEntity classEntity) {
                         if (classEntity.getPackageEntity() != null) {
-                            classEntity.getPackageEntity().setHighlighted(isHighlighted);
+                            classEntity.getPackageEntity().setHighlighted(true);
                         }
-                    } else if (entity instanceof MethodEntity) {
-                        MethodEntity methodEntity = (MethodEntity) entity;
-                        methodEntity.getClassEntity().setHighlighted(isHighlighted);
+                    } else if (entity instanceof MethodEntity methodEntity) {
+                        methodEntity.getClassEntity().setHighlighted(true);
                     }
                 }
 
@@ -506,13 +498,11 @@ public class GraphGenerator {
     private void setEntitiesCoordinates(LinkedHashMap<String, Entity> entities){
         //System.out.println("Get coordinates for " + entityType);
         float max_graph_size = getGraphSize(entities);
-        float max_x = max_graph_size;
-        float max_y = max_graph_size;
 
         Random rand = new Random();
         for (Entity entity : entities.values()){
-            float pos_x = rand.nextFloat() * max_x;
-            float pos_y = rand.nextFloat() * max_y;
+            float pos_x = rand.nextFloat() * max_graph_size;
+            float pos_y = rand.nextFloat() * max_graph_size;
             entity.setPosition(pos_x, pos_y); // TODO - determine proper coordinates
         }
     }
@@ -659,19 +649,17 @@ public class GraphGenerator {
 
     /**
      * Generate a filtered code graph at a specific level
+     *
      * @param parentEntity the parent entity to filter the graph to
-     * @param childLevel the level to generate the code graph at
-     * @param filename the filename to save the gexf file as
-     * @param gitHistory whether viewing git history graph or not
-     * @return  boolean, whether the filtered graph was successfully generated
+     * @param childLevel   the level to generate the code graph at
+     * @param filename     the filename to save the gexf file as
+     * @param gitHistory   whether viewing git history graph or not
      */
-    public boolean directedGraphToGexf(Entity parentEntity, EntityType childLevel, String filename, boolean gitHistory) {
+    public void directedGraphToGexf(Entity parentEntity, EntityType childLevel, String filename, boolean gitHistory) {
         DirectedGraph directedGraph = entitiesToNodes(parentEntity, childLevel, gitHistory);
         if (directedGraph != null) {
             directedGraphToGexf(directedGraph, filename);
-            return true;
         }
-        return false;
     }
 
     public ClassEntity changeInterfaceToClassEntity(ClassOrInterfaceDeclaration classOrInterfaceDeclaration){

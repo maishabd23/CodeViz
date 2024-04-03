@@ -40,13 +40,14 @@ public class GitHistoryTest {
 
         // add entities to graph generator
         GraphGenerator graphGenerator = new GraphGenerator();
-        graphGenerator.addEntity(calculatorPackage.getKey(), calculatorPackage);
-        graphGenerator.addEntity(bufferedImageCustom.getKey(), bufferedImageCustom);
-        graphGenerator.addEntity(calculator.getKey(), calculator);
-        graphGenerator.addEntity(simpleJavaCalculator.getKey(), simpleJavaCalculator);
-        graphGenerator.addEntity(ui.getKey(), ui);
-        graphGenerator.addEntity(calculatorPackageTest.getKey(), calculatorPackageTest);
-        graphGenerator.addEntity(calculatorTest.getKey(), calculatorTest);
+        graphGenerator.addEntity(calculatorPackage.getName(), calculatorPackage);
+        graphGenerator.addEntity(calculatorPackageTest.getName(), calculatorPackageTest);
+
+        graphGenerator.addEntity(bufferedImageCustom.getName(), bufferedImageCustom);
+        graphGenerator.addEntity(calculator.getName(), calculator);
+        graphGenerator.addEntity(simpleJavaCalculator.getName(), simpleJavaCalculator);
+        graphGenerator.addEntity(ui.getName(), ui);
+        graphGenerator.addEntity(calculatorTest.getName(), calculatorTest);
 
         // create connections
         ui.addConnectedEntity(calculator);

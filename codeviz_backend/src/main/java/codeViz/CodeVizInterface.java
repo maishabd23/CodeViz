@@ -11,15 +11,15 @@ import codeViz.gitHistory.GitCommitReader;
 public class CodeVizInterface {
     private final GraphGenerator graphGenerator;
     private final GitCommitReader gitCommitReader;
-    private final GitHubRepoController gitHubRepoController;
+    private final SourcecodeReader sourcecodeReader;
 
     private Entity selectedNode;
     private boolean success;
 
 
     public CodeVizInterface(){
-        this.gitHubRepoController = new GitHubRepoController();
-        this.graphGenerator = gitHubRepoController.getGraphGenerator();
+        this.sourcecodeReader = new SourcecodeReader();
+        this.graphGenerator = sourcecodeReader.getGraphGenerator();
         this.gitCommitReader = new GitCommitReader(graphGenerator);
         this.success = true; // FIXME - change back to false once stuff are working
         this.selectedNode = null;
@@ -36,7 +36,7 @@ public class CodeVizInterface {
         repoURL = modifyRepoUrl(repoURL);
 
         // initial error checking, before generating entities/connections
-        String errorMessage = gitHubRepoController.isValidRepoUrl(repoURL);
+        String errorMessage = sourcecodeReader.isValidRepoUrl(repoURL);
         if (!errorMessage.isEmpty()){
             return errorMessage;
         }
@@ -44,7 +44,7 @@ public class CodeVizInterface {
         //String repoURl = "https://github.com/martinmimigames/little-music-player";
         System.out.println("THE REPO URL WAS SENT TO BACKEND IN CODE VIZ INTERFACE " + repoURL);
         graphGenerator.clearEntities(); //  making a new graph, clear all entities
-        boolean success = gitHubRepoController.analyzeCodebase(repoURL);
+        boolean success = sourcecodeReader.analyzeCodebase(repoURL);
         if (success) {
             String tokenPassword = ""; // empty string for public repos
             gitCommitReader.extractCommitHistory(repoURL, tokenPassword, maxNumCommits);

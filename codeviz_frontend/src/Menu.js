@@ -13,7 +13,6 @@ function Menu() {
 
     //FOR VIEWING REPO
     const [repoURL, setRepoURL] = useState('');
-    const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -47,7 +46,6 @@ function Menu() {
                     // Handle successful response
                     console.log('SUCCESS!');
                     console.log('Response data:', data);
-                    setSubmitted(true);
                 } else {
                     // Handle error response
                     console.error('Error:', data.error || 'An unexpected error occurred');
@@ -281,16 +279,10 @@ function Menu() {
             )}
             <p>
             </p>
-            <table className="center">
-            <td>
-                <button id="searchButton" onClick={mySearchFunction}>Search</button>
-            </td>
-            <td>
-                <button id="clear-search" onClick={() => { /* Implement clear search logic */ }}>Clear Search</button>
-            </td>
-            <p id="printSearch"></p>
-            </table>
 
+            <button id="searchButton" onClick={mySearchFunction}>Search</button>
+            <button id="clear-search" onClick={() => { /* Implement clear search logic */ }}>Clear Search</button>
+            <p id="printSearch"></p>
 
             </div>
 
