@@ -149,19 +149,23 @@ function GraphViz() {
         renderer.setSetting("nodeReducer", (node, data) => {
           const res = { ...data };
 
-          // legend colours
-          if (selectedColours.length > 0) {
+          let reduceNode = false;
+
+          // hovered node and neighbours - takes precedence
+          if (hoveredNeighbors ){
+            if (!hoveredNeighbors.has(node) && hoveredNode !== node) {
+              reduceNode = true;
+            }
+          } else if (selectedColours.length > 0) { // legend colours
             let rgbString = res.color.toString();
-            if (!selectedColours.includes(rgbString)){
-              res.label = "";
-              res.color = "#C9CDD4"; // should be a little darker than the css colour #E6EAF1
-            } else {
+            if (selectedColours.includes(rgbString)){
               legendNodes.add(node);
+            } else {
+              reduceNode = true;
             }
           }
 
-          // hovered node and neighbours
-          if (hoveredNeighbors && !hoveredNeighbors.has(node) && hoveredNode !== node) {
+          if (reduceNode){
             res.label = "";
             res.color = "#C9CDD4"; // should be a little darker than the css colour #E6EAF1
           }
@@ -170,17 +174,18 @@ function GraphViz() {
 
         renderer.setSetting("edgeReducer", (edge, data) => {
           const res = { ...data };
-          if (selectedColours.length > 0) {
+          if (hoveredNode) {
+            if (!graph.hasExtremity(edge, hoveredNode)) { // takes precedence
+              res.hidden = true; // could set as a colour instead
+            }
+          } else if (hoveredEdge && hoveredEdge === edge){
+            res.color = "#858990";
+          } else if (selectedColours.length > 0) {
             // only show edges if both nodes are selected
             const [source, target] = graph.extremities(edge);
             if (!(legendNodes.has(source) && legendNodes.has(target))) {
               res.hidden = true; // could set as a colour instead
             }
-          }
-          if (hoveredNode && !graph.hasExtremity(edge, hoveredNode)) {
-            res.hidden = true; // could set as a colour instead
-          } else if (hoveredEdge && hoveredEdge === edge){
-            res.color = "#858990";
           }
           return res;
         });
