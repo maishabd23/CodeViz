@@ -54,20 +54,6 @@ public class GitCommitReader {
     }
 
     /**
-     * Read commit history locally
-     * @param localDirectory    the local directory to read from
-     * @param maxNumCommits the number of commits to get the history from, -1 if all commits
-     */
-//    public void extractCommitHistory(String localDirectory, int maxNumCommits){
-//        try {
-//            git = Git.init().setDirectory(new File(localDirectory)).call();
-//        } catch (GitAPIException e) {
-//            throw new RuntimeException(e);
-//        }
-//        storeCommitHistory(maxNumCommits);
-//    }
-
-    /**
      * Read commit history via gitHub
      * @param gitHubURI         the URI of the gitHub repository/fork
      * @param tokenPassword     the token password of the user
@@ -282,7 +268,7 @@ public class GitCommitReader {
         for (String fileSection : fileSections){
             fileSection = fileSection.replace(".java", "");
             keyName += fileSection;
-            if (packages.containsKey(keyName) || classes.containsKey(fileSection)){ // TODO - change back to key name here and in GitHubRepoController
+            if (packages.containsKey(keyName) || classes.containsKey(fileSection)){
 
                 if (classes.containsKey(fileSection)){
                     System.out.println("FOUND CLASS FOR " + fullFilename + " AS " + keyName);

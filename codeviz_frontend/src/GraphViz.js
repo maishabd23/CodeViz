@@ -14,6 +14,9 @@ import forceAtlas2 from "graphology-layout-forceatlas2";
 
 import RightContext from './RightContext';
 import PopUpThreshold from "./PopUpThreshold";
+import Legend from "./Legend";
+
+export var selectedColours, setSelectedColours;
 
 // create shared variable here, so it can edit it
 export var hoveredNodeString = null;
@@ -21,28 +24,21 @@ export var labelsThresholdRange, thresholdLabel = null;
 
 // Load external GEXF file:
 function GraphViz() {
-  const [data, setData] = useState(null);
   const initialNodeMessage = "Click on a node to view more options. If the 'Git History' graph is displayed, hover over an edge to view its git history details."
   let hoveredEdge = null;
   const [popUpMenu, setPopUpMenu] = React.useState(false);
+  let graph = null;
+  let renderer = null;
 
-  useEffect(() => {
-    // Make the API request when the component loads
-    fetch('/api/displayGraph')
-      .then((response) => response.json())
-      .then((responseData) => {
-        setData(responseData.file); //extract just the 'file' value
-      });
-  }, []);
+  [selectedColours, setSelectedColours] = useState([]);
 
-  useEffect(() => {
       const fetchData = async () => {
         const response = await fetch("codeviz_demo.gexf"); //needs to be in 'public' folder // TODO - don't hardcode here
         const gexf = await response.text();
   
         // Parse GEXF string:
-        const graph = parse(Graph, gexf);
-  
+        graph = parse(Graph, gexf);
+
         // Retrieve some useful DOM elements:
         const container = document.getElementsByClassName("graphDisplay--image")[0];
         const zoomInBtn = document.getElementById("zoom-in");
@@ -64,7 +60,7 @@ function GraphViz() {
         rendererOld.kill();
 
         // Instantiate new sigma:
-        const renderer = new Sigma(graph, container, {
+        renderer = new Sigma(graph, container, {
           minCameraRatio: 0.1,
           maxCameraRatio: 10,
           enableEdgeEvents: true,
@@ -124,6 +120,7 @@ function GraphViz() {
         // display hovered node's neighbours
         let hoveredNode = undefined;
         let hoveredNeighbors = undefined;
+        let legendNodes = new Set();
 
         // Bind graph interactions:
         // also set node in backend, so it can be used by RightContext Menu
@@ -151,7 +148,24 @@ function GraphViz() {
 
         renderer.setSetting("nodeReducer", (node, data) => {
           const res = { ...data };
-          if (hoveredNeighbors && !hoveredNeighbors.has(node) && hoveredNode !== node) {
+
+          let reduceNode = false;
+
+          // hovered node and neighbours - takes precedence
+          if (hoveredNeighbors ){
+            if (!hoveredNeighbors.has(node) && hoveredNode !== node) {
+              reduceNode = true;
+            }
+          } else if (selectedColours.length > 0) { // legend colours
+            let rgbString = res.color.toString();
+            if (selectedColours.includes(rgbString)){
+              legendNodes.add(node);
+            } else {
+              reduceNode = true;
+            }
+          }
+
+          if (reduceNode){
             res.label = "";
             res.color = "#C9CDD4"; // should be a little darker than the css colour #E6EAF1
           }
@@ -160,18 +174,43 @@ function GraphViz() {
 
         renderer.setSetting("edgeReducer", (edge, data) => {
           const res = { ...data };
-          if (hoveredNode && !graph.hasExtremity(edge, hoveredNode)) {
-            res.hidden = true; // could set as a colour instead
+          if (hoveredNode) {
+            if (!graph.hasExtremity(edge, hoveredNode)) { // takes precedence
+              res.hidden = true; // could set as a colour instead
+            }
           } else if (hoveredEdge && hoveredEdge === edge){
             res.color = "#858990";
+          } else if (selectedColours.length > 0) {
+            // only show edges if both nodes are selected
+            const [source, target] = graph.extremities(edge);
+            if (!(legendNodes.has(source) && legendNodes.has(target))) {
+              res.hidden = true; // could set as a colour instead
+            }
           }
           return res;
         });
       }
-  
+
+    useEffect(() => {
       fetchData();
     }, []);
 
+  useEffect(() => {
+    // call fetchData to ensure graph and renderer are set with all the capabilities
+    console.log("in useEffect", selectedColours);
+    fetchData().then(r => {
+      console.log("Selected items changed:", selectedColours);
+      // if (graph !== null && renderer !== null) {
+      //   setHoveredNeighbours(graph, renderer); // already called in fetchData, don't need to call again
+      // }
+    });
+  }, [selectedColours]); // run when selectedColours changes
+
+  const [controlsExpanded, setControlsExpanded] = useState(false);
+
+  const toggleControls = () => {
+    setControlsExpanded(!controlsExpanded);
+  };
 
     return (
       <div className="graphDisplay">
@@ -180,8 +219,9 @@ function GraphViz() {
         </RightContext>
         <div id="controls">
           <div className="center">
-            <h2>Controls</h2>
+            <h3 className="controls-header" onClick={toggleControls}>Control Panel</h3>
           </div>
+          <div className={`controls-content ${controlsExpanded ? 'expanded' : ''}`}>
           <div className="input"><label htmlFor="zoom-in">Zoom in </label><button id="zoom-in">+</button></div>
           <div className="input"><label htmlFor="zoom-out">Zoom out </label><button id="zoom-out">-</button></div>
           <div className="input"><label htmlFor="zoom-reset">Reset zoom </label><button id="zoom-reset">⊙</button></div>
@@ -197,7 +237,9 @@ function GraphViz() {
             <PopUpThreshold id="popUpThreshold" trigger={popUpMenu} setTrigger={setPopUpMenu}>
             </PopUpThreshold>
           </div>
+          </div>
         </div>
+        <Legend />
         <div id="nodeDetailsDisplay">
           <div className="node-help">
             <h2 className="h2">Node/Edge Details:</h2>

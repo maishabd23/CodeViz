@@ -3,7 +3,6 @@ package codeViz.entity;
 import codeViz.codeComplexity.ClassComplexityDetails;
 import codeViz.gitHistory.CommitInfo;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -23,7 +22,7 @@ public class ClassEntity extends Entity {
     private ClassEntity superClass; // may have methods not defined in this class alone
 
     public ClassEntity(String name, PackageEntity packageEntity){
-        super(name, EntityType.CLASS, new ClassComplexityDetails());
+        super(name, EntityType.CLASS, new ClassComplexityDetails(), packageEntity);
         this.packageEntity = packageEntity;
         this.fields = new LinkedHashMap<>();
         this.methods = new LinkedHashMap<>();
@@ -89,21 +88,6 @@ public class ClassEntity extends Entity {
         // could simplify this if methods is changed from Set to something like HashMap
         methodName = MethodEntity.getProperName(methodName);
         return methods.getOrDefault(methodName, null);
-    }
-
-    /**
-     * Get parent colour
-     * @author Thanuja Sivaananthan
-     * @return  parent colour
-     */
-    public Color getParentColour() {
-        if (isHighlighted()){ // being highlighted takes precedence over the parent
-            return getHighlightedColour();
-        } else if (packageEntity != null){
-            return packageEntity.getColour();
-        } else {
-            return getColour();
-        }
     }
 
     @Override

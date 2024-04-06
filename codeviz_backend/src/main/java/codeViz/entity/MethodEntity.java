@@ -2,7 +2,6 @@ package codeViz.entity;
 
 import codeViz.codeComplexity.ComplexityDetails;
 
-import java.awt.Color;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -21,7 +20,7 @@ public class MethodEntity extends Entity {
     private ClassEntity returnType;
 
     public MethodEntity(String name, ClassEntity classEntity){
-        super(getProperName(name), EntityType.METHOD, new ComplexityDetails());
+        super(getProperName(name), EntityType.METHOD, new ComplexityDetails(), classEntity);
         this.classEntity = classEntity;
 
         // should classEntity store its methods (easier to reference), or is that too much coupling?
@@ -43,19 +42,6 @@ public class MethodEntity extends Entity {
     public ClassEntity getClassEntity() {
         return classEntity;
     }
-
-    /**
-     * Get parent colour
-     * @author Thanuja Sivaananthan
-     * @return  parent colour
-     */
-    public Color getParentColour() {
-        if (isHighlighted()){ // being highlighted takes precedence over the parent
-            return getHighlightedColour();
-        }
-        return classEntity.getColour();
-    }
-
 
     @Override
     public boolean containsSearchValue(String searchValue) {

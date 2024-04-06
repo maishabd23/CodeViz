@@ -13,9 +13,9 @@ function Menu() {
 
     //FOR VIEWING REPO
     const [repoURL, setRepoURL] = useState('');
-    const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [searchResult, setSearchResult] = useState(null);
 
     // Function to handle changes in the repoURL input field
     const handleRepoURLChange = (e) => {
@@ -47,7 +47,6 @@ function Menu() {
                     // Handle successful response
                     console.log('SUCCESS!');
                     console.log('Response data:', data);
-                    setSubmitted(true);
                 } else {
                     // Handle error response
                     console.error('Error:', data.error || 'An unexpected error occurred');
@@ -105,7 +104,7 @@ function Menu() {
                 body: JSON.stringify(searchQuery),
             });
             const data = await response.json();
-            document.getElementById("printSearch").innerHTML = data.string;
+            setSearchResult(data.string)
         } catch (error) {
             console.error('Error:', error);
         }
@@ -191,133 +190,118 @@ function Menu() {
         <div className='menu'>
             <div id="menu-controls">
                 <h3>Select Repository</h3>
-                <table className="center">
-                    <tbody>
-                    <tr>
-                        <td>
-                        <div className="chooseRepo">
-                            <input type="search" id="viewRepoInput" value={repoURL}
-                                   onChange={handleRepoURLChange}
-                                   onKeyDown={(event) => handleKeyPress(event, 'viewRepoButton')}
-                                   placeholder="Enter Repository URL" />
-                            <button id="viewRepoButton" type="submit" onClick={handleSubmit} disabled={loading}>Submit</button>
-                            {error && <p className="error">{error}</p>}
-                            {loading && <p>Loading...</p>}
-                        </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div>
+                    <input type="search" id="viewRepoInput" value={repoURL}
+                           onChange={handleRepoURLChange}
+                           onKeyDown={(event) => handleKeyPress(event, 'viewRepoButton')}
+                           placeholder="Enter Repository URL" />
+                    <button id="viewRepoButton" type="submit" onClick={handleSubmit} disabled={loading}>Submit</button>
+                    {error && <p className="error">{error}</p>}
+                    {loading && <p>Loading...</p>}
+                </div>
             </div>
 
             <div id="menu-controls">
                 <h3>Search</h3>
-                <table className="center">
-                    <tbody>
-                    <tr>
-                        <td>
-                            <div className="help-display">
-                                <input
-                                    type="search"
-                                    id="searchInput"
-                                    placeholder="Enter a search term"
-                                    onKeyDown={(event) => handleKeyPress(event, 'searchButton')}
-                                />
-                                <img src="/info-icon.png" alt='icon' className="info--icon" />
-                                <p className='tooltip'>Search for specific node names</p>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-                {/* ... */}
-                <p>
-                </p>
+                <div className="help-display">
+                    <input
+                        type="search"
+                        id="searchInput"
+                        placeholder="Enter a search term"
+                        onKeyDown={(event) => handleKeyPress(event, 'searchButton')}
+                    />
+                    <img src="/info-icon.png" alt='icon' className="info--icon" />
+                    <p className='tooltip'>Search for specific node names</p>
+                </div>
 
-        {/* Conditional rendering based on 'level' */}
-            {level === 'Package' && (
-                <>
-                    <label>
-                        <input type="checkbox" checked={searchClasses} onChange={(e) => setSearchClasses(e.target.checked)} />
-                        Classes
-                    </label>
-                    <label>
-                        <input type="checkbox" checked={searchConnections} onChange={(e) => setSearchConnections(e.target.checked)} />
-                        Connections
-                    </label>
-                </>
-            )}
-            {level === 'Class' && (
-                <>
-                    <label>
-                        <input type="checkbox" checked={searchMethods} onChange={(e) => setSearchMethods(e.target.checked)} />
-                        Methods
-                    </label>
-                    <label>
-                        <input type="checkbox" checked={searchAttributes} onChange={(e) => setSearchAttributes(e.target.checked)} />
-                        Attributes
-                    </label>
-                    <label>
-                        <input type="checkbox" checked={searchConnections} onChange={(e) => setSearchConnections(e.target.checked)} />
-                        Connections
-                    </label>
-                </>
-            )}
-            {level === 'Method' && (
-                <>
-                    <label>
-                        <input type="checkbox" checked={searchParameters} onChange={(e) => setSearchParameters(e.target.checked)} />
-                        Parameters
-                    </label>
-                    <label>
-                        <input type="checkbox" checked={searchReturnType} onChange={(e) => setSearchReturnType(e.target.checked)} />
-                        Return Type
-                    </label>
-                    <label>
-                        <input type="checkbox" checked={searchConnections} onChange={(e) => setSearchConnections(e.target.checked)} />
-                        Connections
-                    </label>
-                </>
-            )}
-            <p>
-            </p>
-            <table className="center">
-            <td>
+                {/* Conditional rendering based on 'level' */}
+                {level === 'Package' && (
+                    <>
+                    <div className="checkbox-container">
+                    <div>
+                        <label>
+                            <input type="checkbox" checked={searchClasses} onChange={(e) => setSearchClasses(e.target.checked)} />
+                            Classes
+                        </label>
+                        </div>
+                        <div>
+                        <label>
+                            <input type="checkbox" checked={searchConnections} onChange={(e) => setSearchConnections(e.target.checked)} />
+                            Connections
+                        </label>
+                        </div>
+                    </div>
+                    </>
+                )}
+                {level === 'Class' && (
+                    <>
+                    <div className="checkbox-container">
+                    <div>
+                        <label>
+                            <input type="checkbox" checked={searchMethods} onChange={(e) => setSearchMethods(e.target.checked)} />
+                            Methods
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="checkbox" checked={searchAttributes} onChange={(e) => setSearchAttributes(e.target.checked)} />
+                            Attributes
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="checkbox" checked={searchConnections} onChange={(e) => setSearchConnections(e.target.checked)} />
+                            Connections
+                        </label>
+                    </div>
+                    </div>
+                    </>
+                )}
+                {level === 'Method' && (
+                    <>
+                    <div className="checkbox-container">
+                    <div>
+                        <label>
+                            <input type="checkbox" checked={searchParameters} onChange={(e) => setSearchParameters(e.target.checked)} />
+                            Parameters
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="checkbox" checked={searchReturnType} onChange={(e) => setSearchReturnType(e.target.checked)} />
+                            Return Type
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="checkbox" checked={searchConnections} onChange={(e) => setSearchConnections(e.target.checked)} />
+                            Connections
+                        </label>
+                    </div>
+                    </div>
+                    </>
+                )}
+
                 <button id="searchButton" onClick={mySearchFunction}>Search</button>
-            </td>
-            <td>
                 <button id="clear-search" onClick={() => { /* Implement clear search logic */ }}>Clear Search</button>
-            </td>
-            <p id="printSearch"></p>
-            </table>
-
+                {searchResult && (
+                    <div id="printSearch" dangerouslySetInnerHTML={{ __html: searchResult }}></div>
+                )}
 
             </div>
 
             <div id="menu-controls">
                 <h3>Switch Level</h3>
                 <p id="currentLevel"></p>
-                <table className="center">
-                    <tbody>
-                    <tr>
-                        <td>
-                            <div className="input"><label htmlFor="package-view"></label><button id="package-view">Package</button></div>
-                        </td>
-                        <td>
-                            <div className="input"><label htmlFor="class-view"></label><button id="class-view">Class</button></div>
-                        </td>
-                        <td>
-                            <div className="input"><label htmlFor="method-view"></label><button id="method-view">Method</button></div>
-                        </td>
-                        <td>
-                            <div>
-                                <img src="/info-icon.png" alt='icon' className="info--icon" />
-                                <p className='tooltip'>Level of granularity at which to display the graph</p>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div className="help-display">
+                    <div className="input"><label htmlFor="package-view"></label><button id="package-view">Package</button></div>
+                    <div className="input"><label htmlFor="class-view"></label><button id="class-view">Class</button></div>
+                    <div className="input"><label htmlFor="method-view"></label><button id="method-view">Method</button></div>
+                    <div>
+                        <img src="/info-icon.png" alt='icon' className="info--icon" />
+                        <p className='tooltip'>Level of granularity at which to display the graph</p>
+                    </div>
+                </div>
 
                 <div className="graph-type">
                     <input type="radio" id="M1" name="graph_type" value={milestone === 'm1'} onChange={handleM1Change} checked={milestone === 'm1'}>
@@ -326,8 +310,8 @@ function Menu() {
                     <input type="radio" id="M2" name="graph_type" value={milestone === 'm2'} onChange={handleM2Change} checked={milestone === 'm2'} disabled={level !== 'Class'} >
                     </input>
                     <label htmlFor="M2">Git History</label>
-                        <img src="/info-icon.png" alt='icon' className="info--icon" />
-                        <p className='tooltip'>Graph type to view. Note: Git History graph is only available for class view</p>
+                    <img src="/info-icon.png" alt='icon' className="info--icon" />
+                    <p className='tooltip'>Graph type to view. Note: Git History graph is only available for class view</p>
                 </div>
             </div>
         </div>

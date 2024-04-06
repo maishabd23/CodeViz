@@ -1,4 +1,4 @@
-import codeViz.GitHubRepoController;
+import codeViz.SourcecodeReader;
 import codeViz.GraphGenerator;
 import codeViz.entity.*;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,26 +9,25 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class GitHubRepoControllerTest {
+public class SourcecodeReaderTest {
 
-    private static GitHubRepoController gitHubRepoControllerCodeViz;
     private static GraphGenerator graphGenerator;
 
     @BeforeAll
     public static void setupGraphGenerator() {
-        gitHubRepoControllerCodeViz = new GitHubRepoController();
-        gitHubRepoControllerCodeViz.analyzeCodebase("https://github.com/maishabd23/CodeViz");
-        graphGenerator = gitHubRepoControllerCodeViz.getGraphGenerator();
+        SourcecodeReader sourcecodeReaderCodeViz = new SourcecodeReader();
+        sourcecodeReaderCodeViz.analyzeCodebase("https://github.com/maishabd23/CodeViz");
+        graphGenerator = sourcecodeReaderCodeViz.getGraphGenerator();
     }
 
     @Test
     public void testisValidRepoUrl(){
         // should work for main or master branches
-        GitHubRepoController gitHubRepoController = new GitHubRepoController();
-        assertEquals("", gitHubRepoController.isValidRepoUrl("https://github.com/thanujasiva/sysc-3110-project"));
-        assertEquals("", gitHubRepoController.isValidRepoUrl("https://github.com/maishabd23/CodeViz"));
+        SourcecodeReader sourcecodeReader = new SourcecodeReader();
+        assertEquals("", sourcecodeReader.isValidRepoUrl("https://github.com/thanujasiva/sysc-3110-project"));
+        assertEquals("", sourcecodeReader.isValidRepoUrl("https://github.com/maishabd23/CodeViz"));
 
-        assertTrue(gitHubRepoController.analyzeCodebase("https://github.com/maishabd23/CodeViz"));
+        assertTrue(sourcecodeReader.analyzeCodebase("https://github.com/maishabd23/CodeViz"));
     }
 
     /**

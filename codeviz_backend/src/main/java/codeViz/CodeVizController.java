@@ -154,7 +154,7 @@ public class CodeVizController {
             codeVizInterface.generateGraph(currentLevel, GEXF_FILE, this.gitHistory);
         }
 
-        String result = codeVizInterface.getSearchResult(currentLevel);
+        String result = codeVizInterface.getSearchResult();
         System.out.println("Search Result: " + result);
 
         result = TextAnnotate.javaToHtml(result);

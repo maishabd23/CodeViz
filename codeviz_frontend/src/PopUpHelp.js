@@ -123,6 +123,25 @@ function PopUpHelp(props) {
                 When no checkbox selected the search gets performed only on the displayed node names, and highlights the corresponding node.
                 </p>
 
+                <h3>Legend</h3>
+                <p>
+                    The legend corresponds to the colour groups on the code graph:
+                    <ul>
+                        <li>Package Level: Each of the packages</li>
+                        <li>Class Level: Each of the packages</li>
+                        <li>Method Level: Each of the classes</li>
+                    </ul>
+
+                    The entire code graph will show, when either all legend items or none of the legend items are pressed.
+
+                    When selecting one or more legend items, only the nodes corresponding to those groups will be shown on the
+                    code graph, and all other nodes will be greyed out.
+
+                    When performing searches, the "Search Result" will also appear as a legend option, only if relevant
+                    search results exist.
+
+                </p>
+
                 <h3>Label Threshold</h3>
                 <p>
                     The label threshold slider can be used to filter the amount of nodes that have their label displayed,

@@ -32,6 +32,7 @@ public abstract class Entity {
     private final Map<Entity, Float> gitConnectedEntitiesAndWeights; //stores the weight of connections
 
     private final ComplexityDetails complexityDetails;
+    private final Entity parent;
 
     /**
      * Set up an Entity
@@ -39,12 +40,14 @@ public abstract class Entity {
      * @param name              name of entity
      * @param entityType        entity type
      * @param complexityDetails complexity details
+     * @param parent            parent node if it exists
      * @author Thanuja Sivaananthan
      * @author Sabah Samwatin
      */
-    public Entity(String name, EntityType entityType, ComplexityDetails complexityDetails){
+    public Entity(String name, EntityType entityType, ComplexityDetails complexityDetails, Entity parent){
         this.name = name;
         this.entityType = entityType;
+        this.parent = parent;
         this.connectedEntitiesAndWeights = new LinkedHashMap<>();
         this.size = SIZE_INCREMENT;
         this.colour = getRandomColour();
@@ -154,7 +157,28 @@ public abstract class Entity {
      * @author Thanuja Sivaananthan
      * @return  parent colour
      */
-    public abstract Color getParentColour();
+    public Color getParentColour(){
+        if (isHighlighted()){ // being highlighted takes precedence over the parent
+            return getHighlightedColour();
+        } else if (parent != null){
+            return parent.getColour();
+        } else {
+            return getColour();
+        }
+    }
+
+    /**
+     * Get parent name
+     * @author Thanuja Sivaananthan
+     * @return  parent name
+     */
+    public String getParentName(){
+        if (parent != null){
+            return parent.getName();
+        } else {
+            return getName();
+        }
+    }
 
     public abstract String toString();
 

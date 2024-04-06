@@ -34,13 +34,13 @@ import java.util.zip.ZipInputStream;
  * @author Maisha Abdullah
  */
 @Controller
-public class GitHubRepoController {
+public class SourcecodeReader {
 
     private final GraphGenerator graphGenerator;
 
     private List<byte[]> entryContentsList;
 
-    public GitHubRepoController(){
+    public SourcecodeReader(){
         this.graphGenerator = new GraphGenerator(); // only set this once (clear entities each time a new graph is made)
         this.entryContentsList = new ArrayList<>();
     }
