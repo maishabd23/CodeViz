@@ -96,13 +96,14 @@ canvas {
 
 #controls {
   position: absolute;
-  right: 1em;
+  left: 1em;
   top: 1em;
   text-align: left;
   padding: 10px 10px;
   background-color: lightgrey;
   border-radius: 10px;
-  width: 250px;
+  width: 150px;
+  font-size: small;
 }
 
 #menu-controls {
@@ -342,3 +343,21 @@ canvas {
   font-weight: 900;
   font-style: italic;
 }
+
+.controls {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.controls-content {
+  display: none;
+}
+
+.controls-content.expanded {
+  display: block;
+}
+
+/* .controls-header {
+  margin: 0em;
+} */

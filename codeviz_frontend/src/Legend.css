@@ -8,13 +8,12 @@
 
     font-size: small;
 
-
     position: absolute;
     right: 1em;
-    top: 25em; /*FIXME with label threshold string */
+    top: 1em; /*FIXME with label threshold string */
     text-align: left;
-    width: 250px;
-    height: calc(100% - 1em - 250px - 100px - 25%);
+    width: 180px;
+    height: calc(50%);
     overflow: auto;
 
 }
@@ -49,3 +48,9 @@
 .legend-item:hover {
     cursor: pointer;
 }
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }

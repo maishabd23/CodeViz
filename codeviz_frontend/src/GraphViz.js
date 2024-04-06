@@ -206,16 +206,22 @@ function GraphViz() {
     });
   }, [selectedColours]); // run when selectedColours changes
 
+  const [controlsExpanded, setControlsExpanded] = useState(false);
+
+  const toggleControls = () => {
+    setControlsExpanded(!controlsExpanded);
+  };
 
     return (
       <div className="graphDisplay">
         <RightContext>
           <div className="graphDisplay--image"></div>
         </RightContext>
-        <div id="controls">
+        <div id="controls" onClick={toggleControls}>
           <div className="center">
-            <h2>Controls</h2>
+            <h3 className="controls-header">Control Panel</h3>
           </div>
+          <div className={`controls-content ${controlsExpanded ? 'expanded' : ''}`}>
           <div className="input"><label htmlFor="zoom-in">Zoom in </label><button id="zoom-in">+</button></div>
           <div className="input"><label htmlFor="zoom-out">Zoom out </label><button id="zoom-out">-</button></div>
           <div className="input"><label htmlFor="zoom-reset">Reset zoom </label><button id="zoom-reset">⊙</button></div>
@@ -230,6 +236,7 @@ function GraphViz() {
             <button onClick={() => setPopUpMenu(true)}>Modify Threshold Settings</button>
             <PopUpThreshold id="popUpThreshold" trigger={popUpMenu} setTrigger={setPopUpMenu}>
             </PopUpThreshold>
+          </div>
           </div>
         </div>
         <Legend />
