@@ -217,9 +217,9 @@ function GraphViz() {
         <RightContext>
           <div className="graphDisplay--image"></div>
         </RightContext>
-        <div id="controls" onClick={toggleControls}>
+        <div id="controls">
           <div className="center">
-            <h3 className="controls-header">Control Panel</h3>
+            <h3 className="controls-header" onClick={toggleControls}>Control Panel</h3>
           </div>
           <div className={`controls-content ${controlsExpanded ? 'expanded' : ''}`}>
           <div className="input"><label htmlFor="zoom-in">Zoom in </label><button id="zoom-in">+</button></div>
