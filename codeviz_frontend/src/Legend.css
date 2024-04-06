@@ -10,10 +10,11 @@
 
     position: absolute;
     right: 1em;
-    top: 1em; /*FIXME with label threshold string */
+    top: 1em;
     text-align: left;
     width: 180px;
-    height: calc(50%);
+    min-height: 200px;
+    height: calc(100% - 25% - 3em);
     overflow: auto;
 
 }

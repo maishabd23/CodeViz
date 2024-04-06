@@ -54,11 +54,11 @@ button {
   border-radius: 5px;
   background-color: rgb(93, 106, 119); 
   color: #fff;
-  padding: 6px 10px; 
+  padding: 6px 10px;
   border: none; 
   cursor: pointer;
   transition: background-color 0.3s; /* Smooth transition for background color */
-  margin: 5px;
+  margin: 3px;
 }
 
 /* Hover state */
@@ -112,7 +112,18 @@ canvas {
   border-color: #F4F7FC;
   border-style: solid;
   border-radius: 10px;
-  padding-bottom: 10px;
+}
+
+.checkbox-container {
+  display: block;
+  margin-bottom: 5px;
+  flex-direction: column;
+  text-align: left; /* ensure left alignment */
+  padding: 0 20px;
+}
+
+.checkbox-container label {
+  margin-left: 5px; /* Optional: Add some spacing between checkbox and label */
 }
 
 .error {
@@ -129,7 +140,7 @@ canvas {
   padding: 20px; 
   background-color: rgba(255,255,255,0.9);
   width: calc(100% - 1.5em);
-  height: 25%;
+  height: 25%; /* make the size flexible to see more/less text */
   overflow: auto; 
   box-sizing: border-box;
   border-radius: 10px;
@@ -154,6 +165,8 @@ canvas {
 
 .help-display {
   display: flex;
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
 }
 
 .graph-type{
@@ -206,9 +219,8 @@ canvas {
 
 .menu {
   background-color: #F4F7FC;
-  padding: 10px 10px;
-  width: 25%;
-  min-width: 240px;
+  padding: 5px 5px;
+  width: 270px; /* hardcode menu width, it will always show the same info */
   height: 100%;
 }
 
@@ -221,127 +233,6 @@ canvas {
   margin-left: auto;
   margin-right: auto;
   text-align: center;
-}
-.fade-in {
-  animation: fadeInAnimation 5s ease-in forwards;
-  opacity: 0; /* Set initial opacity to 0 */
-}
-
-@keyframes fadeInAnimation {
-  from {
-    opacity: 0; /* Start from fully transparent */
-  }
-  to {
-    opacity: 1; /* End with full opacity */
-  }
-}
-
-.poppins-thin {
-  font-family: "Poppins", sans-serif;
-  font-weight: 100;
-  font-style: normal;
-}
-
-.poppins-extralight {
-  font-family: "Poppins", sans-serif;
-  font-weight: 200;
-  font-style: normal;
-}
-
-.poppins-light {
-  font-family: "Poppins", sans-serif;
-  font-weight: 300;
-  font-style: normal;
-}
-
-.poppins-regular {
-  font-family: "Poppins", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-}
-
-.poppins-medium {
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-  font-style: normal;
-}
-
-.poppins-semibold {
-  font-family: "Poppins", sans-serif;
-  font-weight: 600;
-  font-style: normal;
-}
-
-.poppins-bold {
-  font-family: "Poppins", sans-serif;
-  font-weight: 700;
-  font-style: normal;
-}
-
-.poppins-extrabold {
-  font-family: "Poppins", sans-serif;
-  font-weight: 800;
-  font-style: normal;
-}
-
-.poppins-black {
-  font-family: "Poppins", sans-serif;
-  font-weight: 900;
-  font-style: normal;
-}
-
-.poppins-thin-italic {
-  font-family: "Poppins", sans-serif;
-  font-weight: 100;
-  font-style: italic;
-}
-
-.poppins-extralight-italic {
-  font-family: "Poppins", sans-serif;
-  font-weight: 200;
-  font-style: italic;
-}
-
-.poppins-light-italic {
-  font-family: "Poppins", sans-serif;
-  font-weight: 300;
-  font-style: italic;
-}
-
-.poppins-regular-italic {
-  font-family: "Poppins", sans-serif;
-  font-weight: 400;
-  font-style: italic;
-}
-
-.poppins-medium-italic {
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-  font-style: italic;
-}
-
-.poppins-semibold-italic {
-  font-family: "Poppins", sans-serif;
-  font-weight: 600;
-  font-style: italic;
-}
-
-.poppins-bold-italic {
-  font-family: "Poppins", sans-serif;
-  font-weight: 700;
-  font-style: italic;
-}
-
-.poppins-extrabold-italic {
-  font-family: "Poppins", sans-serif;
-  font-weight: 800;
-  font-style: italic;
-}
-
-.poppins-black-italic {
-  font-family: "Poppins", sans-serif;
-  font-weight: 900;
-  font-style: italic;
 }
 
 .controls {
